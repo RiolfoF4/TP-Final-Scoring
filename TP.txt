@@ -1,0 +1,41 @@
+Archivo de Conductores
+  Número de documento (DNI)
+  Apellido y Nombres
+  Fecha nacimiento
+  Teléfono
+  e-mail
+  Scoring: //cantidad de puntos
+  Habilitado: Si/No
+  Fecha_Habilitación
+  Cant_reincidencias: 0..N
+  
+Archivo de Infracciones
+  Número de documento (DNI)
+  Fecha de infracción
+  Tipo de infracción // https://www.argentina.gob.ar/seguridadvial
+  Puntos a descontar
+ 
+Se pide:
+  ABMC de conductores (consulta por nombre y por DNI)
+  AMC de Infracciones
+  Actualización de scoring ante una infracción
+  Listado ordenado por Apellido y Nombres de Conductores
+  Listado ordenado por fecha de todas las infracciones en un período determinado
+  Listado ordenado por fecha de todas las infracciones de un conductor en un período determinado
+  Listado de los infractores a los cuales su scoring llegó a 0
+  Estadísticas:
+	- Cantidad de infracciones entre dos fechas
+	- Porcentaje de conductores con reincidencia
+	- Porcentaje de conductores con scoring 0
+	- Total //agregar esta opción según su criterio y que sea de utilidad para la municipalidad
+	- Rango etario con más infracciones (menores de 30, entre 31 y 50, mayores a 50)
+
+Notas:
+El trabajo se deberá implementar con archivos random.
+El archivo de Conductores se mantendrá ordenado mediante árboles binarios de búsqueda (uno
+por DNI y uno por Apellido y Nombres, con clave y pos_relativa_maestro) y el archivo de
+infracciones por fecha
+Debe estar modularizado en Units.
+Se puede agregar cualquier aporte que considere conveniente, justificando.
+Se presupone que el usuario será personal de la seguridad vial, por lo que la carga y visualización
+de los datos debe ser práctica y amigable.
