@@ -23,7 +23,5 @@ procedure MostrarMenu;
     end;
     CerrarArchivoCon(ArchCon);
     CerrarArchivoInf(ArchInf);
-
   end;
-
 end.
