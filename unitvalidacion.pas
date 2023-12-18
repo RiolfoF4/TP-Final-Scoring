@@ -1,8 +1,5 @@
 unit UnitValidacion;
 
-
-{$mode ObjFPC}{$H+}
-
 interface
 uses
     StrUtils;
