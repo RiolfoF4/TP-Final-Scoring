@@ -15,11 +15,12 @@ procedure MostrarMenu;
   begin
     CrearAbrirArchivoCon(ArchCon);
     CrearAbrirArchivoInf(ArchInf);
-    WriteLn('[1] Ingresar Nombre.');
-    WriteLn('[2] Ingresar DNI');
+    WriteLn('[1] Ingresar Apellido y Nombre.');
+    WriteLn('[2] Ingresar DNI.');
     ReadLn(Op);
     Case Op of
-      '1': 
+      '1': DeterminarCasoApYNom(ArchCon, ArchInf);
+      '2': DeterminarCasoDNI(ArchCon, ArchInf);
     end;
     CerrarArchivoCon(ArchCon);
     CerrarArchivoInf(ArchInf);

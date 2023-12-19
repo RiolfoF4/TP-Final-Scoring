@@ -14,7 +14,7 @@ Archivo de Infracciones
   Fecha de infracción
   Tipo de infracción // https://www.argentina.gob.ar/seguridadvial
   Puntos a descontar
- 
+
 Se pide:
   ABMC de conductores (consulta por nombre y por DNI)
   AMC de Infracciones
