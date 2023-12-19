@@ -19,8 +19,8 @@ procedure MostrarMenu;
     WriteLn('[2] Ingresar DNI.');
     ReadLn(Op);
     Case Op of
-      '1': DeterminarCasoApYNom(ArchCon, ArchInf);
-      '2': DeterminarCasoDNI(ArchCon, ArchInf);
+      '1': DeterminarCaso(ArchCon, ArchInf, 1);
+      '2': DeterminarCaso(ArchCon, ArchInf, 2);
     end;
     CerrarArchivoCon(ArchCon);
     CerrarArchivoInf(ArchInf);

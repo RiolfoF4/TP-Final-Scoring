@@ -11,9 +11,10 @@ function EsNum(Cad: String): Boolean;
 function EsCadenaFecha(Cad: String): Boolean;
 function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
 function EsAnioBisiesto(Anyo: Integer): Boolean;
+function EsEMail(Cad: String): Boolean;
 
 implementation
-  function EsNum(Cad: String): Boolean;
+function EsNum(Cad: String): Boolean;
   const
     Digitos = ['0'..'9'];
   var
@@ -25,12 +26,6 @@ implementation
       EsNum := False
     else
     begin
-      if Length(Cad) > 1 then
-        {El primer elemento de la Cadena debe ser un dígito o un '-'}
-        if not ((Cad[1] in Digitos) or (Cad[1] = '-')) then
-          EsNum := False
-        else
-          Inc(i);
       while (i < Length(Cad)) and EsNum do
       begin
         Inc(i);
@@ -39,7 +34,7 @@ implementation
     end;
   end;
 
-  function EsCadenaFecha(Cad: String): Boolean;
+function EsCadenaFecha(Cad: String): Boolean;
   const
     Meses = [1..12];
   var
@@ -74,7 +69,7 @@ implementation
       end;
   end;
 
-  function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
+function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
   const
     Meses = [1..12];
   begin
@@ -97,7 +92,7 @@ implementation
       EsFecha := False;
   end;
 
-  function EsAnioBisiesto(Anyo: Integer): Boolean;
+function EsAnioBisiesto(Anyo: Integer): Boolean;
   begin
     if ((Anyo mod 4) = 0) and (not((Anyo mod 100) = 0) or ((Anyo mod 400) = 0)) then
       EsAnioBisiesto := True
@@ -105,5 +100,23 @@ implementation
       EsAnioBisiesto := False;
   end;
 
+function EsEMail(Cad: String): Boolean;
+  var
+    PosCad: Word;
+    Dom: String;
+  begin
+    EsEMail := True;
+    PosCad := 0;
+    PosCad := Pos('@', Cad);
+    if PosCad = 0 then
+      EsEMail := False
+    else
+    begin
+      Dom := LowerCase(Copy(Cad, PosCad + 1, Length(Cad) - PosCad));
+      if not ((Dom = 'google.com') or (Dom = 'yahoo.com') or (Dom = 'yahoo.com.ar') or (Dom = 'hotmail.com')
+            or (Dom = 'hotmail.com.ar') or (Dom = 'live.com') or (Dom = 'live.com.ar'))
+        then EsEMail := False;
+    end;
+  end;
 end.
 

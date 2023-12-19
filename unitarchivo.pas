@@ -22,6 +22,7 @@ type
     Habilitado: Boolean;
     FechaHab: TRegFecha;
     CantRein: Byte;
+    Estado: Boolean;
   end;
 
   TDatoInfracciones = record
