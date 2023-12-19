@@ -7,7 +7,7 @@ uses
 
 // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI}
 procedure DeterminarCaso(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: Byte);
-procedure AltaConductor(var ArchCon);                      
+procedure AltaConductor(var ArchCon: TArchCon);                      
 
 implementation
 function ObtenerApYNom: String;
@@ -39,7 +39,7 @@ function ObtenerTel: Cardinal;
     Cad: String[12];
   begin
     ObtenerTel := 0;
-    while ObtenerTel <= 0 do
+    while ObtenerTel = 0 do
     begin
       Write('Teléfono (Sin prefijo internacional ni espacios): ');
       ReadLn(Cad);
@@ -89,7 +89,7 @@ procedure DeterminarCaso(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: Byt
     end;
   end;
 
-procedure AltaConductor(var ArchCon);
+procedure AltaConductor(var ArchCon: TArchCon);
   var
     DatosCon: TDatoConductores;
   begin
