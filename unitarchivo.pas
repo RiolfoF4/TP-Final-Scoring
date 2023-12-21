@@ -7,8 +7,8 @@ const
 
 type
   TRegFecha = record
-    Dia: Byte;
-    Mes: Byte;
+    Dia: Word;
+    Mes: Word;
     Anio: Word;
   end;
 

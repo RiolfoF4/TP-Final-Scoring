@@ -2,7 +2,7 @@ unit UnitMenu;
 
 interface
 uses
-  UnitArchivo;
+  UnitArchivo, Actividades;
 
 procedure MostrarMenu;
 

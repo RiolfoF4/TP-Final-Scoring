@@ -1,4 +1,5 @@
 unit Actividades;
+{$CODEPAGE UTF8}
 
 interface
 
@@ -6,8 +7,7 @@ uses
   sysutils, UnitArchivo, UnitValidacion;
 
 // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI}
-procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: Byte);
-procedure AltaConductor(var ArchCon: TArchCon);                      
+procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: Byte);               
 
 implementation
 function ObtenerApYNom: String;
@@ -34,17 +34,17 @@ function ObtenerDNI: Cardinal;
     end;
   end;
 
-function ObtenerTel: Cardinal;
+function ObtenerTel: String;
   var
-    Cad: String[12];
+    Cad: String[20];
   begin
-    ObtenerTel := 0;
-    while ObtenerTel = 0 do
+    ObtenerTel := '';
+    while ObtenerTel = '' do
     begin
       Write('Teléfono (Sin prefijo internacional ni espacios): ');
       ReadLn(Cad);
       if EsNum(Cad) then
-        ObtenerTel := StrToDWord(Cad);
+        ObtenerTel := Cad;
     end;
   end;
 
@@ -75,34 +75,39 @@ procedure ObtenerFechaNac(var Fecha: TRegFecha);
     while not (FechaValida) do
       with Fecha do
       begin
-        Write('Año: ');
-        ReadLn(Anyo);
-        Write('Mes: ');
+        WriteLn('Fecha de Nacimiento');
+        Write(' Año: ');
+        ReadLn(Anio);
+        Write(' Mes: ');
         ReadLn(Mes);
-        Write('Día: ');
+        Write(' Día: ');
         ReadLn(Dia);
         FechaValida := EsFecha(Anio, Mes, Dia);
       end;
   end;
 
+procedure AltaConductor(var ArchCon: TArchCon) forward;
+procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
+
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: Byte);
   var
     ApYNom: String[50];
     DNI: Cardinal;
-    Pos: Word;
+    Pos: Integer;
     Rta: String[2];
     ConAux: TDatoConductores;
   begin
     if Caso = 1 then
     begin
       ApYNom := ObtenerApYNom;
-      Pos := PosicionApYNom(ArbolApYNom, ApYNom);
+{      Pos := PosicionApYNom(ArbolApYNom, ApYNom);}
     end
     else
     begin
       DNI := ObtenerDNI;
-      Pos := PosicionDNI(ArbolDNI, DNI);
+{      Pos := PosicionDNI(ArbolDNI, DNI);}
     end;
+    Pos := 0;
     if Pos < 0 then
     begin
       WriteLn('No se encontró el conductor ingresado!');
@@ -111,10 +116,11 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: 
       if LowerCase(Rta) = 's' then
       begin
         AltaConductor(ArchCon);
+        WriteLn('Alta exitosa!');
         Write('¿Desea agregar una infracción? (s/N): ');
         ReadLn(Rta);
-        if LowerCase(Rta) = 's' then
-          AltaInfraccion(ArchInf);
+{        if LowerCase(Rta) = 's' then
+          AltaInfraccion(ArchInf);}
       end;
     end
     else
@@ -126,10 +132,10 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; Caso: 
       WriteLn('[2] Dar de Baja.');
       WriteLn('[0] Volver.');
       ReadLn(Rta);
-      case Rta of
+{      case Rta of
         '1': ModificarCon(ConAux);
         '2': BajaCon(ConAux);
-      end;
+      end;}
     end;
   end;
 
@@ -147,8 +153,44 @@ procedure AltaConductor(var ArchCon: TArchCon);
     ObtenerFechaActual(DatosCon.FechaHab);
     DatosCon.CantRein := 0;
     DatosCon.Estado := True;
-    SeekEOF(ArchCon);
+    Seek(ArchCon, FileSize(ArchCon));
     Write(ArchCon, DatosCon);
     {Agregar al árbol}
   end;
+
+procedure MostrarDatosCon(var DatosCon: TDatoConductores);
+  begin
+    with DatosCon do
+    begin
+      WriteLn('DNI: ', DNI);
+      WriteLn('Apellido y Nombre: ', ApYNom);
+      WriteLn('Fecha de Nacimiento: ', FechaNac.Dia, '/', FechaNac.Mes, '/', FechaNac.Anio);
+      WriteLn('Teléfono: ', Tel);
+      WriteLn('EMail: ', EMail);
+      WriteLn('Scoring: ', Scoring);
+      Write('Habilitado: ');
+      if Habilitado then
+      begin
+        {Cambiar color}
+        WriteLn('Sí');
+      end
+      else
+      begin
+        WriteLn('No');
+      end;
+      WriteLn('Fecha de Habilitación: ', FechaHab.Dia, '/', FechaHab.Mes, '/', FechaHab.Anio);
+      WriteLn('Cantidad de Reincidencias: ', CantRein);
+      Write('Estado: ');
+      if Estado then
+      begin
+        {Cambiar color}
+        WriteLn('Alta');
+      end
+      else
+      begin
+        WriteLn('Baja');
+      end;
+    end;
+  end;
+
 end.
