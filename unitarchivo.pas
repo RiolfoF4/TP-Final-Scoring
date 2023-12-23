@@ -4,6 +4,8 @@ interface
 const
   RutaConductores = 'archivo\conductores.dat';
   RutaInfracciones = 'archivo\infracciones.dat';
+  RutaPosicionesApYNom = 'archivo\posicionesapynom.dat';
+  RutaPosicionesDNI = 'archivo\posicionesdni.dat';
 
 type
   TRegFecha = record
@@ -32,13 +34,29 @@ type
     Puntos: ShortInt;
   end;
 
+  TDatoPosApYNom = record
+    ApYNom: String[100];
+    Pos: Word;
+  end;
+
+  TDatoPosDNI = record
+    DNI: Cardinal;
+    Pos: Word;
+  end;
+
   TArchCon = File of TDatoConductores;
   TArchInf = File of TDatoInfracciones;
-
+  TArchPosApYNom = File of TDatoPosApYNom;
+  TArchPosDNI = File of TDatoPosDNI;
+  
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
 procedure CrearAbrirArchivoInf(var Arch: TArchInf);
 procedure CerrarArchivoInf(var Arch: TArchInf);
+procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);
+procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
+procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);
+procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
 
 implementation
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);  
@@ -67,6 +85,36 @@ procedure CrearAbrirArchivoInf(var Arch: TArchInf);
   end;
 
 procedure CerrarArchivoInf(var Arch: TArchInf);
+  begin
+    Close(Arch);
+  end;
+
+procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);  
+  begin
+    Assign(Arch, RutaPosicionesApYNom);
+    {$I-}
+    Reset(Arch);
+    {$I+}
+    if IOResult <> 0 then
+      Rewrite(Arch);
+  end;
+
+procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
+  begin
+    Close(Arch);
+  end;
+
+procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);  
+  begin
+    Assign(Arch, RutaPosicionesDNI);
+    {$I-}
+    Reset(Arch);
+    {$I+}
+    if IOResult <> 0 then
+      Rewrite(Arch);
+  end;
+
+procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
   begin
     Close(Arch);
   end;
