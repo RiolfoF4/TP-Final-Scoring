@@ -10,9 +10,10 @@ procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosA
                       var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf; 
                  var ArchPosApYNom: TArchPosApYNom; var ArchPosDNI: TArchPosDNI);
+
 // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI}
-procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; 
-                            var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
+procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
+                            var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
 
 implementation
 function ObtenerApYNom: String;
@@ -91,8 +92,49 @@ procedure ObtenerFechaNac(var Fecha: TRegFecha);
       end;
   end;
 
-procedure AltaConductor(var ArchCon: TArchCon) forward;
+procedure AltaConductor(var ArchCon: TArchCon; var ArchPosApYNom: TArchPosApYNom; var ArchPosDNI: TArchPosDNI; 
+                        var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI); forward;
 procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
+procedure GuardarPosApYNom(var ArchPosApYNom: TArchPosApYNom; ApYNom: String; Pos: Cardinal);
+  var
+    xAux: TDatoPosApYNom;
+  begin
+    xAux.ApYNom := ApYNom;
+    xAux.Pos := Pos;
+    Seek(ArchPosApYNom, FileSize(ArchPosApYNom));
+    Write(ArchPosApYNom, xAux);
+  end;
+procedure GuardarPosDNI(var ArchPosDNI: TArchPosDNI; DNI: Cardinal; Pos: Cardinal);
+  var
+    xAux: TDatoPosDNI;
+  begin
+    xAux.DNI := DNI;
+    xAux.Pos := Pos;
+    Seek(ArchPosDNI, FileSize(ArchPosDNI));
+    Write(ArchPosDNI, xAux);
+  end;
+procedure ActualizarArbolApYNom(var ArbolApYNom: TPuntApYNom; var ArchPosApYNom: TArchPosApYNom);
+  var
+    xArch: TDatoPosApYNom;
+    xArbol: TDatoApYNom;
+  begin
+    Seek(ArchPosApYNom, FileSize(ArchPosApYNom) - 1); // Busca el la última posición añadida}
+    Read(ArchPosApYNom, xArch);
+    xArbol.ApYNom := xArch.ApYNom;
+    xArbol.Pos := xArch.Pos;
+    AgregarApYNom(ArbolApYNom, xArbol);
+  end;
+procedure ActualizarArbolDNI(var ArbolDNI: TPuntDNI; var ArchPosDNI: TArchPosDNI);
+  var
+    xArch: TDatoPosDNI;
+    xArbol: TDatoDNI;
+  begin
+    Seek(ArchPosDNI, FileSize(ArchPosDNI) - 1); // Busca el la última posición añadida}
+    Read(ArchPosDNI, xArch);
+    xArbol.DNI := xArch.DNI;
+    xArbol.Pos := xArch.Pos;
+    AgregarDNI(ArbolDNI, xArbol);
+  end;
 procedure CargarArbolApYNom(var ArbolApYNom: TPuntApYNom; var ArchPosApYNom: TArchPosApYNom);
   var
     xAuxArch: TDatoPosApYNom;
@@ -147,19 +189,19 @@ procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf;
     CerrarArchivoPosDNI(ArchPosDNI);
   end;
 
-procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; 
-                            var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);  
+procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
+                            var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
   var
     ApYNom: String[50];
     DNI: Cardinal;
-    Pos: Integer;
+    Pos: LongInt;
     Rta: String[2];
     ConAux: TDatoConductores;
   begin
     if Caso = 1 then
     begin
       ApYNom := ObtenerApYNom;
-{      Pos := PosicionApYNom(ArbolApYNom, ApYNom);}
+      Pos := PreordenApYNom(ArbolApYNom, ApYNom);
     end
     else
     begin
@@ -167,7 +209,6 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
       Pos := PreordenDNI(ArbolDNI, DNI);
     end;
     WriteLn('POS: ', Pos);
-    {Pos := 0;}
     if Pos < 0 then
     begin
       WriteLn('No se encontró el conductor ingresado!');
@@ -175,7 +216,7 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
       ReadLn(Rta);
       if LowerCase(Rta) = 's' then
       begin
-        AltaConductor(ArchCon);
+        AltaConductor(ArchCon, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI);
         WriteLn('Alta exitosa!');
         Write('¿Desea agregar una infracción? (s/N): ');
         ReadLn(Rta);
@@ -199,9 +240,12 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
     end;
   end;
 
-procedure AltaConductor(var ArchCon: TArchCon);
+
+procedure AltaConductor(var ArchCon: TArchCon; var ArchPosApYNom: TArchPosApYNom; var ArchPosDNI: TArchPosDNI; 
+                        var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   var
     DatosCon: TDatoConductores;
+    PosArch: Word;
   begin
     DatosCon.DNI := ObtenerDNI;
     DatosCon.ApYNom := ObtenerApYNom;
@@ -213,10 +257,19 @@ procedure AltaConductor(var ArchCon: TArchCon);
     ObtenerFechaActual(DatosCon.FechaHab);
     DatosCon.CantRein := 0;
     DatosCon.Estado := True;
-    Seek(ArchCon, FileSize(ArchCon));
+
+    // Guardar datos en el archivo de conductores
+    PosArch := FileSIze(ArchCon);
+    Seek(ArchCon, PosArch);
     Write(ArchCon, DatosCon);
-    {TODO:  Confirmar datos 
-            Agregar al árbol}
+
+    // Guardar posición de los datos del conductor
+    GuardarPosApYNom(ArchPosApYNom, DatosCon.ApYNom, PosArch);
+    GuardarPosDNI(ArchPosDNI, DatosCon.DNI, PosArch);
+
+    // Agregar posición al árbol
+    ActualizarArbolApYNom(ArbolApYNom, ArchPosApYNom);
+    ActualizarArbolDNI(ArbolDNI, ArchPosDNI);
   end;
 
 procedure MostrarDatosCon(var DatosCon: TDatoConductores);
