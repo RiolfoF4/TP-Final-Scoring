@@ -1,47 +1,62 @@
-unit UnitArbol;
-  
+unit UnitPosiciones;
+ 
 interface
+const
+  RutaPosicionesApYNom = 'archivo\posicionesapynom.dat';
+  RutaPosicionesDNI = 'archivo\posicionesdni.dat';
+  
 type
-  TDatoApYNom = record
+  TDatoPosApYNom = record
     ApYNom: String[100];
     Pos: Word;
   end;
 
-  TDatoDNI = record
+  TDatoPosDNI = record
     DNI: Cardinal;
     Pos: Word;
   end;
   
   TPuntApYNom = ^TNodoApYNom;
   TNodoApYNom = record
-    InfoApYNom: TDatoApYNom;
+    InfoApYNom: TDatoPosApYNom;
     SAI, SAD: TPuntApYNom;
   end;
 
   TPuntDNI = ^TNodoDNI;
   TNodoDNI = record
-    InfoDNI: TDatoDNI;
+    InfoDNI: TDatoPosDNI;
     SAI, SAD: TPuntDNI;
   end;
 
-{ÁRBOL DE POSICIONES POR APELLIDO Y NOMBRE}
+  TArchPosApYNom = File of TDatoPosApYNom;
+  TArchPosDNI = File of TDatoPosDNI;
+
+{-ÁRBOL DE POSICIONES POR APELLIDO Y NOMBRE-}
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
-procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoApYNom);
-procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: TDatoApYNom);
+procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
+procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
 procedure InordenApYNom(var Raiz: TPuntApYNom);
 function PreordenApYNom(Raiz: TPuntApYNom; Buscado: String): LongInt;
 function ArbolVacioApYNom(Raiz: TPuntApYNom): Boolean;
 function ArbolLlenoApYNom(Raiz: TPuntApYNom): Boolean;
-{-----------------------------------------}
-{-------ÁRBOL DE POSICIONES POR DNI-------}
+{-------------------------------------------}
+{--------ÁRBOL DE POSICIONES POR DNI--------}
 procedure CrearArbolDNI(var Raiz: TPuntDNI);
-procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoDNI);
-procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoDNI);
+procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
+procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
 procedure InordenDNI(var Raiz: TPuntDNI);
 function PreordenDNI(Raiz: TPuntDNI; Buscado: Cardinal): LongInt;
 function ArbolVacioDNI(Raiz: TPuntDNI): Boolean;
 function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
-{-----------------------------------------}
+{-------------------------------------------}
+{ARCHIVO DE POSICIONES POR APELLIDO Y NOMBRE}
+procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);
+procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
+{-------------------------------------------}
+{-------ARCHIVO DE POSICIONES POR DNI-------}
+procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);
+procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
+{-------------------------------------------}
 
 implementation
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
@@ -49,7 +64,7 @@ procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
     Raiz := NIL;
   end;
 
-procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoApYNom);
+procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
   begin
     if Raiz = NIL then
     begin
@@ -65,7 +80,7 @@ procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoApYNom);
         AgregarApYNom(Raiz^.SAD, x);
   end;
 
-function SuprimirMin(var Raiz: TPuntApYNom): TDatoApYNom;
+function SuprimirMin(var Raiz: TPuntApYNom): TDatoPosApYNom;
   begin
     if Raiz^.SAI = NIL then
     begin
@@ -76,7 +91,7 @@ function SuprimirMin(var Raiz: TPuntApYNom): TDatoApYNom;
       SuprimirMin := SuprimirMin(Raiz^.SAI);
   end;
 
-procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: TDatoApYNom);
+procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
   begin
     if Raiz <> NIL then
       if x.ApYNom < Raiz^.InfoApYNom.ApYNom then
@@ -112,7 +127,7 @@ function PreordenApYNom(Raiz: TPuntApYNom; Buscado: String): LongInt;
     if Raiz = NIL then
       PreordenApYNom := -1
     else
-      if Raiz^.InfoApYNom.ApYNom = Buscado then
+      if LowerCase(Raiz^.InfoApYNom.ApYNom) = LowerCase(Buscado) then
         PreordenApYNom := Raiz^.InfoApYNom.Pos
       else
         if Raiz^.InfoApYNom.ApYNom > Buscado then
@@ -136,7 +151,7 @@ procedure CrearArbolDNI(var Raiz: TPuntDNI);
     Raiz := NIL;
   end;
 
-procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoDNI);
+procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
   begin
     if Raiz = NIL then
     begin
@@ -152,7 +167,7 @@ procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoDNI);
         AgregarDNI(Raiz^.SAD, x);
   end;
 
-function SuprimirMin(var Raiz: TPuntDNI): TDatoDNI;
+function SuprimirMin(var Raiz: TPuntDNI): TDatoPosDNI;
   begin
     if Raiz^.SAI = NIL then
     begin
@@ -163,7 +178,7 @@ function SuprimirMin(var Raiz: TPuntDNI): TDatoDNI;
       SuprimirMin := SuprimirMin(Raiz^.SAI);
   end;
 
-procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoDNI);
+procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
   begin
     if Raiz <> NIL then
       if x.DNI < Raiz^.InfoDNI.DNI then
@@ -216,5 +231,35 @@ function ArbolVacioDNI(Raiz: TPuntDNI): Boolean;
 function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
   begin
     ArbolLlenoDNI := (GetHeapStatus.TotalFree < SizeOf(TNodoDNI));
+  end;
+
+procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);  
+  begin
+    Assign(Arch, RutaPosicionesApYNom);
+    {$I-}
+    Reset(Arch);
+    {$I+}
+    if IOResult <> 0 then
+      Rewrite(Arch);
+  end;
+
+procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
+  begin
+    Close(Arch);
+  end;
+
+procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);  
+  begin
+    Assign(Arch, RutaPosicionesDNI);
+    {$I-}
+    Reset(Arch);
+    {$I+}
+    if IOResult <> 0 then
+      Rewrite(Arch);
+  end;
+
+procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
+  begin
+    Close(Arch);
   end;
 end.
