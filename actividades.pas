@@ -11,7 +11,7 @@ procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosA
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf; 
                  var ArchPosApYNom: TArchPosApYNom; var ArchPosDNI: TArchPosDNI);
 
-// Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI}
+// Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
                             var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
 
@@ -58,14 +58,16 @@ function ObtenerEMail: String;
   var
     Cad: String;
   begin
-    ObtenerEMail := '';
+{    ObtenerEMail := '';
     while ObtenerEMail = '' do
     begin
       Write('EMail: ');
       ReadLn(Cad);
       if EsEMail(Cad) then
         ObtenerEMail := Cad;
-    end;
+    end;}
+    Write('EMail: ');
+    ReadLn(ObtenerEMail);
   end;
 
 procedure ObtenerFechaActual(var Fecha: TRegFecha);
