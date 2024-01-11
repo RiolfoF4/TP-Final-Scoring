@@ -2,3 +2,5 @@
 *.exe
 *.o
 *.ppu
+archivo/conductores.dat
+archivo/posicionesapynom.dat
