@@ -3,6 +3,7 @@
 *.o
 *.ppu
 archivo/conductores.dat
+archivo/infracciones.dat
 archivo/posicionesapynom.dat
-temp/listado_infracciones.txt
-temp/temp.pas
+archivo/posicionesdni.dat
+temp/test.dat
