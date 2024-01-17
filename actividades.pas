@@ -4,7 +4,7 @@ unit Actividades;
 interface
 
 uses
-  sysutils, UnitArchivo, UnitValidacion, UnitPosiciones;
+  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones;
 
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
                       var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
@@ -55,8 +55,8 @@ function ObtenerTel: String;
   end;
 
 function ObtenerEMail: String;
-  var
-    Cad: String;
+{  var
+    Cad: String;}
   begin
 {    ObtenerEMail := '';
     while ObtenerEMail = '' do
@@ -146,6 +146,7 @@ procedure CargarArbolDNI(var ArbolDNI: TPuntDNI; var ArchPosDNI: TArchPosDNI);
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
                       var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   begin
+    TextColor(White);
     CrearAbrirArchivoCon(ArchCon);
     CrearAbrirArchivoInf(ArchInf);
     CrearAbrirArchivoPosApYNom(ArchPosApYNom);
@@ -187,7 +188,6 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; var Ar
       DatoIng := UIntToStr(DNI);
       Pos := PreordenDNI(ArbolDNI, DNI);
     end;
-    WriteLn('POS: ', Pos);
     if Pos < 0 then
     begin
       WriteLn('No se encontró el conductor ingresado!');
@@ -225,6 +225,7 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchPo
     DatosCon: TDatoConductores;
     PosArch: Word;
   begin
+    // Guardar automáticamente el dato que se ingresa al consultar conductor, ingresar el que falta.
     if Caso = 1 then
     begin
       DatosCon.ApYNom := DatoIngresado;
@@ -233,8 +234,10 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchPo
     else
     begin
       DatosCon.ApYNom := ObtenerApYNom;
-      DatosCon.DNI := StrToUInt(DatoIngresado);
+      Val(DatoIngresado, DatosCon.DNI);
     end;
+
+    // Obtener el resto de los datos del conductor.
     ObtenerFechaNac(DatosCon.FechaNac);
     DatosCon.Tel := ObtenerTel;
     DatosCon.EMail := ObtenerEMail;
@@ -274,25 +277,30 @@ procedure MostrarDatosCon(var DatosCon: TDatoConductores);
       Write('Habilitado: ');
       if Habilitado then
       begin
-        {Cambiar color}
+        TextColor(Green);
         WriteLn('Sí');
       end
       else
       begin
+        TextColor(Red);
         WriteLn('No');
       end;
+      TextColor(White);
       WriteLn('Fecha de Habilitación: ', FechaHab.Dia, '/', FechaHab.Mes, '/', FechaHab.Anio);
       WriteLn('Cantidad de Reincidencias: ', CantRein);
-      Write('Estado: ');
+      // ¿Debería mostrar si está dado de alta o de baja?
+{      Write('Estado: ');
       if not(BajaLogica) then
       begin
-        {Cambiar color}
+        TextColor(Green);
         WriteLn('Alta');
       end
       else
       begin
+        TextColor(Red);
         WriteLn('Baja');
       end;
+      TextColor(White);}
     end;
   end;
 
