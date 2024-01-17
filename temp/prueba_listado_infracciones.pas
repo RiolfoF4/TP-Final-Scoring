@@ -1,4 +1,4 @@
-program temp;
+program prueba_listado_infracciones;
 
 uses
   crt, sysutils, UnitValidacion;
@@ -9,7 +9,7 @@ const
   Opciones = '[A]nterior           [S]iguiente           [Q]Salir';
 
 type
-  TArchTest = File of String;
+  TArchBinInf = File of String;
   TPilaPos = record
     Tope: Byte;
     Tam: Byte;
@@ -18,7 +18,7 @@ type
 
 var
   ArchListaInf: Text;
-  ArchTest: TArchTest;
+  ArchBinInf: TArchBinInf;
   Infraccion: String;
   i: Byte;
   Anterior: Byte;
@@ -54,17 +54,17 @@ function PilaVacia(var P: TPilaPos): Boolean;
 {~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
 
 
-procedure InicializarArchTest(var ArchTest: TArchTest; var ArchListaInf: Text);
+procedure InicializarArchBinInf(var ArchBinInf: TArchBinInf; var ArchListaInf: Text);
   var
     x: String;
   begin
     while not (EOF(ArchListaInf)) do
     begin
       ReadLn(ArchListaInf, x);
-      Write(ArchTest, x);
+      Write(ArchBinInf, x);
     end;
     Reset(ArchListaInf);
-    Seek(ArchTest, 0);
+    Seek(ArchBinInf, 0);
   end;
 
 function UltimoEspacioEnLinea(Texto: String): Integer;
@@ -116,7 +116,7 @@ function PuntosInfraccion(Infraccion: String): Integer;
       PuntosInfraccion := -1;
   end;
 
-function InfraccionValida(NumeroInfrac: String; var ArchInf: TArchTest): Boolean;
+function InfraccionValida(NumeroInfrac: String; var ArchInf: TArchBinInf): Boolean;
   var
     Num: Integer;
   begin
@@ -135,11 +135,11 @@ begin
   // Establece el área donde mostrar las infracciones/opciones.
   Window(20, 5, 100, 30);
   // ~~~~~~ Inicialización ~~~~~~ 
-  Assign(ArchTest, RutaTest);
+  Assign(ArchBinInf, RutaTest);
   Assign(ArchListaInf, Ruta);
-  Rewrite(ArchTest);
+  Rewrite(ArchBinInf);
   Reset(ArchListaInf);
-  InicializarArchTest(ArchTest, ArchListaInf);
+  InicializarArchBinInf(ArchBinInf, ArchListaInf);
   CrearPila(PosAnterior);
 
   i := 0;
@@ -150,13 +150,13 @@ begin
   // Centra el texto de opciones.
   Margen := ((80-Length(Opciones)) div 2) + Length(Opciones);
 
-  while (Tecl <> 'q') and not (InfraccionValida(Tecl, ArchTest)) do
+  while (Tecl <> 'q') and not (InfraccionValida(Tecl, ArchBinInf)) do
   begin
     // Si no se llegó al final del archivo, muestra secuencialmente las infracciones.
-    if i < FileSize(ArchTest) then
+    if i < FileSize(ArchBinInf) then
     begin
-      Seek(ArchTest, i);
-      Read(ArchTest, Infraccion);
+      Seek(ArchBinInf, i);
+      Read(ArchBinInf, Infraccion);
       Infraccion := '[' + IntToStr(i+1) + '] ' + Infraccion;
       MostrarInfraccion(Infraccion);
       WriteLn;
@@ -165,7 +165,7 @@ begin
 
     // Recibe una entrada del usuario si el texto supera un límite inferior
     // o se llega al final del archivo.
-    if (WhereY > 21) or (EOF(ArchTest)) then
+    if (WhereY > 21) or (EOF(ArchBinInf)) then
     begin
       WriteLn(Opciones:Margen);
       Write(UTF8Decode('Opción: '));
@@ -179,7 +179,7 @@ begin
         's':
           // Si NO se llegó al final del archivo, apila el índice de la infracción que se muestra actualmente.
           // Si se llegó el final del archivo, muestra lo mismo.
-          if not (EOF(ArchTest)) then
+          if not (EOF(ArchBinInf)) then
             Apilar(PosAnterior, Anterior)
           else
             i := Anterior;
@@ -201,8 +201,8 @@ begin
   end;
   {------TEMP------}
   ClrScr;
-  Seek(ArchTest, StrToInt(Tecl) - 1);
-  Read(ArchTest, Infraccion);
+  Seek(ArchBinInf, StrToInt(Tecl) - 1);
+  Read(ArchBinInf, Infraccion);
   WriteLn(UTF8Decode('Infracción seleccionada: '));
   MostrarInfraccion(Infraccion);
   WriteLn('Puntos a descontar: ');
@@ -210,5 +210,5 @@ begin
   ReadLn;
   {----------------}
   Close(ArchListaInf);
-  Close(ArchTest);
+  Close(ArchBinInf);
 end.
