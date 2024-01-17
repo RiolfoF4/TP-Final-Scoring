@@ -40,6 +40,7 @@ function PreordenApYNom(Raiz: TPuntApYNom; Buscado: String): LongInt;
 function ArbolVacioApYNom(Raiz: TPuntApYNom): Boolean;
 function ArbolLlenoApYNom(Raiz: TPuntApYNom): Boolean;
 {-------------------------------------------}
+
 {--------ÁRBOL DE POSICIONES POR DNI--------}
 procedure CrearArbolDNI(var Raiz: TPuntDNI);
 procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
@@ -49,10 +50,12 @@ function PreordenDNI(Raiz: TPuntDNI; Buscado: Cardinal): LongInt;
 function ArbolVacioDNI(Raiz: TPuntDNI): Boolean;
 function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
 {-------------------------------------------}
+
 {ARCHIVO DE POSICIONES POR APELLIDO Y NOMBRE}
 procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);
 procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
 {-------------------------------------------}
+
 {-------ARCHIVO DE POSICIONES POR DNI-------}
 procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);
 procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
