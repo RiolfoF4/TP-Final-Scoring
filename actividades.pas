@@ -6,6 +6,10 @@ interface
 uses
   sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones;
 
+const
+  EsqX = 30;
+  EsqY = 8;
+
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
                       var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf; 
@@ -21,6 +25,7 @@ function ObtenerApYNom: String;
     ObtenerApYNom := '';
     while ObtenerApYNom = '' do
     begin
+      GotoXY(1, WhereY-1);
       Write('Apellido y Nombre: ');
       ReadLn(ObtenerApYNom);
     end;
@@ -31,9 +36,11 @@ function ObtenerDNI: Cardinal;
     Cad: String[10];
   begin
     ObtenerDNI := 0;
-    while (ObtenerDNI < 1000000) do
+    while (ObtenerDNI < 10000000) do
     begin
-      Write('DNI: ');
+      GotoXY(1, WhereY-1);
+      ClrEol;
+      Write('DNI (Sin puntos ni espacios): ');
       ReadLn(Cad);
       if EsNum(Cad) then
         ObtenerDNI := StrToDWord(Cad);
@@ -146,6 +153,7 @@ procedure CargarArbolDNI(var ArbolDNI: TPuntDNI; var ArchPosDNI: TArchPosDNI);
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArchPosApYNom: TArchPosApYNom;
                       var ArchPosDNI: TArchPosDNI; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   begin
+    Window(EsqX, EsqY, WindMaxX, WindMaxY);
     TextColor(White);
     CrearAbrirArchivoCon(ArchCon);
     CrearAbrirArchivoInf(ArchInf);
@@ -193,24 +201,29 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; var Ar
       WriteLn('No se encontró el conductor ingresado!');
       Write('¿Desea darlo de Alta? (s/N): ');
       ReadLn(Rta);
+      ClrScr;
       if LowerCase(Rta) = 's' then
       begin
         AltaConductor(DatoIng, ArchCon, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI, Caso);
         Write('¿Desea agregar una infracción? (s/N): ');
         ReadLn(Rta);
+        ClrScr;
 {        if LowerCase(Rta) = 's' then
           AltaInfraccion(ArchInf);}
       end;
     end
     else
     begin
+      ClrScr;
       Seek(ArchCon, Pos);
       Read(ArchCon, ConAux);
       MostrarDatosCon(ConAux);
+      WriteLn;
       WriteLn('[1] Modificar Datos.');
       WriteLn('[2] Dar de Baja.');
       WriteLn('[0] Volver.');
       ReadLn(Rta);
+      ClrScr;
 {      case Rta of
         '1': ModificarCon(ConAux);
         '2': BajaCon(ConAux);

@@ -1,8 +1,9 @@
 unit UnitMenu;
+{$CODEPAGE UTF8}
 
 interface
 uses
-  UnitArchivo, UnitPosiciones, Actividades;
+  crt, UnitArchivo, UnitPosiciones, Actividades;
 
 procedure MostrarMenu;
 
@@ -16,13 +17,22 @@ procedure MostrarMenu;
     ArbolApYNom: TPuntApYNom;
     ArbolDNI: TPuntDNI;
     Op: String[2];
+    {PosX, PosY: Word;}
   begin
     Inicializar(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI);
     repeat
+      {PosX := EsqX; PosY := EsqY;}
+      {GotoXY(PosX, PosY);}
       WriteLn('[1] Ingresar Apellido y Nombre.');
+      {PosY += 1; GotoXY(PosX, PosY);}
       WriteLn('[2] Ingresar DNI.');
+      {PosY += 1; GotoXY(PosX, PosY);}
       WriteLn('[0] Salir.');
+      {PosY += 2; GotoXY(PosX, PosY);}
+      WriteLn;
+      Write('Opción: ');
       ReadLn(Op);
+      ClrScr;
       Case Op of
         '1': DeterminarCasoCon(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI, 1);
         '2': DeterminarCasoCon(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI, 2);
