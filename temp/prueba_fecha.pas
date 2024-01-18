@@ -95,9 +95,9 @@ begin
   WriteLn(StrToDate(Fecha, '/'));
   ReadLn;
 
-  if StrToDate(Fecha, '/') < StrToDate('10/10/2004', '/') then
-    WriteLn('La fecha ingresada es anterior al 10/10/2004')
+  if StrToDate(Fecha, '/') < StrToDate('1/12/2004', '/') then
+    WriteLn('La fecha ingresada es anterior al 1/12/2004')
   else
-    WriteLn('La fecha ingresada es posterior al 10/10/2004');
+    WriteLn('La fecha ingresada es posterior al 1/12/2004');
   ReadLn;
 end.
