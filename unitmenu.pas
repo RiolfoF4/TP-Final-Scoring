@@ -21,6 +21,7 @@ procedure MostrarMenu;
   begin
     Inicializar(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI);
     repeat
+      ClrScr;
       {PosX := EsqX; PosY := EsqY;}
       {GotoXY(PosX, PosY);}
       WriteLn('[1] Ingresar Apellido y Nombre.');
