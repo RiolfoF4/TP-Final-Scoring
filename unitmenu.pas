@@ -12,14 +12,12 @@ procedure MostrarMenu;
   var
     ArchCon: TArchCon;
     ArchInf: TArchInf;
-    ArchPosApYNom: TArchPosApYNom;
-    ArchPosDNI: TArchPosDNI;
     ArbolApYNom: TPuntApYNom;
     ArbolDNI: TPuntDNI;
     Op: String[2];
     {PosX, PosY: Word;}
   begin
-    Inicializar(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI);
+    Inicializar(ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
     repeat
       ClrScr;
       {PosX := EsqX; PosY := EsqY;}
@@ -35,10 +33,10 @@ procedure MostrarMenu;
       ReadLn(Op);
       ClrScr;
       Case Op of
-        '1': DeterminarCasoCon(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI, 1);
-        '2': DeterminarCasoCon(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI, ArbolApYNom, ArbolDNI, 2);
+        '1': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 1);
+        '2': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 2);
       end;
     until Op = '0';
-    Cerrar(ArchCon, ArchInf, ArchPosApYNom, ArchPosDNI);
+    Cerrar(ArchCon, ArchInf);
   end;
 end.

@@ -1,10 +1,11 @@
 unit UnitPosiciones;
  
 interface
+{
 const
   RutaPosicionesApYNom = 'archivo\posicionesapynom.dat';
   RutaPosicionesDNI = 'archivo\posicionesdni.dat';
-  
+ } 
 type
   TDatoPosApYNom = record
     ApYNom: String[100];
@@ -27,10 +28,10 @@ type
     InfoDNI: TDatoPosDNI;
     SAI, SAD: TPuntDNI;
   end;
-
+{
   TArchPosApYNom = File of TDatoPosApYNom;
   TArchPosDNI = File of TDatoPosDNI;
-
+}
 {-ÁRBOL DE POSICIONES POR APELLIDO Y NOMBRE-}
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
 procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
@@ -52,13 +53,13 @@ function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
 {-------------------------------------------}
 
 {ARCHIVO DE POSICIONES POR APELLIDO Y NOMBRE}
-procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);
-procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
+{procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);
+procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);}
 {-------------------------------------------}
 
 {-------ARCHIVO DE POSICIONES POR DNI-------}
-procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);
-procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
+{procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);
+procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);}
 {-------------------------------------------}
 
 implementation
@@ -235,6 +236,7 @@ function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
   begin
     ArbolLlenoDNI := (GetHeapStatus.TotalFree < SizeOf(TNodoDNI));
   end;
+end.
 
 procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);  
   begin
@@ -265,4 +267,3 @@ procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
   begin
     Close(Arch);
   end;
-end.
