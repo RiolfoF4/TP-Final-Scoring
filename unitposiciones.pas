@@ -35,7 +35,7 @@ type
 {-ÁRBOL DE POSICIONES POR APELLIDO Y NOMBRE-}
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
 procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
-procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
+procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: String);
 procedure InordenApYNom(var Raiz: TPuntApYNom);
 function PreordenApYNom(Raiz: TPuntApYNom; Buscado: String): LongInt;
 function ArbolVacioApYNom(Raiz: TPuntApYNom): Boolean;
@@ -95,24 +95,25 @@ function SuprimirMin(var Raiz: TPuntApYNom): TDatoPosApYNom;
       SuprimirMin := SuprimirMin(Raiz^.SAI);
   end;
 
-procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
+procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: String);
   begin
     if Raiz <> NIL then
-      if x.ApYNom < Raiz^.InfoApYNom.ApYNom then
+      if x < Raiz^.InfoApYNom.ApYNom then
         SuprimirApYNom(Raiz^.SAI, x)
       else
-        SuprimirApYNom(Raiz^.SAD, x)
-    else
-      if (Raiz^.SAI = NIL) and (Raiz^.SAD = NIL) then
-        Raiz := NIL
-      else
-        if Raiz^.SAI = NIL then
-          Raiz := Raiz^.SAD
+        if x > Raiz^.InfoApYNom.ApYNom then
+          SuprimirApYNom(Raiz^.SAD, x)
         else
-          if Raiz^.SAD = NIL then
-            Raiz := Raiz^.SAI
+          if (Raiz^.SAI = NIL) and (Raiz^.SAD = NIL) then
+            Raiz := NIL
           else
-            Raiz^.InfoApYNom := SuprimirMin(Raiz^.SAD);
+            if Raiz^.SAI = NIL then
+              Raiz := Raiz^.SAD
+            else
+              if Raiz^.SAD = NIL then
+                Raiz := Raiz^.SAI
+              else
+                Raiz^.InfoApYNom := SuprimirMin(Raiz^.SAD);
   end;
 
 procedure InordenApYNom(var Raiz: TPuntApYNom);
@@ -188,18 +189,19 @@ procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
       if x.DNI < Raiz^.InfoDNI.DNI then
         SuprimirDNI(Raiz^.SAI, x)
       else
-        SuprimirDNI(Raiz^.SAD, x)
-    else
-      if (Raiz^.SAI = NIL) and (Raiz^.SAD = NIL) then
-        Raiz := NIL
-      else
-        if Raiz^.SAI = NIL then
-          Raiz := Raiz^.SAD
+        if x.DNI < Raiz^.InfoDNI.DNI then
+          SuprimirDNI(Raiz^.SAD, x)
         else
-          if Raiz^.SAD = NIL then
-            Raiz := Raiz^.SAI
+          if (Raiz^.SAI = NIL) and (Raiz^.SAD = NIL) then
+            Raiz := NIL
           else
-            Raiz^.InfoDNI := SuprimirMin(Raiz^.SAD);
+            if Raiz^.SAI = NIL then
+              Raiz := Raiz^.SAD
+            else
+              if Raiz^.SAD = NIL then
+                Raiz := Raiz^.SAI
+              else
+                Raiz^.InfoDNI := SuprimirMin(Raiz^.SAD);
   end;
 
 procedure InordenDNI(var Raiz: TPuntDNI);
