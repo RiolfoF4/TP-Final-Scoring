@@ -108,9 +108,9 @@ procedure ObtenerFechaNac(var Fecha: TRegFecha);
       end;
   end;
 
-function ObtenerOpcionAlta(DatosCon: TDatoConductores): Char;
+function ObtenerOpcionAlta(DatosCon: TDatoConductores): String;
   var
-    Op: Char;
+    Op: String;
   begin
     ObtenerOpcionAlta := #00;
     WriteLn('¿Son correctos los datos ingresados?');
@@ -124,13 +124,27 @@ function ObtenerOpcionAlta(DatosCon: TDatoConductores): Char;
     Write('Opción: ');
     ClrEol;
     ReadLn(Op);
-    if LowerCase(Op) in ['1', '2', '0'] then
+    if (Op = '1') or (Op = '2') or (Op = '0') then
       ObtenerOpcionAlta := LowerCase(Op)
     else
       GotoXY(1, WhereY-1);
     end;    
   end;
 
+function ObtenerRtaSN: String;
+  var
+    Rta: String[2];
+    PosX, PosY: Word;
+  begin
+    PosX := WhereX;
+    PosY := WhereY;
+    repeat
+      GotoXY(PosX, PosY);
+      ClrEol;
+      ReadLn(Rta);
+    until (LowerCase(Rta) = 's') or (LowerCase(Rta) = 'n');
+    ObtenerRtaSN := LowerCase(Rta);
+  end;
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
                         var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte); forward;
 procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
@@ -155,11 +169,8 @@ procedure GuardarPosDNI(var ArbolDNI: TPuntDNI; DNI: Cardinal; Pos: Cardinal);
 procedure ActualizarPosApYNom(var ArbolApYNom: TPuntApYNom; NuevoApYNom: String; AnteriorApYNom: String);
   var
     Pos: Word;
-    xAux: TDatoPosApYNom;
   begin
     Pos := PreordenApYNom(ArbolApYNom, AnteriorApYNom);
-    xAux.ApYNom := AnteriorApYNom;
-    xAux.Pos := Pos;
     SuprimirApYNom(ArbolApYNom, AnteriorApYNom);
     GuardarPosApYNom(ArbolApYNom, NuevoApYNom, Pos);
   end;
@@ -209,7 +220,6 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
     ApYNom: String[50];
     DNI: Cardinal;
     Pos: LongInt;
-    Rta: String[2];
     DatoIng: String[50];
   begin
     if Caso = 1 then
@@ -225,14 +235,7 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
       Pos := PreordenDNI(ArbolDNI, DNI);
     end;
     if Pos < 0 then
-    begin
-      WriteLn('No se encontró el conductor ingresado!');
-      Write('¿Desea darlo de Alta? (s/N): ');
-      ReadLn(Rta);
-      ClrScr;
-      if LowerCase(Rta) = 's' then
-        AltaConductor(DatoIng, ArchCon, ArbolApYNom, ArbolDNI, Caso);
-    end
+        AltaConductor(DatoIng, ArchCon, ArbolApYNom, ArbolDNI, Caso)
     else
       ConsultaConductor(Pos, ArchCon, ArbolApYNom, ArbolDNI);
   end;
@@ -243,65 +246,71 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
   var
     DatosCon: TDatoConductores;
     PosArch: Word;
-    Op: Char;
+    Op, Rta: String[2];
   begin
-    // Guardar automáticamente el dato que se ingresa al consultar conductor
-    if Caso = 1 then
-    begin
-      DatosCon.ApYNom := DatoIngresado;
-      DatosCon.DNI := ObtenerDNI;
-    end
-    else
-    begin
-      DatosCon.ApYNom := ObtenerApYNom;
-      Val(DatoIngresado, DatosCon.DNI);
-    end;
-
-    // Obtener el resto de los datos del conductor
-    ObtenerFechaNac(DatosCon.FechaNac);
-    DatosCon.Tel := ObtenerTel;
-    DatosCon.EMail := ObtenerEMail;
-    DatosCon.Scoring := 20;
-    DatosCon.Habilitado := True;
-    ObtenerFechaActual(DatosCon.FechaHab);
-    DatosCon.CantRein := 0;
-    DatosCon.BajaLogica := False;
-
-    repeat
+    WriteLn('No se encontró el conductor ingresado!');
+    Write('¿Desea darlo de Alta? (s/N): ');
+    ReadLn(Rta);
     ClrScr;
-    MostrarDatosCon(DatosCon);
-    WriteLn;
-    Op := ObtenerOpcionAlta(DatosCon);
-    Case Op of
-      '1':
+    if LowerCase(Rta) = 's' then
+    begin
+      // Guardar automáticamente el dato que se ingresa al consultar conductor
+      if Caso = 1 then
       begin
-          // Guardar datos en el archivo de conductores
-          PosArch := FileSize(ArchCon);
-          Seek(ArchCon, PosArch);
-          Write(ArchCon, DatosCon);
+        DatosCon.ApYNom := DatoIngresado;
+        DatosCon.DNI := ObtenerDNI;
+      end
+      else
+      begin
+        DatosCon.ApYNom := ObtenerApYNom;
+        Val(DatoIngresado, DatosCon.DNI);
+      end;
 
-          // Guardar posición de los datos del conductor
-          GuardarPosApYNom(ArbolApYNom, DatosCon.ApYNom, PosArch);
-          GuardarPosDNI(ArbolDNI, DatosCon.DNI, PosArch);
+      // Obtener el resto de los datos del conductor
+      ObtenerFechaNac(DatosCon.FechaNac);
+      DatosCon.Tel := ObtenerTel;
+      DatosCon.EMail := ObtenerEMail;
+      DatosCon.Scoring := 20;
+      DatosCon.Habilitado := True;
+      ObtenerFechaActual(DatosCon.FechaHab);
+      DatosCon.CantRein := 0;
+      DatosCon.BajaLogica := False;
 
-          WriteLn;
-          TextColor(Green);
-          WriteLn('Alta exitosa!');
+      repeat
+      ClrScr;
+      MostrarDatosCon(DatosCon);
+      WriteLn;
+      Op := ObtenerOpcionAlta(DatosCon);
+      Case Op of
+        '1':
+        begin
+            // Guardar datos en el archivo de conductores
+            PosArch := FileSize(ArchCon);
+            Seek(ArchCon, PosArch);
+            Write(ArchCon, DatosCon);
+
+            // Guardar posición de los datos del conductor
+            GuardarPosApYNom(ArbolApYNom, DatosCon.ApYNom, PosArch);
+            GuardarPosDNI(ArbolDNI, DatosCon.DNI, PosArch);
+
+            WriteLn;
+            TextColor(Green);
+            WriteLn('Alta exitosa!');
+            TextColor(White);
+            Write('¿Desea agregar una infracción? (s/N): ');
+            ReadLn;
+        end;
+        '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
+        '0': 
+        begin
+          TextColor(Red);
+          WriteLn('Alta cancelada!');
           TextColor(White);
-          Write('¿Desea agregar una infracción? (s/N): ');
-          ReadLn;
+        end;
       end;
-      '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
-      '0': 
-      begin
-        TextColor(Red);
-        WriteLn('Alta cancelada!');
-        TextColor(White);
-      end;
+      until (Op = '1') or (Op = '0');
+      Delay(1000);
     end;
-    until Op in ['1', '0'];
-
-    Delay(1000);
   end;
 
 procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
@@ -315,8 +324,8 @@ procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: T
     Seek(ArchCon, Pos);
     Read(ArchCon, DatosCon);
 
-
     repeat
+    ClrScr;
     MostrarDatosCon(DatosCon);
     WriteLn;
     WriteLn('[1] Modificar Datos.');
@@ -325,13 +334,13 @@ procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: T
     WriteLn;
     Write('Opción: ');
     ReadLn(Op);
-    ClrScr;
+    if Op <> '0' then
+      ClrScr;
     case Op of
       '1': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
     end;
     until Op = '0';
 
-    // Sobrescribe los datos del conductor
     Seek(ArchCon, Pos);
     Write(ArchCon, DatosCon);
   end;
@@ -409,12 +418,15 @@ procedure MostrarOpDatosCon(var DatosCon: TDatoConductores);
 
 procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   var
-    Op: String[2];
-    AnteriorApYNom: String[100];
+    DatosConAux: TDatoConductores;
+    EsAlta: Boolean;
+    Op, Rta: String[2];
   begin
+    DatosConAux := DatosCon;
+    EsAlta := (PreordenDNI(ArbolDNI, DatosCon.DNI) = -1);
     repeat
       ClrScr;
-      MostrarOpDatosCon(DatosCon);
+      MostrarOpDatosCon(DatosConAux);
       WriteLn;
       Write('Opción: ');
       ReadLn(Op);
@@ -423,29 +435,47 @@ procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntA
         '1': 
         begin
           // Muestra un error si el DNI del conductor ya está guardado en el archivo
-          if PreordenDNI(ArbolDNI, DatosCon.DNI) = -1 then
-            DatosCon.DNI := ObtenerDNI
+          if EsAlta then
+            DatosConAux.DNI := ObtenerDNI
           else
           begin
             TextColor(Red);
-            WriteLn('ERROR: No es posible modificar un DNI ya cargado');
-            ReadLn;
+            WriteLn('ERROR: No es posible modificar un DNI ya cargado.');
+            Delay(1500);
             TextColor(White);
           end;
         end;
-        '2': 
-        begin
-          // Guarda el nombre anterior conductor si ya estaba guardado en el archivo
-          if PreordenApYNom(ArbolApYNom, DatosCon.ApYNom) <> -1 then
-            AnteriorApYNom := DatosCon.ApYNom;
-          DatosCon.ApYNom := ObtenerApYNom;
-          ActualizarPosApYNom(ArbolApYNom, DatosCon.ApYNom, AnteriorApYNom);
-        end;
-        '3': ObtenerFechaNac(DatosCon.FechaNac);
-        '4': DatosCon.Tel := ObtenerTel;
-        '5': DatosCon.EMail := ObtenerEMail;
+        '2': DatosConAux.ApYNom := ObtenerApYNom;
+        '3': ObtenerFechaNac(DatosConAux.FechaNac);
+        '4': DatosConAux.Tel := ObtenerTel;
+        '5': DatosConAux.EMail := ObtenerEMail;
       end;
     until Op = '0';
-  end;
+    
+    if EsAlta then
+      DatosCon := DatosConAux
+    else
+    begin
+      WriteLn;
+      Write('¿Desea guardar los cambios? (S/N): ');
+      Rta := ObtenerRtaSN;
+      WriteLn;
+      if LowerCase(Rta) = 'n' then
+      begin
+        TextColor(LightRed);
+        Write('Se han descartado los cambios.')
+      end
+      else
+      begin
+        ActualizarPosApYNom(ArbolApYNom, DatosConAux.ApYNom, DatosCon.ApYNom);
 
+        // Sobrescribe los datos del conductor
+        DatosCon := DatosConAux;
+        TextColor(Green);
+        Write('Cambios guardados correctamente.')
+      end;
+      TextColor(White);
+      Delay(1500);
+    end;
+  end;
 end.
