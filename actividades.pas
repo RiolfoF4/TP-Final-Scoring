@@ -69,17 +69,7 @@ function ObtenerTel: String;
   end;
 
 function ObtenerEMail: String;
-{  var
-    Cad: String;}
   begin
-{    ObtenerEMail := '';
-    while ObtenerEMail = '' do
-    begin
-      Write('EMail: ');
-      ReadLn(Cad);
-      if EsEMail(Cad) then
-        ObtenerEMail := Cad;
-    end;}
     Write('EMail: ');
     ReadLn(ObtenerEMail);
   end;
@@ -131,6 +121,11 @@ function ObtenerRtaSN: String;
       ReadLn(Rta);
     until (LowerCase(Rta) = 's') or (LowerCase(Rta) = 'n');
     ObtenerRtaSN := LowerCase(Rta);
+  end;
+
+procedure MostrarFecha(Fecha: TRegFecha);
+  begin
+    Write(Format('%0.2d', [Fecha.Dia]), '/', Format('%0.2d', [Fecha.Mes]), '/', Fecha.Anio);
   end;
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
                         var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte); forward;
@@ -339,8 +334,9 @@ procedure MostrarDatosCon(var DatosCon: TDatoConductores);
       begin
         WriteLn('DNI: ', DNI);
         WriteLn('Apellido y Nombre: ', ApYNom);
-        WriteLn('Fecha de Nacimiento: ', Format('%0.2d', [FechaNac.Dia]), '/', 
-                Format('%0.2d', [FechaNac.Mes]), '/', FechaNac.Anio);
+        Write('Fecha de Nacimiento: '); 
+        MostrarFecha(FechaNac);
+        WriteLn;
         WriteLn('Teléfono: ', Tel);
         WriteLn('EMail: ', EMail);
         WriteLn('Scoring: ', Scoring);
@@ -356,8 +352,9 @@ procedure MostrarDatosCon(var DatosCon: TDatoConductores);
           WriteLn('No');
         end;
         TextColor(White);
-        WriteLn('Fecha de Habilitación: ', Format('%0.2d', [FechaHab.Dia]), '/',
-                 Format('%0.2d', [FechaHab.Mes]), '/', FechaHab.Anio);
+        Write('Fecha de Habilitación: ');
+        MostrarFecha(FechaHab);
+        WriteLn;
         WriteLn('Cantidad de Reincidencias: ', CantRein);
         // ¿Debería mostrar si está dado de alta o de baja?
   {      Write('Estado: ');
@@ -403,6 +400,29 @@ procedure MostrarOpDatosCon(var DatosCon: TDatoConductores);
     WriteLn('[0] Volver');
   end;
 
+procedure MostrarModifCon(DatosOriginales, DatosModificados: TDatoConductores);
+  const
+    f = ' ==> ';
+  begin
+    WriteLn('DNI: ', DatosOriginales.DNI);
+    if DatosOriginales.ApYNom <> DatosModificados.ApYNom then
+      WriteLn('Apellido y Nombre: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);
+    if (DatosOriginales.FechaNac.Dia <> DatosModificados.FechaNac.Dia) or 
+       (DatosOriginales.FechaNac.Mes <> DatosModificados.FechaNac.Mes) or
+       (DatosOriginales.FechaNac.Anio <> DatosModificados.FechaNac.Anio) then
+    begin
+      Write('Fecha de Nacimiento: ');
+      MostrarFecha(DatosOriginales.FechaNac);
+      Write(f);
+      MostrarFecha(DatosModificados.FechaNac);
+      WriteLn;
+    end;
+    if DatosOriginales.Tel <> DatosModificados.Tel then
+      WriteLn('Teléfono: ', DatosOriginales.Tel, f, DatosModificados.Tel);
+    if DatosOriginales.EMail <> DatosModificados.EMail then
+      WriteLn('EMail: ', DatosOriginales.EMail, f, DatosModificados.EMail);
+  end;
+
 procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   var
     DatosConAux: TDatoConductores;
@@ -443,6 +463,7 @@ procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntA
       DatosCon := DatosConAux
     else
     begin
+      MostrarModifCon(DatosCon, DatosConAux);
       WriteLn;
       Write('¿Desea guardar los cambios? (S/N): ');
       Rta := ObtenerRtaSN;
