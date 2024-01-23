@@ -30,10 +30,15 @@ function ObtenerFechaStr: String;
       while Car <> #13 do
       begin
         Car := ReadKey;
-        Write(Car);
+
         // Si se pulsa retroceso, se elimina el último caracter
         if Car = #08 then
-          Delete(Fecha, Length(Fecha), 1)
+        begin
+          Delete(Fecha, Length(Fecha), 1);
+          // Elimina la '/', si es necesario
+          if (Length(Fecha) = 3) or (Length(Fecha) = 6) then
+            Delete(Fecha, Length(Fecha), 1);
+        end
         else
           // Si el caracter ingresado es un número decimal
           if (#48 <= Car) and (Car <= #57) then
@@ -41,21 +46,22 @@ function ObtenerFechaStr: String;
             begin
               // Agrega '/' en las posiciones 3 y 6 de la string, DD[/]MM[/]AAAA
               //                                                     3    6
-              if ((Length(Fecha) = 2) or (Length(Fecha) = 5)) and (Fecha[Length(Fecha)] <> '/') then
+              if (Length(Fecha) = 2) or (Length(Fecha) = 5) then
                 Fecha := Fecha + '/';
               Fecha := Fecha + Car;
               if (Length(Fecha) = 2) or (Length(Fecha) = 5) then
                 Fecha := Fecha + '/';
             end;
+  
         // Muestra lo que se está escribiendo
-        GotoXY(PosX,WhereY);
+        GotoXY(PosX, WhereY);
         ClrEol;
         Write(Fecha);
 
         // Muestra el formato de la fecha a ingresar
         if Length(Fecha) = 0 then
         begin
-          TextColor(LightGray);
+          TextColor(DarkGray);
           Write('DD/MM/AAAA');
           TextColor(White);
           GotoXY(PosX,WhereY);
