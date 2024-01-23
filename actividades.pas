@@ -4,7 +4,7 @@ unit Actividades;
 interface
 
 uses
-  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones;
+  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, UnitManejoFecha;
 
 const
   EsqX = 30;
@@ -90,22 +90,9 @@ procedure ObtenerFechaActual(var Fecha: TRegFecha);
   end;
 
 procedure ObtenerFechaNac(var Fecha: TRegFecha);
-  var
-    FechaValida: Boolean;
   begin
-    FechaValida := False;
-    while not (FechaValida) do
-      with Fecha do
-      begin
-        WriteLn('Fecha de Nacimiento');
-        Write(' Año: ');
-        ReadLn(Anio);
-        Write(' Mes: ');
-        ReadLn(Mes);
-        Write(' Día: ');
-        ReadLn(Dia);
-        FechaValida := EsFecha(Anio, Mes, Dia);
-      end;
+    Write('Fecha de Nacimiento: ');
+    CadARegFecha(ObtenerFechaStr, Fecha.Dia, Fecha.Mes, Fecha.Anio);
   end;
 
 function ObtenerOpcionAlta(DatosCon: TDatoConductores): String;
