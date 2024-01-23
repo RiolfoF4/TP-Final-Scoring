@@ -5,12 +5,12 @@ uses
     StrUtils;
 
 type
-  TFecha = array[1..3] of Integer;
+  TFecha = array[1..3] of Word;
 
 function EsNum(Cad: String): Boolean;
 function EsCadenaFecha(Cad: String): Boolean;
-function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
-function EsAnioBisiesto(Anyo: Integer): Boolean;
+function EsFecha(Anyo, Mes, Dia: Word): Boolean;
+function EsAnioBisiesto(Anyo: Word): Boolean;
 function EsEMail(Cad: String): Boolean;
 
 implementation
@@ -52,7 +52,8 @@ function EsCadenaFecha(Cad: String): Boolean;
       establece un valor no válido}
         if EsNum(Fecha) then Val(Fecha, VFecha[i]) else VFecha[i] := -1;
       end;
-    if (VFecha[3] > 0) and (VFecha[2] in Meses) and (VFecha[1] > 0) then
+    EsCadenaFecha := EsFecha(VFecha[3], VFecha[2], VFecha[1]);
+{    if (VFecha[3] > 0) and (VFecha[2] in Meses) and (VFecha[1] > 0) then
       case VFecha[2] of
         {Meses con 31 días}
         1,3,5,7,8,10,12:
@@ -66,10 +67,10 @@ function EsCadenaFecha(Cad: String): Boolean;
             if (VFecha[1] <= 29) then EsCadenaFecha := True
           else
             if (VFecha[1] <= 28) then EsCadenaFecha := True;
-      end;
+      end;}
   end;
 
-function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
+function EsFecha(Anyo, Mes, Dia: Word): Boolean;
   const
     Meses = [1..12];
   begin
@@ -92,7 +93,7 @@ function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
       EsFecha := False;
   end;
 
-function EsAnioBisiesto(Anyo: Integer): Boolean;
+function EsAnioBisiesto(Anyo: Word): Boolean;
   begin
     if ((Anyo mod 4) = 0) and (not((Anyo mod 100) = 0) or ((Anyo mod 400) = 0)) then
       EsAnioBisiesto := True

@@ -1,7 +1,7 @@
 program prueba_fecha;
 
 uses
-  crt, sysutils, UnitValidacion;
+  crt, sysutils, video, UnitValidacion;
 
 type
   TRegFecha = record
@@ -23,10 +23,11 @@ procedure CadARegFecha(Fecha: String; var RegFecha: TRegFecha);
   end;
 
 begin
-  Fecha := '';
+  TextColor(LightGray);
+  Write('DD/MM/AAAA');
   TextColor(White);
-  Write('Formato de Fecha: DD/MM/AAAA');
-  GotoXY(19,3);
+  GotoXY(1,WhereY);
+  Fecha := '';
   while not (EsCadenaFecha(Fecha)) do
   begin
     // Inicializa Car en NULL
@@ -37,7 +38,7 @@ begin
     begin
       Car := ReadKey;
       Write(Car);
-      // Si se pulsa el retroceso, se elimina el último caracter
+      // Si se pulsa retroceso, se elimina el último caracter
       if Car = #08 then
         Delete(Fecha, Length(Fecha), 1)
       else
@@ -54,10 +55,16 @@ begin
               Fecha := Fecha + '/';
           end;
       // Muestra lo que se está escribiendo
-      GotoXY(19,3);    // CAMBIAR
+      GotoXY(1,WhereY);    // CAMBIAR
       ClrEol;
       Write(Fecha);
-
+      if Length(Fecha) = 0 then
+      begin
+        TextColor(LightGray);
+        Write('DD/MM/AAAA');
+        TextColor(White);
+        GotoXY(1,WhereY);
+      end;
       PosX := WhereX; 
       PosY := WhereY;
     end;
