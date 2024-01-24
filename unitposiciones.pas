@@ -52,16 +52,6 @@ function ArbolVacioDNI(Raiz: TPuntDNI): Boolean;
 function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
 {-------------------------------------------}
 
-{ARCHIVO DE POSICIONES POR APELLIDO Y NOMBRE}
-{procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);
-procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);}
-{-------------------------------------------}
-
-{-------ARCHIVO DE POSICIONES POR DNI-------}
-{procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);
-procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);}
-{-------------------------------------------}
-
 implementation
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
   begin
@@ -239,33 +229,3 @@ function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
     ArbolLlenoDNI := (GetHeapStatus.TotalFree < SizeOf(TNodoDNI));
   end;
 end.
-
-procedure CrearAbrirArchivoPosApYNom(var Arch: TArchPosApYNom);  
-  begin
-    Assign(Arch, RutaPosicionesApYNom);
-    {$I-}
-    Reset(Arch);
-    {$I+}
-    if IOResult <> 0 then
-      Rewrite(Arch);
-  end;
-
-procedure CerrarArchivoPosApYNom(var Arch: TArchPosApYNom);
-  begin
-    Close(Arch);
-  end;
-
-procedure CrearAbrirArchivoPosDNI(var Arch: TArchPosDNI);  
-  begin
-    Assign(Arch, RutaPosicionesDNI);
-    {$I-}
-    Reset(Arch);
-    {$I+}
-    if IOResult <> 0 then
-      Rewrite(Arch);
-  end;
-
-procedure CerrarArchivoPosDNI(var Arch: TArchPosDNI);
-  begin
-    Close(Arch);
-  end;
