@@ -43,6 +43,7 @@ function EsCadenaFecha(Cad: String): Boolean;
     VFecha: TFecha;    //(día,mes,año)
   begin
     if WordCount(Cad, ['/']) = 3 then
+    begin
       for i := 1 to 3 do
       begin
       {Extrae una subCadena, separada por '/', y la almacena en 'Fecha'}
@@ -51,13 +52,17 @@ function EsCadenaFecha(Cad: String): Boolean;
       establece un valor no válido}
         if EsNum(Fecha) then Val(Fecha, VFecha[i]) else VFecha[i] := -1;
       end;
-    EsCadenaFecha := EsFecha(VFecha[3], VFecha[2], VFecha[1]);
+      EsCadenaFecha := EsFecha(VFecha[3], VFecha[2], VFecha[1]);
+    end
+    else
+      EsCadenaFecha := False;
   end;
 
 function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
   const
     Meses = [1..12];
   begin
+    EsFecha := False;
     if (Anyo > 0) and (Mes in Meses) and (Dia > 0) then
       case Mes of
         {Meses con 31 días}
@@ -76,9 +81,7 @@ function EsFecha(Anyo, Mes, Dia: Integer): Boolean;
           begin
             if (Dia <= 28) then EsFecha := True;
           end;
-      end
-    else
-      EsFecha := False;
+      end;
   end;
 
 function EsAnioBisiesto(Anyo: Integer): Boolean;
