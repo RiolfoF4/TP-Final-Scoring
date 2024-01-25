@@ -4,11 +4,11 @@ unit Actividades;
 interface
 
 uses
-  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, UnitManejoFecha;
+  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, UnitManejoFecha, UnitInfracciones;
 
 const
-  EsqX = 30;
-  EsqY = 8;
+  EsqX = 15;
+  EsqY = 5;
 
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
@@ -127,9 +127,10 @@ procedure MostrarFecha(Fecha: TRegFecha);
   begin
     Write(Format('%0.2d', [Fecha.Dia]), '/', Format('%0.2d', [Fecha.Mes]), '/', Fecha.Anio);
   end;
-procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
+procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
                         var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte); forward;
-procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
+procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArchInf: TArchInf;
+                            var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
 procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
 procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
 procedure GuardarPosApYNom(var ArbolApYNom: TPuntApYNom; ApYNom: String; Pos: Cardinal);
@@ -181,7 +182,7 @@ procedure CargarArbolPos(var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; v
 
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   begin
-    Window(EsqX, EsqY, WindMaxX, WindMaxY);
+    Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY);
     TextColor(White);
     CrearAbrirArchivoCon(ArchCon);
     CrearAbrirArchivoInf(ArchInf);
@@ -217,13 +218,13 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
       Pos := PreordenDNI(ArbolDNI, DNI);
     end;
     if Pos < 0 then
-        AltaConductor(DatoIng, ArchCon, ArbolApYNom, ArbolDNI, Caso)
+        AltaConductor(DatoIng, ArchCon, ArchInf, ArbolApYNom, ArbolDNI, Caso)
     else
-      ConsultaConductor(Pos, ArchCon, ArbolApYNom, ArbolDNI);
+      ConsultaConductor(Pos, ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
   end;
 
 
-procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
+procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
                         var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);
   var
     DatosCon: TDatoConductores;
@@ -279,8 +280,9 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
             TextColor(Green);
             WriteLn('Alta exitosa!');
             TextColor(White);
-            Write('¿Desea agregar una infracción? (s/N): ');
-            ReadLn;
+            Delay(1000);
+            ClrScr;
+            ConsultaConductor(PosArch, ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
         end;
         '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
         '0': 
@@ -288,14 +290,15 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon;
           TextColor(Red);
           WriteLn('Alta cancelada!');
           TextColor(White);
+          Delay(1000);
         end;
       end;
       until (Op = '1') or (Op = '0');
-      Delay(1000);
     end;
   end;
 
-procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArchInf: TArchInf;
+                            var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
   var
     DatosCon: TDatoConductores;
     Op: String[2];
@@ -310,8 +313,10 @@ procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: T
     ClrScr;
     MostrarDatosCon(DatosCon);
     WriteLn;
-    WriteLn('[1] Modificar Datos.');
-    WriteLn('[2] Dar de Baja.');
+    WriteLn('[1] Alta de Infracción.');
+    WriteLn('[2] Consulta de Infracciones.');
+    WriteLn('[3] Modificar Datos.');
+    WriteLn('[4] Dar de Baja.');
     WriteLn('[0] Volver.');
     WriteLn;
     Write('Opción: ');
@@ -319,7 +324,8 @@ procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArbolApYNom: T
     if Op <> '0' then
       ClrScr;
     case Op of
-      '1': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
+      '1': AltaInfraccion(DatosCon, ArchInf);
+      '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
     end;
     until Op = '0';
 
@@ -356,19 +362,6 @@ procedure MostrarDatosCon(var DatosCon: TDatoConductores);
         MostrarFecha(FechaHab);
         WriteLn;
         WriteLn('Cantidad de Reincidencias: ', CantRein);
-        // ¿Debería mostrar si está dado de alta o de baja?
-  {      Write('Estado: ');
-        if not(BajaLogica) then
-        begin
-          TextColor(Green);
-          WriteLn('Alta');
-        end
-        else
-        begin
-          TextColor(Red);
-          WriteLn('Baja');
-        end;
-        TextColor(White);}
       end;
     end;
 
