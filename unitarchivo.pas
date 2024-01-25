@@ -4,6 +4,8 @@ interface
 const
   RutaConductores = 'archivo\conductores.dat';
   RutaInfracciones = 'archivo\infracciones.dat';
+  RutaListadoInfracciones = 'archivo\listado_infracciones.txt';
+  RutaListadoInfraccionesBin = 'archivo\listado_infracciones.dat';
 
 type
   TRegFecha = record
@@ -28,17 +30,23 @@ type
   TDatoInfracciones = record
     DNI: Cardinal;
     Fecha: TRegFecha;
-    Tipo: Byte;
+    Tipo: String;
     Puntos: ShortInt;
   end;
 
   TArchCon = File of TDatoConductores;
   TArchInf = File of TDatoInfracciones;
+  TArchListInf = Text;
+  TArchBinListInf = File of String;
   
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
 procedure CrearAbrirArchivoInf(var Arch: TArchInf);
 procedure CerrarArchivoInf(var Arch: TArchInf);
+procedure CrearAbrirArchivoListInf(var Arch: TArchListInf);
+procedure CerrarArchivoListInf(var Arch: TArchListInf);
+procedure CrearAbrirArchivoBinListInf(var Arch: TArchBinListInf);
+procedure CerrarArchivoBinListInf(var Arch: TArchBinListInf);
 
 implementation
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);  
@@ -67,6 +75,28 @@ procedure CrearAbrirArchivoInf(var Arch: TArchInf);
   end;
 
 procedure CerrarArchivoInf(var Arch: TArchInf);
+  begin
+    Close(Arch);
+  end;
+
+procedure CrearAbrirArchivoListInf(var Arch: TArchListInf);
+  begin
+    Assign(Arch, RutaListadoInfracciones);
+    Reset(Arch);
+  end;
+
+procedure CerrarArchivoListInf(var Arch: TArchListInf);
+  begin
+    Close(Arch);
+  end;
+
+procedure CrearAbrirArchivoBinListInf(var Arch: TArchBinListInf);
+  begin
+    Assign(Arch, RutaListadoInfraccionesBin);
+    Rewrite(Arch);
+  end;
+
+procedure CerrarArchivoBinListInf(var Arch: TArchBinListInf);
   begin
     Close(Arch);
   end;
