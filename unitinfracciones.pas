@@ -171,15 +171,33 @@ function ObtenerInfraccion(): String;
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
   var
     Infraccion: String;
+    Rta: String[2];
   begin
     Infraccion := ObtenerInfraccion;
     if Infraccion <> '' then
     begin
+			WriteLn('DNI: ', DatosCon.DNI);
+			WriteLn();
       MostrarInfraccion('Infracción seleccionada: ' + Infraccion);
       WriteLn('Puntos a descontar: ', PuntosInfraccion(Infraccion));
-    end
-    else
-      WriteLn('NOSE WACHO QUE ONDA PA');
-    ReadLn;
+      WriteLn();
+      Write(UTF8Decode('¿Desea dar de alta la infracción seleccionada? (s/N): '));
+      ReadLn(Rta);
+      WriteLn();
+      if LowerCase(Rta) <> 's' then
+      begin
+				TextColor(Red);
+				WriteLn('Alta cancelada!');
+				TextColor(White);
+			end
+			else
+			begin
+				//GuardarInfraccion(Infraccion, DatosCon.DNI);
+				TextColor(Green);
+				WriteLn('Alta exitosa!');
+				TextColor(White);
+			end;
+    Delay(1500);
+		end;
   end;
 end.
