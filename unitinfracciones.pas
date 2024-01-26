@@ -86,7 +86,7 @@ procedure MostrarInfraccion(Infraccion: String);
     end;
   end;
 
-procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+function ObtenerInfraccion(): String;
   const
     LimiteInferior = 16;
   var
@@ -96,6 +96,7 @@ procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
     i, Anterior: Byte;
     Tecl: String[2];
     Infraccion: String;
+
   begin
     CrearAbrirArchivoListInf(ArchListaInf);
     CrearAbrirArchivoBinListInf(ArchBinListInf);
@@ -123,8 +124,8 @@ procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
       // o se llega al final del archivo
       if (WhereY > LimiteInferior) or (EOF(ArchBinListInf)) then
       begin
-        WriteLn('[S]iguiente.');
-        WriteLn('[A]nterior.');
+        WriteLn('[S] iguiente.');
+        WriteLn('[A] nterior.');
         WriteLn('[Q] Salir.');
         WriteLn;
         Write(UTF8Decode('Opción: '));
@@ -155,18 +156,30 @@ procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
         ClrScr;
       end;
     end;
-
-    // OBTENER LA INFRACCIÓN SELECCIONADA:
+    // Devolver la infraccion seleccionada, o una string vacía si selecciona 'Salir'
     if InfraccionValida(Tecl, ArchBinListInf) then
     begin
       Seek(ArchBinListInf, StrToInt(Tecl) - 1);
-      Read(ArchBinListInf, Infraccion);
-      MostrarInfraccion('Infracción seleccionada: ' + Infraccion);
-      WriteLn('Puntos a descontar: ', PuntosInfraccion(Infraccion));
-      ReadLn;
-    end;
-
+      Read(ArchBinListInf, ObtenerInfraccion);
+    end
+    else
+      ObtenerInfraccion := '';
     CerrarArchivoListInf(ArchListaInf);
     CerrarArchivoBinListInf(ArchBinListInf);
+  end;
+
+procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+  var
+    Infraccion: String;
+  begin
+    Infraccion := ObtenerInfraccion;
+    if Infraccion <> '' then
+    begin
+      MostrarInfraccion('Infracción seleccionada: ' + Infraccion);
+      WriteLn('Puntos a descontar: ', PuntosInfraccion(Infraccion));
+    end
+    else
+      WriteLn('NOSE WACHO QUE ONDA PA');
+    ReadLn;
   end;
 end.
