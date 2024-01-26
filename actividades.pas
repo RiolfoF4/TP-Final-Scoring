@@ -87,25 +87,25 @@ procedure ObtenerFechaNac(var Fecha: TRegFecha);
 
 function ObtenerOpcionAlta(DatosCon: TDatoConductores): String;
   var
-    Op: String;
+    Op: String[2];
   begin
-    ObtenerOpcionAlta := #00;
+    ObtenerOpcionAlta := '';
     WriteLn('¿Son correctos los datos ingresados?');
     WriteLn('[1] Sí');
     WriteLn('[2] No (Modificar)');
     WriteLn('[0] CANCELAR ALTA');
     WriteLn;
 
-    while ObtenerOpcionAlta = #00 do
+    while ObtenerOpcionAlta = '' do
     begin
     Write('Opción: ');
     ClrEol;
     ReadLn(Op);
     if (Op = '1') or (Op = '2') or (Op = '0') then
-      ObtenerOpcionAlta := LowerCase(Op)
+      ObtenerOpcionAlta := Op
     else
       GotoXY(1, WhereY-1);
-    end;    
+    end;
   end;
 
 function ObtenerRtaSN: String;
@@ -122,7 +122,7 @@ function ObtenerRtaSN: String;
     until (LowerCase(Rta) = 's') or (LowerCase(Rta) = 'n');
     ObtenerRtaSN := LowerCase(Rta);
   end;
-
+  
 procedure MostrarFecha(Fecha: TRegFecha);
   begin
     Write(Format('%0.2d', [Fecha.Dia]), '/', Format('%0.2d', [Fecha.Mes]), '/', Fecha.Anio);
