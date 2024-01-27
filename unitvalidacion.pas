@@ -35,8 +35,6 @@ function EsNum(Cad: String): Boolean;
   end;
 
 function EsCadenaFecha(Cad: String): Boolean;
-  const
-    Meses = [1..12];
   var
     i: Byte;
     Fecha: String;
