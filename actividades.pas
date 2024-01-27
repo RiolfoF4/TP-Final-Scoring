@@ -85,7 +85,7 @@ procedure ObtenerFechaNac(var Fecha: TRegFecha);
     CadARegFecha(ObtenerFechaStr, Fecha.Dia, Fecha.Mes, Fecha.Anio);
   end;
 
-function ObtenerOpcionAlta(DatosCon: TDatoConductores): String;
+function ObtenerOpcionAlta(): String;
   var
     Op: String[2];
   begin
@@ -263,7 +263,7 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchIn
       ClrScr;
       MostrarDatosCon(DatosCon);
       WriteLn;
-      Op := ObtenerOpcionAlta(DatosCon);
+      Op := ObtenerOpcionAlta();
       Case Op of
         '1':
         begin
