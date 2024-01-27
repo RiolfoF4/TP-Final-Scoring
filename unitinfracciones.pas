@@ -86,7 +86,7 @@ procedure MostrarInfraccion(Infraccion: String);
     end;
   end;
 
-function ObtenerInfraccion(): String;
+function ObtenerInfraccion(): ShortString;
   const
     LimiteInferior = 16;
   var
@@ -95,7 +95,7 @@ function ObtenerInfraccion(): String;
     PosAnterior: TPila;
     i, Anterior: Byte;
     Tecl: String[2];
-    Infraccion: String;
+    Infraccion: ShortString;
 
   begin
     CrearAbrirArchivoListInf(ArchListaInf);
