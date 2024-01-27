@@ -4,7 +4,8 @@ unit Actividades;
 interface
 
 uses
-  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, UnitManejoFecha, UnitInfracciones;
+  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, 
+  UnitManejoFecha, UnitInfracciones, UnitObtenerDatos;
 
 const
   EsqX = 15;
@@ -18,111 +19,6 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
                             var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
 
 implementation
-function ObtenerApYNom: String;
-  begin
-    ObtenerApYNom := '';
-    while ObtenerApYNom = '' do
-    begin
-      Write('Apellido y Nombre: ');
-      ReadLn(ObtenerApYNom);
-      if ObtenerApYNom = '' then
-        GotoXY(1, WhereY-1);
-    end;
-  end;
-
-function ObtenerDNI: Cardinal;
-  var
-    Cad: String[10];
-  begin
-    ObtenerDNI := 0;
-    while (ObtenerDNI < 10000000) do
-    begin
-      ClrEol;
-      Write('DNI (Sin puntos ni espacios): ');
-      ReadLn(Cad);
-      if EsNum(Cad) then
-      begin
-        ObtenerDNI := StrToDWord(Cad);
-        if ObtenerDNI < 10000000 then
-          GotoXY(1, WhereY-1);
-      end
-      else
-        GotoXY(1, WhereY-1);
-    end;
-  end;
-
-function ObtenerTel: String;
-  var
-    Cad: String[20];
-  begin
-    ObtenerTel := '';
-    while ObtenerTel = '' do
-    begin
-      Write('Teléfono (Sin prefijo internacional ni espacios): ');
-      ClrEol;
-      ReadLn(Cad);
-      if EsNum(Cad) then
-        ObtenerTel := Cad
-      else
-        GotoXY(1, WhereY-1);
-    end;
-  end;
-
-function ObtenerEMail: String;
-  begin
-    Write('EMail: ');
-    ReadLn(ObtenerEMail);
-  end;
-
-procedure ObtenerFechaActual(var Fecha: TRegFecha);
-  begin
-    DecodeDate(Date, Fecha.Anio, Fecha.Mes, Fecha.Dia);
-  end;
-
-procedure ObtenerFechaNac(var Fecha: TRegFecha);
-  begin
-    Write('Fecha de Nacimiento: ');
-    CadARegFecha(ObtenerFechaStr, Fecha.Dia, Fecha.Mes, Fecha.Anio);
-  end;
-
-function ObtenerOpcionAlta(): String;
-  var
-    Op: String[2];
-  begin
-    ObtenerOpcionAlta := '';
-    WriteLn('¿Son correctos los datos ingresados?');
-    WriteLn('[1] Sí');
-    WriteLn('[2] No (Modificar)');
-    WriteLn('[0] CANCELAR ALTA');
-    WriteLn;
-
-    while ObtenerOpcionAlta = '' do
-    begin
-    Write('Opción: ');
-    ClrEol;
-    ReadLn(Op);
-    if (Op = '1') or (Op = '2') or (Op = '0') then
-      ObtenerOpcionAlta := Op
-    else
-      GotoXY(1, WhereY-1);
-    end;
-  end;
-
-function ObtenerRtaSN: String;
-  var
-    Rta: String[2];
-    PosX, PosY: Word;
-  begin
-    PosX := WhereX;
-    PosY := WhereY;
-    repeat
-      GotoXY(PosX, PosY);
-      ClrEol;
-      ReadLn(Rta);
-    until (LowerCase(Rta) = 's') or (LowerCase(Rta) = 'n');
-    ObtenerRtaSN := LowerCase(Rta);
-  end;
-  
 procedure MostrarFecha(Fecha: TRegFecha);
   begin
     Write(Format('%0.2d', [Fecha.Dia]), '/', Format('%0.2d', [Fecha.Mes]), '/', Fecha.Anio);
@@ -263,7 +159,7 @@ procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchIn
       ClrScr;
       MostrarDatosCon(DatosCon);
       WriteLn;
-      Op := ObtenerOpcionAlta();
+      Op := ObtenerOpcionAlta;
       Case Op of
         '1':
         begin
@@ -397,6 +293,7 @@ procedure MostrarModifCon(DatosOriginales, DatosModificados: TDatoConductores);
   const
     f = ' ==> ';
   begin
+    // Muestra los datos modificados
     WriteLn('DNI: ', DatosOriginales.DNI);
     if DatosOriginales.ApYNom <> DatosModificados.ApYNom then
       WriteLn('Apellido y Nombre: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);

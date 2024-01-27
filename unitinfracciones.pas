@@ -3,7 +3,7 @@ unit UnitInfracciones;
 interface
 
 uses
-  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila;
+  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 
@@ -16,7 +16,7 @@ procedure InicializarArchBinListInf(var ArchBinListInf: TArchBinListInf; var Arc
     begin
       ReadLn(ArchListaInf, x);
       if x <> '' then
-        Write(ArchBinListInf, x);
+        Write(ArchBinListInf, x)
     end;
     Reset(ArchListaInf);
     Seek(ArchBinListInf, 0);
@@ -86,7 +86,7 @@ procedure MostrarInfraccion(Infraccion: String);
     end;
   end;
 
-function ObtenerInfraccion(): ShortString;
+function ObtenerInfraccion: ShortString;
   const
     LimiteInferior = 16;
   var
@@ -156,6 +156,7 @@ function ObtenerInfraccion(): ShortString;
         ClrScr;
       end;
     end;
+
     // Devolver la infraccion seleccionada, o una string vacía si selecciona 'Salir'
     if InfraccionValida(Tecl, ArchBinListInf) then
     begin
@@ -168,22 +169,37 @@ function ObtenerInfraccion(): ShortString;
     CerrarArchivoBinListInf(ArchBinListInf);
   end;
 
+procedure CargarDatosInfraccion(DatosCon: TDatoConductores; var Infraccion: TDatoInfracciones);
+  begin
+    Infraccion.DNI := DatosCon.DNI;
+    ObtenerFechaActual(Infraccion.Fecha);
+    Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
+  end;
+
+procedure AgregarInfraccion(var DatosCon: TDatoConductores; Infraccion: TDatoInfracciones; var ArchInf: TArchInf);
+  begin
+    
+  end;
+
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
   var
-    Infraccion: String;
+    Infraccion: TDatoInfracciones;
     Rta: String[2];
   begin
-    Infraccion := ObtenerInfraccion;
-    if Infraccion <> '' then
+    Infraccion.Tipo := ObtenerInfraccion;
+    if Infraccion.Tipo <> '' then
     begin
-			WriteLn('DNI: ', DatosCon.DNI);
-			WriteLn();
-      MostrarInfraccion('Infracción seleccionada: ' + Infraccion);
-      WriteLn('Puntos a descontar: ', PuntosInfraccion(Infraccion));
-      WriteLn();
-      Write(UTF8Decode('¿Desea dar de alta la infracción seleccionada? (s/N): '));
-      ReadLn(Rta);
-      WriteLn();
+      CargarDatosInfraccion(DatosCon, Infraccion);
+			WriteLn('DNI: ', Infraccion.DNI);
+			WriteLn;
+      MostrarInfraccion('Infracción seleccionada: ' + Infraccion.Tipo);
+      WriteLn;
+      WriteLn('Puntos a descontar: ', Infraccion.Puntos);
+      WriteLn;
+      // TODO: Mostrar la fecha y permitir modificar el tipo y la fecha de la infraccion
+      Write(UTF8Decode('¿Desea dar de alta la infracción seleccionada? (S/N): '));
+      Rta := ObtenerRtaSN;
+      WriteLn;
       if LowerCase(Rta) <> 's' then
       begin
 				TextColor(Red);
@@ -192,7 +208,6 @@ procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 			end
 			else
 			begin
-				//GuardarInfraccion(Infraccion, DatosCon.DNI);
 				TextColor(Green);
 				WriteLn('Alta exitosa!');
 				TextColor(White);
