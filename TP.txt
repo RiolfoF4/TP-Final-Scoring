@@ -8,7 +8,7 @@ Archivo de Conductores
   Habilitado: Si/No
   Fecha_Habilitación
   Cant_reincidencias: 0..N
-  
+
 Archivo de Infracciones
   Número de documento (DNI)
   Fecha de infracción
