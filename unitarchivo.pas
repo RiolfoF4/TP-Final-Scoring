@@ -30,14 +30,14 @@ type
   TDatoInfracciones = record
     DNI: Cardinal;
     Fecha: TRegFecha;
-    Tipo: String;
+    Tipo: ShortString;
     Puntos: ShortInt;
   end;
 
   TArchCon = File of TDatoConductores;
   TArchInf = File of TDatoInfracciones;
   TArchListInf = Text;
-  TArchBinListInf = File of String;
+  TArchBinListInf = File of ShortString;
   
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
