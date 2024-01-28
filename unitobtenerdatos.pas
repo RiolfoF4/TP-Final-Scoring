@@ -20,7 +20,7 @@ function ObtenerApYNom: String;
     ObtenerApYNom := '';
     while ObtenerApYNom = '' do
     begin
-      Write('Apellido y Nombre: ');
+      Write('Apellido y Nombres: ');
       ReadLn(ObtenerApYNom);
       if ObtenerApYNom = '' then
         GotoXY(1, WhereY-1);
