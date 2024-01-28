@@ -19,7 +19,7 @@ procedure MostrarMenu;
     Inicializar(ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
     repeat
       ClrScr;
-      WriteLn('[1] Ingresar Apellido y Nombre.');
+      WriteLn('[1] Ingresar Apellido y Nombres.');
       WriteLn('[2] Ingresar DNI.');
       WriteLn('[0] Salir.');
       WriteLn;
