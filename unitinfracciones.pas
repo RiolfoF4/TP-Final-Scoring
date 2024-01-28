@@ -3,7 +3,7 @@ unit UnitInfracciones;
 interface
 
 uses
-  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos;
+  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 
@@ -193,6 +193,8 @@ procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 			WriteLn('DNI: ', Infraccion.DNI);
 			WriteLn;
       MostrarInfraccion('Infracción seleccionada: ' + Infraccion.Tipo);
+      WriteLn;
+      WriteLn(UTF8Decode('Fecha de infracción: '), FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
       WriteLn;
       WriteLn('Puntos a descontar: ', Infraccion.Puntos);
       WriteLn;

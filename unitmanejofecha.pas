@@ -3,10 +3,11 @@ unit UnitManejoFecha;
 interface
 
 uses
-  crt, UnitValidacion;
+  crt, sysutils, UnitValidacion;
 
 function ObtenerFechaStr: String;
 procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
+function FormatoFecha(Dia, Mes, Anio: Word): String;
 
 implementation
 function ObtenerFechaStr: String;
@@ -83,9 +84,15 @@ function ObtenerFechaStr: String;
   end;
 
 procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
+  // Formato de fecha: DD/MM/AAAA
   begin
     Val(Copy(Fecha, 1, 2), Dia);
     Val(Copy(Fecha, 4, 2), Mes);
     Val(Copy(Fecha, 7), Anio);
+  end;
+
+function FormatoFecha(Dia, Mes, Anio: Word): String;
+  begin
+    FormatoFecha := Format('%0.2d', [Dia]) + '/' + Format('%0.2d', [Mes]) + '/' + IntToStr(Anio);
   end;
 end.

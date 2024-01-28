@@ -19,10 +19,6 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
                             var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
 
 implementation
-procedure MostrarFecha(Fecha: TRegFecha);
-  begin
-    Write(Format('%0.2d', [Fecha.Dia]), '/', Format('%0.2d', [Fecha.Mes]), '/', Fecha.Anio);
-  end;
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
                         var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte); forward;
 procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArchInf: TArchInf;
@@ -236,9 +232,7 @@ procedure MostrarDatosCon(var DatosCon: TDatoConductores);
       begin
         WriteLn('DNI: ', DNI);
         WriteLn('Apellido y Nombre: ', ApYNom);
-        Write('Fecha de Nacimiento: '); 
-        MostrarFecha(FechaNac);
-        WriteLn;
+        WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
         WriteLn('Teléfono: ', Tel);
         WriteLn('EMail: ', EMail);
         WriteLn('Scoring: ', Scoring);
@@ -254,9 +248,7 @@ procedure MostrarDatosCon(var DatosCon: TDatoConductores);
           WriteLn('No');
         end;
         TextColor(White);
-        Write('Fecha de Habilitación: ');
-        MostrarFecha(FechaHab);
-        WriteLn;
+        WriteLn('Fecha de Habilitación: ', FormatoFecha(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio));
         WriteLn('Cantidad de Reincidencias: ', CantRein);
       end;
     end;
@@ -296,16 +288,16 @@ procedure MostrarModifCon(DatosOriginales, DatosModificados: TDatoConductores);
     // Muestra los datos modificados
     WriteLn('DNI: ', DatosOriginales.DNI);
     if DatosOriginales.ApYNom <> DatosModificados.ApYNom then
-      WriteLn('Apellido y Nombre: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);
+      WriteLn('Apellido y Nombres: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);
     if (DatosOriginales.FechaNac.Dia <> DatosModificados.FechaNac.Dia) or 
        (DatosOriginales.FechaNac.Mes <> DatosModificados.FechaNac.Mes) or
        (DatosOriginales.FechaNac.Anio <> DatosModificados.FechaNac.Anio) then
     begin
-      Write('Fecha de Nacimiento: ');
-      MostrarFecha(DatosOriginales.FechaNac);
+      with DatosOriginales do
+      WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
       Write(f);
-      MostrarFecha(DatosModificados.FechaNac);
-      WriteLn;
+      with DatosModificados do
+        WriteLn(FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
     end;
     if DatosOriginales.Tel <> DatosModificados.Tel then
       WriteLn('Teléfono: ', DatosOriginales.Tel, f, DatosModificados.Tel);
