@@ -3,12 +3,12 @@ unit UnitInfracciones;
 interface
 
 uses
-  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha;
+  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha, UnitLista;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 
 implementation
-procedure InicializarArchBinListInf(var ArchBinListInf: TArchBinListInf; var ArchListaInf: TArchListInf);
+procedure InicializarListaInf(var Lista: TLista; var ArchListaInf: TArchListInf);
 var
   x: String;
 begin
@@ -16,10 +16,9 @@ begin
   begin
     ReadLn(ArchListaInf, x);
     if x <> '' then
-      Write(ArchBinListInf, x);
+      Agregar(Lista, x);
   end;
   Reset(ArchListaInf);
-  Seek(ArchBinListInf, 0);
 end;
 
 function PuntosInfraccion(Infraccion: String): Integer;
@@ -34,7 +33,7 @@ begin
     PuntosInfraccion := -1;
 end;
 
-function InfraccionValida(NumeroInfrac: String; var ArchInf: TArchBinListInf): Boolean;
+function InfraccionValida(NumeroInfrac: String; var ListaInfracciones: TLista): Boolean;
 var
   Num: Integer;
 begin
@@ -42,9 +41,7 @@ begin
   if EsNum(NumeroInfrac) then
   begin
     Val(NumeroInfrac, Num);
-    // NOTA: La infracción [1] se encuentra en la posición 0 del archivo, la [2] en el 1...
-    // La última infracción coincide con el tamaño del archivo
-    if (1 <= Num) and (Num <= FileSize(ArchInf)) then
+    if (1 <= Num) and (Num <= TamanioLista(ListaInfracciones)) then
       InfraccionValida := True;
   end;
 end;
@@ -91,7 +88,7 @@ const
   LimiteInferior = 16;
 var
   ArchListaInf: TArchListInf;
-  ArchBinListInf: TArchBinListInf;
+  ListaInf: TLista;
   PosAnterior: TPila;
   i, Anterior: Byte;
   Tecl: String[2];
@@ -99,30 +96,28 @@ var
 
 begin
   CrearAbrirArchivoListInf(ArchListaInf);
-  CrearAbrirArchivoBinListInf(ArchBinListInf);
-  InicializarArchBinListInf(ArchBinListInf, ArchListaInf);
+  CrearLista(ListaInf);
+  InicializarListaInf(ListaInf, ArchListaInf);
   CrearPila(PosAnterior);
 
-  i := 0;
-  Anterior := 0;
+  i := 1;
+  Anterior := 1;
   Tecl := '';
 
-  while (LowerCase(Tecl) <> 'q') and not (InfraccionValida(Tecl, ArchBinListInf)) do
+  while (LowerCase(Tecl) <> 'q') and not (InfraccionValida(Tecl, ListaInf)) do
   begin
     // Si no se llegó al final del archivo, muestra secuencialmente las infracciones
-    if i < FileSize(ArchBinListInf) then
+    if i <= TamanioLista(ListaInf) then
     begin
-      Seek(ArchBinListInf, i);
-      Read(ArchBinListInf, Infraccion);
-      Infraccion := '[' + IntToStr(i+1) + '] ' + Infraccion;
-      MostrarInfraccion(Infraccion);
+      Recuperar(ListaInf, i, Infraccion);
+      MostrarInfraccion('[' + IntToStr(i) + '] ' + Infraccion);
       WriteLn;
       Inc(i);
     end;
 
     // Recibe una entrada del usuario si el texto supera un límite inferior
     // o se llega al final del archivo
-    if (WhereY > LimiteInferior) or (EOF(ArchBinListInf)) then
+    if (WhereY > LimiteInferior) or (i = TamanioLista(ListaInf)) then
     begin
       WriteLn('[S] iguiente.');
       WriteLn('[A] nterior.');
@@ -136,7 +131,7 @@ begin
         's':
           // Si NO se llegó al final del archivo, apila el índice de la infracción que se muestra actualmente
           // Si se llegó el final del archivo, muestra lo mismo
-          if not (EOF(ArchBinListInf)) then
+          if not (i = TamanioLista(ListaInf)) then
             Apilar(PosAnterior, Anterior)
           else
             i := Anterior;
@@ -147,7 +142,7 @@ begin
           if not (PilaVacia(PosAnterior)) then
             Desapilar(PosAnterior, i)
           else
-            i := 0;
+            i := 1;
       else
         // Si la tecla no es 's' ni 'a', muestra lo mismo
         i := Anterior;
@@ -158,15 +153,11 @@ begin
   end;
 
   // Devolver la infraccion seleccionada, o una string vacía si selecciona 'Salir'
-  if InfraccionValida(Tecl, ArchBinListInf) then
-  begin
-    Seek(ArchBinListInf, StrToInt(Tecl) - 1);
-    Read(ArchBinListInf, ObtenerInfraccion);
-  end
+  if InfraccionValida(Tecl, ListaInf) then
+    Recuperar(ListaInf, StrToInt(Tecl), ObtenerInfraccion)
   else
     ObtenerInfraccion := '';
   CerrarArchivoListInf(ArchListaInf);
-  CerrarArchivoBinListInf(ArchBinListInf);
 end;
 
 procedure ModificarTipoInfraccion(var Infraccion: TDatoInfracciones);
@@ -176,17 +167,17 @@ begin
 end;
 
 procedure DesplazarDerecha(var ArchInf: TArchInf; Pos: Word);
-  var
-    i: Word;  
-    xAux: TDatoInfracciones;
+var
+  i: Word;  
+  xAux: TDatoInfracciones;
+begin
+  for i := FileSize(ArchInf) - 1 downto Pos do
   begin
-    for i := FileSize(ArchInf) - 1 downto Pos do
-    begin
-      Seek(ArchInf, i);
-      Read(ArchInf, xAux);
-      Write(ArchInf, xAux);
-    end;
+    Seek(ArchInf, i);
+    Read(ArchInf, xAux);
+    Write(ArchInf, xAux);
   end;
+end;
 
 procedure AgregarInfraccion(Infraccion: TDatoInfracciones; var ArchInf: TArchInf);
 var
@@ -195,7 +186,7 @@ var
   FechaInf, FechaAux: TDateTime;
 begin
   Seek(ArchInf, 0);
-  
+
   // Si es la primer infracción que se ingresa, cargarla directamente
   if FileSize(ArchInf) = 0 then
     Write(ArchInf, Infraccion)
@@ -226,24 +217,23 @@ begin
       Seek(ArchInf, Pos);
       Write(ArchInf, Infraccion);
     end;
-    ReadLn;
   end;
 end;
 
 procedure MostrarInfracciones(var ArchInf: TArchInf);         // TEMP
-  var
-    InfAux: TDatoInfracciones;
+var
+  InfAux: TDatoInfracciones;
+begin
+  Seek(ArchInf, 0);
+  while not (EOF(ArchInf)) do
   begin
-    Seek(ArchInf, 0);
-    while not (EOF(ArchInf)) do
-    begin
-      Read(ArchInf, InfAux);
-      MostrarInfraccion('[' + IntToStr(FilePos(ArchInf)) + '] Infracción: ' + InfAux.Tipo);
-      WriteLn('Fecha: ', FormatoFecha(InfAux.Fecha.Dia, InfAux.Fecha.Mes, InfAux.Fecha.Anio));
-      WriteLn;
-    end;
-    ReadLn;
+    Read(ArchInf, InfAux);
+    MostrarInfraccion('[' + IntToStr(FilePos(ArchInf)) + '] Infracción: ' + InfAux.Tipo);
+    WriteLn('Fecha: ', FormatoFecha(InfAux.Fecha.Dia, InfAux.Fecha.Mes, InfAux.Fecha.Anio));
+    WriteLn;
   end;
+  ReadLn;
+end;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
@@ -284,6 +274,7 @@ begin
           TextColor(Green);
           WriteLn('Alta exitosa!');
           TextColor(White);
+          Delay(1500);
         end;
         '2': ModificarTipoInfraccion(Infraccion);
         '3': ObtenerFechaInf(Infraccion.Fecha);
@@ -293,10 +284,10 @@ begin
           TextColor(Red);
           WriteLn('Alta cancelada!');
           TextColor(White);
+          Delay(1500);
         end;
       end;
     until (Rta = '1') or (Rta = '0');
   end;
-  Delay(1500);
 end;
 end.
