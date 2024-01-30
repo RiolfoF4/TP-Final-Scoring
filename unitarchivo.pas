@@ -34,10 +34,10 @@ type
     Puntos: ShortInt;
   end;
 
-  TArchCon = File of TDatoConductores;
-  TArchInf = File of TDatoInfracciones;
+  TArchCon = file of TDatoConductores;
+  TArchInf = file of TDatoInfracciones;
   TArchListInf = Text;
-  TArchBinListInf = File of ShortString;
+  TArchBinListInf = file of ShortString;
   
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
@@ -50,54 +50,54 @@ procedure CerrarArchivoBinListInf(var Arch: TArchBinListInf);
 
 implementation
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);  
-  begin
-    Assign(Arch, RutaConductores);
+begin
+  Assign(Arch, RutaConductores);
     {$I-}
-    Reset(Arch);
+  Reset(Arch);
     {$I+}
-    if IOResult <> 0 then
-      Rewrite(Arch);
-  end;
+  if IOResult <> 0 then
+    Rewrite(Arch);
+end;
 
 procedure CerrarArchivoCon(var Arch: TArchCon);
-  begin
-    Close(Arch);
-  end;
+begin
+  Close(Arch);
+end;
 
 procedure CrearAbrirArchivoInf(var Arch: TArchInf);
-  begin
-    Assign(Arch, RutaInfracciones);
+begin
+  Assign(Arch, RutaInfracciones);
     {$I-}
-    Reset(Arch);
+  Reset(Arch);
     {$I+}
-    if IOResult <> 0 then
-      Rewrite(Arch);
-  end;
+  if IOResult <> 0 then
+    Rewrite(Arch);
+end;
 
 procedure CerrarArchivoInf(var Arch: TArchInf);
-  begin
-    Close(Arch);
-  end;
+begin
+  Close(Arch);
+end;
 
 procedure CrearAbrirArchivoListInf(var Arch: TArchListInf);
-  begin
-    Assign(Arch, RutaListadoInfracciones);
-    Reset(Arch);
-  end;
+begin
+  Assign(Arch, RutaListadoInfracciones);
+  Reset(Arch);
+end;
 
 procedure CerrarArchivoListInf(var Arch: TArchListInf);
-  begin
-    Close(Arch);
-  end;
+begin
+  Close(Arch);
+end;
 
 procedure CrearAbrirArchivoBinListInf(var Arch: TArchBinListInf);
-  begin
-    Assign(Arch, RutaListadoInfraccionesBin);
-    Rewrite(Arch);
-  end;
+begin
+  Assign(Arch, RutaListadoInfraccionesBin);
+  Rewrite(Arch);
+end;
 
 procedure CerrarArchivoBinListInf(var Arch: TArchBinListInf);
-  begin
-    Close(Arch);
-  end;
+begin
+  Close(Arch);
+end;
 end.
