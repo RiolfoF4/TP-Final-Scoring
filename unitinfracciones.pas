@@ -175,13 +175,25 @@ begin
   Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
 end;
 
+procedure DesplazarDerecha(var ArchInf: TArchInf; Pos: Word);
+  var
+    i: Word;  
+    xAux: TDatoInfracciones;
+  begin
+    for i := FileSize(ArchInf) - 1 downto Pos do
+    begin
+      Seek(ArchInf, i);
+      Read(ArchInf, xAux);
+      Write(ArchInf, xAux);
+    end;
+  end;
+
 procedure AgregarInfraccion(Infraccion: TDatoInfracciones; var ArchInf: TArchInf);
 var
   Pos: Word;
   xAux: TDatoInfracciones;
   FechaInf, FechaAux: TDateTime;
 begin
-  ClrScr;
   Seek(ArchInf, 0);
   
   // Si es la primer infracción que se ingresa, cargarla directamente
@@ -192,43 +204,46 @@ begin
     // Si no, recorrer el archivo hasta encontrar una fecha que sea posterior a la ingresada,
     // o al llegar al final del archivo
     repeat
-      Read(ArchInf, xAux);
       Pos := FilePos(ArchInf);
-      WriteLn('Pos: ', Pos);
-      ReadLn;
+      if not (EOF(ArchInf)) then
+        Read(ArchInf, xAux);
+
       // Guarda las fechas en el formato de Pascal
       FechaInf := StrToDate(FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio), '/');
       FechaAux := StrToDate(FormatoFecha(xAux.Fecha.Dia, xAux.Fecha.Mes, xAux.Fecha.Anio), '/');
-    until (FechaInf < FechaAux) or (EOF(ArchInf));
+    until (FechaInf < FechaAux) or (Pos = FileSize(ArchInf));
 
-    // ¬¬¬¬¬¬¬TEMP¬¬¬¬¬¬¬
-    ReadLn;
-    WriteLn('Tamanio del archivo: ', FileSize(ArchInf), '; Pos encontrada: ', Pos);
-    Seek(ArchInf, 0);
-    while not EOF(ArchInf) do
-    begin
-      Read(ArchInf, xAux);
-      WriteLn('DNI: ', xAux.DNI);
-      MostrarInfraccion('Infraccion: ' + xAux.Tipo);
-      WriteLn('FECHA: ', FormatoFecha(xAux.Fecha.Dia, xAux.Fecha.Mes, xAux.Fecha.Anio));
-      ReadLn;
-    end;
-    // ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
-    Seek(ArchInf, Pos);
     // Si se llegó al final del archivo, agregar la infraccion
-    if EOF(ArchInf) then
+    if Pos = FileSize(ArchInf) then
     begin
-      WriteLn('La infraccion es posterior a todas las anteriores');
-      ReadLn;
       Seek(ArchInf, Pos);
       Write(ArchInf, Infraccion);
     end
     else
-      // Si NO se llegó al final del archivo, desplazar las demás infracciones y luego agregar la infraccion ingresada
-      WriteLn('~~~~Encontro la posicion, pero ya hay una infraccion en esa posicion a si que xd');
+    begin
+      // Desplaza hacia la derecha todas las infracciones a partir de Pos
+      DesplazarDerecha(ArchInf, Pos);
+      Seek(ArchInf, Pos);
+      Write(ArchInf, Infraccion);
+    end;
     ReadLn;
   end;
 end;
+
+procedure MostrarInfracciones(var ArchInf: TArchInf);         // TEMP
+  var
+    InfAux: TDatoInfracciones;
+  begin
+    Seek(ArchInf, 0);
+    while not (EOF(ArchInf)) do
+    begin
+      Read(ArchInf, InfAux);
+      MostrarInfraccion('[' + IntToStr(FilePos(ArchInf)) + '] Infracción: ' + InfAux.Tipo);
+      WriteLn('Fecha: ', FormatoFecha(InfAux.Fecha.Dia, InfAux.Fecha.Mes, InfAux.Fecha.Anio));
+      WriteLn;
+    end;
+    ReadLn;
+  end;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
@@ -255,6 +270,7 @@ begin
       WriteLn('[1] Confirmar Alta.');
       WriteLn(UTF8Decode('[2] Modificar Infracción.'));
       WriteLn(UTF8Decode('[3] Modifiar Fecha de Infracción.'));
+      WriteLn('[4] TEMP Mostrar Infracciones.');
       WriteLn('[0] Cancelar Alta.');
       WriteLn;
       Write(UTF8Decode('Opción: '));
@@ -271,6 +287,7 @@ begin
         end;
         '2': ModificarTipoInfraccion(Infraccion);
         '3': ObtenerFechaInf(Infraccion.Fecha);
+        '4': MostrarInfracciones(ArchInf);
         '0':
         begin
           TextColor(Red);
