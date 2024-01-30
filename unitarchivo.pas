@@ -37,7 +37,6 @@ type
   TArchCon = file of TDatoConductores;
   TArchInf = file of TDatoInfracciones;
   TArchListInf = Text;
-  TArchBinListInf = file of ShortString;
   
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
@@ -45,8 +44,6 @@ procedure CrearAbrirArchivoInf(var Arch: TArchInf);
 procedure CerrarArchivoInf(var Arch: TArchInf);
 procedure CrearAbrirArchivoListInf(var Arch: TArchListInf);
 procedure CerrarArchivoListInf(var Arch: TArchListInf);
-procedure CrearAbrirArchivoBinListInf(var Arch: TArchBinListInf);
-procedure CerrarArchivoBinListInf(var Arch: TArchBinListInf);
 
 implementation
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);  
@@ -86,17 +83,6 @@ begin
 end;
 
 procedure CerrarArchivoListInf(var Arch: TArchListInf);
-begin
-  Close(Arch);
-end;
-
-procedure CrearAbrirArchivoBinListInf(var Arch: TArchBinListInf);
-begin
-  Assign(Arch, RutaListadoInfraccionesBin);
-  Rewrite(Arch);
-end;
-
-procedure CerrarArchivoBinListInf(var Arch: TArchBinListInf);
 begin
   Close(Arch);
 end;
