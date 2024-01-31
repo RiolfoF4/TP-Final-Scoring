@@ -6,16 +6,16 @@ const
   N = 10;
 
 type
-  TDato = Byte;
+  TDatoPila = Byte;
   TPila = record
-    Elem: array[1..N] of TDato;
+    Elem: array[1..N] of TDatoPila;
     Tope: Word;
     Tam: Word;
   end;
 
 procedure CrearPila(var P: TPila);
-procedure Apilar(var P: TPila; x: TDato);
-procedure Desapilar(var P: TPila; var x: TDato);
+procedure Apilar(var P: TPila; x: TDatoPila);
+procedure Desapilar(var P: TPila; var x: TDatoPila);
 function TamanioPila(P: TPila): Word;
 function PilaVacia(P: TPila): Boolean;
 function PilaLlena(P: TPila): Boolean;
@@ -27,14 +27,14 @@ begin
   P.Tam := 0;
 end;
 
-procedure Apilar(var P: TPila; x: TDato);
+procedure Apilar(var P: TPila; x: TDatoPila);
 begin
   Inc(P.Tope);
   P.Elem[P.Tope] := x;
   Inc(P.Tam);
 end;
 
-procedure Desapilar(var P: TPila; var x: TDato);
+procedure Desapilar(var P: TPila; var x: TDatoPila);
 begin
   x := P.Elem[P.Tope];
   Dec(P.Tope);
