@@ -5,7 +5,7 @@ unit UnitObtenerDatos;
 interface
 
 uses
-  crt, sysutils, UnitArchivo, UnitValidacion, UnitManejoFecha;
+  crt, sysutils, UnitTypes, UnitValidacion, UnitManejoFecha;
 
 function ObtenerApYNom: String;
 function ObtenerDNI: Cardinal;
