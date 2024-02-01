@@ -27,8 +27,8 @@ function PuntosInfraccion(Infraccion: String): Integer;
 var
   SeparadorPuntos: Word;
 begin
-  // Los puntos están separados por '{Infraccion}.\Puntos', sin comillas ni espacios
-  SeparadorPuntos := Pos('\', Infraccion);
+  // Los puntos están separados por '{Infraccion}.|Puntos', sin comillas ni espacios
+  SeparadorPuntos := Pos('|', Infraccion);
   if SeparadorPuntos > 0 then
     Val(Copy(Infraccion, SeparadorPuntos+1), PuntosInfraccion)
   else
@@ -80,7 +80,7 @@ begin
   else
   begin
     // Muestra la infracción
-    SeparadorPuntos := Pos('\', Infraccion);
+    SeparadorPuntos := Pos('|', Infraccion);
     WriteLn(UTF8Decode(Copy(Infraccion, 1, SeparadorPuntos-1)));
   end;
 end;
@@ -224,14 +224,22 @@ end;
 
 procedure CalcularPlazoInhab(var DatosCon: TDatoConductores);
 var
-  Dias: Extended;
+  Dias: Word;
+  FechaActual: TRegFecha;
 begin
   Inc(DatosCon.CantRein);
+  // Calcula los días que el conductor queda inhabilitado
   if DatosCon.CantRein <= 3 then
     Dias := 60 + 60 * (DatosCon.CantRein - 1)
   else
-    Dias := 180 * IntPower(2, DatosCon.CantRein - 3);
-  // TODO: CalcularFechaHab(DatosCon, Dias);
+    Dias := 180 * Round(IntPower(2, DatosCon.CantRein - 3));
+
+  // Establece la fecha de habilitación a X Dias de la fecha actual
+  ObtenerFechaActual(FechaActual);
+  NuevaFechaAXDias(
+    FechaActual.Dia, FechaActual.Mes, FechaActual.Anio, Dias, 
+    DatosCon.FechaHab.Dia, DatosCon.FechaHab.Mes, DatosCon.FechaHab.Anio
+    );
 end;
 
 procedure DescontarPuntos(var DatosCon: TDatoConductores; Puntos: ShortInt);
@@ -239,6 +247,7 @@ begin
   DatosCon.Scoring := DatosCon.Scoring - Puntos;
   if DatosCon.Scoring <= 0 then
   begin
+    DatosCon.Scoring := 0;
     DatosCon.Habilitado := False;
     CalcularPlazoInhab(DatosCon);
   end;
@@ -282,7 +291,11 @@ begin
     repeat
       ClrScr;
       MostrarDatosInf(Infraccion);
-      WriteLn('Scoring: ', DatosCon.Scoring, ' ==> ', DatosCon.Scoring - Infraccion.Puntos);
+      Write('Scoring: ', DatosCon.Scoring, ' ==> ');
+      if DatosCon.Scoring - Infraccion.Puntos < 0 then
+        WriteLn(0)
+      else
+        WriteLn(DatosCon.Scoring - Infraccion.Puntos);
       WriteLn;
       WriteLn('[1] Confirmar Alta.');
       WriteLn(UTF8Decode('[2] Modificar Infracción.'));
