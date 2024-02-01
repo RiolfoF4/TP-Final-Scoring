@@ -72,6 +72,35 @@ begin
   end;
 end;
 
+procedure ComprobarInhabilitaciones(var ArchCon: TArchCon);
+var
+  FechaActual: TRegFecha;
+  FechaActualPas: TDateTime;
+  xAux: TDatoConductores;
+  FechaHabPas: TDateTime;
+begin
+  // Guarda la fecha de hoy en formato Pascal
+  ObtenerFechaActual(FechaActual);
+  FechaActualPas := StrToDate(FormatoFecha(FechaActual.Dia, FechaActual.Mes, FechaActual.Anio), '/');
+
+  Seek(ArchCon, 0);
+  while not (EOF(ArchCon)) do
+  begin
+    Read(ArchCon, xAux);
+    if not (xAux.Habilitado) then
+    begin
+      FechaHabPas := StrToDate(FormatoFecha(xAux.FechaHab.Dia, xAux.FechaHab.Mes, xAux.FechaHab.Anio), '/');
+      if FechaHabPas <= FechaActualPas then
+      begin
+        xAux.Habilitado := True;
+        xAux.Scoring := 20;
+        Seek(ArchCon, FilePos(ArchCon) - 1);
+        Write(ArchCon,xAux);
+      end;
+    end;
+  end;
+end;
+
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 begin
   Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY);
@@ -81,6 +110,7 @@ begin
   CrearArbolApYNom(ArbolApYNom);
   CrearArbolDNI(ArbolDNI);
   CargarArbolPos(ArbolApYNom, ArbolDNI, ArchCon);
+  ComprobarInhabilitaciones(ArchCon);
 end;
 
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
