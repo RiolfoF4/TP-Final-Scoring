@@ -8,6 +8,7 @@ uses
 function ObtenerFechaStr: String;
 procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
 function FormatoFecha(Dia, Mes, Anio: Word): String;
+procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
 
 implementation
 function ObtenerFechaStr: String;
@@ -94,5 +95,39 @@ end;
 function FormatoFecha(Dia, Mes, Anio: Word): String;
 begin
   FormatoFecha := Format('%0.2d', [Dia]) + '/' + Format('%0.2d', [Mes]) + '/' + IntToStr(Anio);
+end;
+
+function MaxDiasMes(Mes, Anio: Word): Word;
+begin
+  case Mes of
+    {Meses con 31 días}
+    1,3,5,7,8,10,12: MaxDiasMes := 31;
+    {Meses con 30 días}
+    4,6,9,11: MaxDiasMes := 30;
+    {Mes con 29 días si el año es bisiesto y 28 si no}
+    2:
+      if EsAnioBisiesto(Anio) then
+        MaxDiasMes := 29
+      else
+        MaxDiasMes := 28;
+  end;
+end;
+
+procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
+begin
+  XDia := Dia + CantDias;
+  XMes := Mes;
+  XAnio := Anio;
+  while XDia > MaxDiasMes(XMes, XAnio) do
+  begin
+    XDia := XDia - MaxDiasMes(XMes, XAnio);
+    if XMes <> 12 then
+      Inc(XMes)
+    else
+    begin
+      Inc(XAnio);
+      XMes := 1;
+    end;
+  end;
 end;
 end.
