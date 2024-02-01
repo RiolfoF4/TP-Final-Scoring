@@ -5,7 +5,7 @@ interface
 
 uses
   sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, 
-  UnitManejoFecha, UnitInfracciones, UnitObtenerDatos;
+  UnitManejoFecha, UnitInfracciones, UnitObtenerDatos, UnitTypes;
 
 const
   EsqX = 15;
@@ -217,6 +217,7 @@ begin
       ClrScr;
     case Op of
       '1': AltaInfraccion(DatosCon, ArchInf);
+      //'2': ConsultaInfraccion(DatosCon, ArchInf);
       '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
     end;
   until Op = '0';
