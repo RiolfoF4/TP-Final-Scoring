@@ -3,12 +3,14 @@ unit UnitInfracciones;
 interface
 
 uses
-  crt, sysutils, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha, UnitLista;
+  crt, sysutils, Math, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+//procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+
 
 implementation
-procedure InicializarListaInf(var Lista: TLista; var ArchListaInf: TArchListInf);
+procedure InicializarListaInf(var Lista: TListaTiposInf; var ArchListaInf: TArchListInf);
 var
   x: String;
 begin
@@ -33,7 +35,7 @@ begin
     PuntosInfraccion := -1;
 end;
 
-function InfraccionValida(NumeroInfrac: String; var ListaInfracciones: TLista): Boolean;
+function InfraccionValida(NumeroInfrac: String; var ListaInfracciones: TListaTiposInf): Boolean;
 var
   Num: Integer;
 begin
@@ -88,7 +90,7 @@ const
   LimiteInferior = 16;
 var
   ArchListaInf: TArchListInf;
-  ListaInf: TLista;
+  ListaInf: TListaTiposInf;
   PosAnterior: TPila;
   i, Anterior: Byte;
   Tecl: String[2];
@@ -106,7 +108,7 @@ begin
 
   while (LowerCase(Tecl) <> 'q') and not (InfraccionValida(Tecl, ListaInf)) do
   begin
-    // Si no se llegó al final del archivo, muestra secuencialmente las infracciones
+    // Si no se llegó al final de la lista, muestra secuencialmente las infracciones
     if i <= TamanioLista(ListaInf) then
     begin
       Recuperar(ListaInf, i, Infraccion);
@@ -116,7 +118,7 @@ begin
     end;
 
     // Recibe una entrada del usuario si el texto supera un límite inferior
-    // o se llega al final del archivo
+    // o se llega al final de la lista
     if (WhereY > LimiteInferior) or (i = TamanioLista(ListaInf)) then
     begin
       WriteLn('[S] iguiente.');
@@ -129,16 +131,16 @@ begin
       // a: Anterior
       case LowerCase(Tecl) of
         's':
-          // Si NO se llegó al final del archivo, apila el índice de la infracción que se muestra actualmente
-          // Si se llegó el final del archivo, muestra lo mismo
+          // Si NO se llegó al final de la lista, apila el índice de la infracción que se muestra actualmente
+          // Si se llegó el final de la lista, muestra lo mismo
           if not (i = TamanioLista(ListaInf)) then
             Apilar(PosAnterior, Anterior)
           else
             i := Anterior;
         'a': 
-          // Si la pila contiene algún índice, lo desapila y lo guarda en el índice del archivo 'i'
-          // Si la pila NO contiene ningún índice, se encuentra en la primera "página", y establece el índice del
-          // archivo nuevamente en la posición 0
+          // Si la pila contiene algún índice, lo desapila y lo guarda en el índice de la lista 'i'
+          // Si la pila NO contiene ningún índice, se encuentra en la primera "página", y establece el índice de la
+          // lista nuevamente en la posición 0
           if not (PilaVacia(PosAnterior)) then
             Desapilar(PosAnterior, i)
           else
@@ -187,7 +189,7 @@ var
 begin
   Seek(ArchInf, 0);
 
-  // Si es la primer infracción que se ingresa, cargarla directamente
+  // Si es la primer infracción que se ingresa, guardarla directamente
   if FileSize(ArchInf) = 0 then
     Write(ArchInf, Infraccion)
   else
@@ -220,6 +222,38 @@ begin
   end;
 end;
 
+procedure CalcularPlazoInhab(var DatosCon: TDatoConductores);
+var
+  Dias: Extended;
+begin
+  Inc(DatosCon.CantRein);
+  if DatosCon.CantRein <= 3 then
+    Dias := 60 + 60 * (DatosCon.CantRein - 1)
+  else
+    Dias := 180 * IntPower(2, DatosCon.CantRein - 3);
+  // TODO: CalcularFechaHab(DatosCon, Dias);
+end;
+
+procedure DescontarPuntos(var DatosCon: TDatoConductores; Puntos: ShortInt);
+begin
+  DatosCon.Scoring := DatosCon.Scoring - Puntos;
+  if DatosCon.Scoring <= 0 then
+  begin
+    DatosCon.Habilitado := False;
+    CalcularPlazoInhab(DatosCon);
+  end;
+end;
+
+procedure MostrarDatosInf(Infraccion: TDatoInfracciones);
+begin
+  WriteLn('DNI: ', Infraccion.DNI);
+  WriteLn;
+  MostrarInfraccion('Infracción: ' + Infraccion.Tipo);
+  WriteLn;
+  WriteLn(UTF8Decode('Fecha de infracción: '), FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
+  WriteLn('Puntos: ', Infraccion.Puntos);
+end;
+
 procedure MostrarInfracciones(var ArchInf: TArchInf);         // TEMP
 var
   InfAux: TDatoInfracciones;
@@ -230,7 +264,6 @@ begin
     Read(ArchInf, InfAux);
     MostrarInfraccion('[' + IntToStr(FilePos(ArchInf)) + '] Infracción: ' + InfAux.Tipo);
     WriteLn('Fecha: ', FormatoFecha(InfAux.Fecha.Dia, InfAux.Fecha.Mes, InfAux.Fecha.Anio));
-    WriteLn;
   end;
   ReadLn;
 end;
@@ -248,20 +281,13 @@ begin
     Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
     repeat
       ClrScr;
-      WriteLn('DNI: ', Infraccion.DNI);
-      WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
-      WriteLn;
-      MostrarInfraccion('Infracción: ' + Infraccion.Tipo);
-      WriteLn;
-      WriteLn(UTF8Decode('Fecha de infracción: '), FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
-      WriteLn('Puntos a descontar: ', Infraccion.Puntos);
+      MostrarDatosInf(Infraccion);
       WriteLn('Scoring: ', DatosCon.Scoring, ' ==> ', DatosCon.Scoring - Infraccion.Puntos);
       WriteLn;
       WriteLn('[1] Confirmar Alta.');
       WriteLn(UTF8Decode('[2] Modificar Infracción.'));
       WriteLn(UTF8Decode('[3] Modifiar Fecha de Infracción.'));
-      WriteLn('[4] TEMP Mostrar Infracciones.');
-      WriteLn('[0] Cancelar Alta.');
+      WriteLn('[0] CANCELAR ALTA.');
       WriteLn;
       Write(UTF8Decode('Opción: '));
       ReadLn(Rta);
@@ -271,6 +297,7 @@ begin
         '1':
         begin
           AgregarInfraccion(Infraccion, ArchInf);
+          DescontarPuntos(DatosCon, Infraccion.Puntos);
           TextColor(Green);
           WriteLn('Alta exitosa!');
           TextColor(White);
@@ -278,7 +305,6 @@ begin
         end;
         '2': ModificarTipoInfraccion(Infraccion);
         '3': ObtenerFechaInf(Infraccion.Fecha);
-        '4': MostrarInfracciones(ArchInf);
         '0':
         begin
           TextColor(Red);
@@ -290,4 +316,18 @@ begin
     until (Rta = '1') or (Rta = '0');
   end;
 end;
+
+
+{procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+var
+  Infraccion: TDatoInfracciones;
+  Op: String[2];
+  //ListaInf: Lista de TDatoInfracciones?;
+begin
+  ObtenerInfracciones(DatosCon.DNI, ListaInf);
+  Op := ObtenerOpInfracciones(ListaInf);
+  if Op <> '0' then
+    Recuperar(ListaInf, StrToInt(Op), Infraccion);
+end;}
+
 end.
