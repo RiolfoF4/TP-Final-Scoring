@@ -19,10 +19,12 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; // Cas
 implementation
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte); forward;
-procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArchInf: TArchInf;
+procedure ConsultaConductor(var ArchCon: TArchCon; Pos: Word; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
 procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
 procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
+procedure BajaConductor(var DatosCon: TDatoConductores) forward;
+procedure ConsultaBajaConductor(var DatosCon: TDatoConductores) forward;
 procedure GuardarPosApYNom(var ArbolApYNom: TPuntApYNom; ApYNom: String; Pos: Cardinal);
 var
   xAux: TDatoPosApYNom;
@@ -140,9 +142,8 @@ begin
   if Pos < 0 then
     AltaConductor(DatoIng, ArchCon, ArchInf, ArbolApYNom, ArbolDNI, Caso)
   else
-    ConsultaConductor(Pos, ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
+    ConsultaConductor(ArchCon, Pos, ArchInf, ArbolApYNom, ArbolDNI);
 end;
-
 
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);
@@ -151,6 +152,7 @@ var
   PosArch: Word;
   Op, Rta: String[2];
 begin
+  WriteLn;
   WriteLn('No se encontró el conductor ingresado!');
   Write('¿Desea darlo de Alta? (s/N): ');
   ReadLn(Rta);
@@ -173,6 +175,8 @@ begin
     ObtenerFechaNac(DatosCon.FechaNac);
     DatosCon.Tel := ObtenerTel;
     DatosCon.EMail := ObtenerEMail;
+
+    // Inicializar los demás datos
     DatosCon.Scoring := 20;
     DatosCon.Habilitado := True;
     ObtenerFechaActual(DatosCon.FechaHab);
@@ -202,7 +206,7 @@ begin
           TextColor(White);
           Delay(1000);
           ClrScr;
-          ConsultaConductor(PosArch, ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
+          ConsultaConductor(ArchCon, PosArch, ArchInf, ArbolApYNom, ArbolDNI);
         end;
         '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
         '0': 
@@ -217,7 +221,7 @@ begin
   end;
 end;
 
-procedure ConsultaConductor(Pos: Word; var ArchCon: TArchCon; var ArchInf: TArchInf;
+procedure ConsultaConductor(var ArchCon: TArchCon; Pos: Word; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 var
   DatosCon: TDatoConductores;
@@ -228,28 +232,35 @@ begin
   // Lee los datos del conductor
   Seek(ArchCon, Pos);
   Read(ArchCon, DatosCon);
-
+  
   repeat
     ClrScr;
-    MostrarDatosCon(DatosCon);
-    WriteLn;
-    WriteLn('[1] Alta de Infracción.');
-    WriteLn('[2] Consulta de Infracciones.');
-    WriteLn('[3] Modificar Datos.');
-    WriteLn('[4] Dar de Baja.');
-    WriteLn('[0] Volver.');
-    WriteLn;
-    Write('Opción: ');
-    ReadLn(Op);
-    if Op <> '0' then
-      ClrScr;
-    case Op of
-      '1': AltaInfraccion(DatosCon, ArchInf);
-      //'2': ConsultaInfraccion(DatosCon, ArchInf);
-      '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
-    end;
-  until Op = '0';
-
+    if not (DatosCon.BajaLogica) then
+    begin
+      MostrarDatosCon(DatosCon);
+      WriteLn;
+      WriteLn('[1] Alta de Infracción.');
+      WriteLn('[2] Consulta de Infracciones.');
+      WriteLn('[3] Modificar Datos.');
+      WriteLn('[4] Dar de Baja.');
+      WriteLn('[0] Volver.');
+      WriteLn;
+      Write('Opción: ');
+      ReadLn(Op);
+      if Op <> '0' then
+        ClrScr;
+      case Op of
+        '1': AltaInfraccion(DatosCon, ArchInf);
+        //'2': ConsultaInfraccion(DatosCon, ArchInf);
+        '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
+        '4': BajaConductor(DatosCon);
+      end;
+    end
+    else
+      ConsultaBajaConductor(DatosCon);
+  until (Op = '0') or (DatosCon.BajaLogica);
+  
+  // Guarda los datos del conductor en el archivo
   Seek(ArchCon, Pos);
   Write(ArchCon, DatosCon);
 end;
@@ -257,29 +268,28 @@ end;
 procedure MostrarDatosCon(var DatosCon: TDatoConductores);
 begin
   with DatosCon do
-    if not (BajaLogica) then
+  begin
+    WriteLn('DNI: ', DNI);
+    WriteLn('Apellido y Nombre: ', ApYNom);
+    WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
+    WriteLn('Teléfono: ', Tel);
+    WriteLn('EMail: ', EMail);
+    WriteLn('Scoring: ', Scoring);
+    Write('Habilitado: ');
+    if Habilitado then
     begin
-      WriteLn('DNI: ', DNI);
-      WriteLn('Apellido y Nombre: ', ApYNom);
-      WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
-      WriteLn('Teléfono: ', Tel);
-      WriteLn('EMail: ', EMail);
-      WriteLn('Scoring: ', Scoring);
-      Write('Habilitado: ');
-      if Habilitado then
-      begin
-        TextColor(Green);
-        WriteLn('Sí');
-      end
-      else
-      begin
-        TextColor(Red);
-        WriteLn('No');
-      end;
-      TextColor(White);
-      WriteLn('Fecha de Habilitación: ', FormatoFecha(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio));
-      WriteLn('Cantidad de Reincidencias: ', CantRein);
+      TextColor(Green);
+      WriteLn('Sí');
+    end
+    else
+    begin
+      TextColor(Red);
+      WriteLn('No');
     end;
+    TextColor(White);
+    WriteLn('Fecha de Habilitación: ', FormatoFecha(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio));
+    WriteLn('Cantidad de Reincidencias: ', CantRein);
+  end;
 end;
 
 procedure MostrarOpDatosCon(var DatosCon: TDatoConductores);
@@ -394,5 +404,68 @@ begin
     TextColor(White);
     Delay(1500);
   end;
+end;
+
+procedure BajaConductor(var DatosCon: TDatoConductores);
+begin
+  TextColor(Red);
+  WriteLn('Advertencia!');
+  WriteLn;
+  TextColor(White);
+  WriteLn('Se dará de baja al siguiente conductor:');
+  WriteLn('           DNI: ', DatosCon.DNI);
+  WriteLn('           Apellido y Nombres: ', DatosCon.ApYNom);
+  WriteLn;
+  WriteLn('Esta acción NO eliminará los datos o las infracciones guardadas,'); 
+  WriteLn('pero lo excluirá de listados y promedios.');
+  WriteLn;
+  Write('¿Desea continuar con la baja? (S/N): ');
+  if ObtenerRtaSN = 's' then
+  begin
+    DatosCon.BajaLogica := True;
+    TextColor(Green);
+    WriteLn;
+    WriteLn('Baja Exitosa!');
+    TextColor(White);
+  end
+  else
+  begin
+    TextColor(Red);
+    WriteLn;
+    WriteLn('Baja Cancelada!');
+    TextColor(White);
+  end;
+  Delay(1500);
+end;
+
+procedure ConsultaBajaConductor(var DatosCon: TDatoConductores);
+begin
+  TextColor(Red);
+  WriteLn('Advertencia!');
+  WriteLn;
+  TextColor(White);
+  WriteLn('El conductor ingresado se encuentra dado de baja:');
+  WriteLn('           DNI: ', DatosCon.DNI);
+  WriteLn('           Apellido y Nombres: ', DatosCon.ApYNom);
+  WriteLn;
+  WriteLn('Para poder acceder a los datos debe darlo de alta.');
+  WriteLn;
+  Write('¿Desea darlo de alta? (S/N): ');
+  if ObtenerRtaSN = 's' then
+  begin
+    DatosCon.BajaLogica := False;
+    WriteLn;
+    TextColor(Green);
+    WriteLn('Alta Exitosa!');
+    TextColor(White);
+  end
+  else
+  begin
+    WriteLn;
+    TextColor(Red);
+    WriteLn('Alta Cancelada!');
+    TextColor(White);
+  end;
+  Delay(1500);
 end;
 end.
