@@ -86,9 +86,30 @@ begin
 end;
 
 procedure ObtenerFechaInf(var Fecha: TRegFecha);
+var
+  FechaActual: TRegFecha;
+  FechaActualPas: TDateTime;
+  FechaAux: String[10];
+  FechaAuxPas: TDateTime;
 begin
+  ObtenerFechaActual(FechaActual);
+  with FechaActual do
+    FechaActualPas := StrToDate(FormatoFecha(Dia, Mes, Anio), '/');
+  repeat
   Write('Fecha de Infracción: ');
-  CadARegFecha(ObtenerFechaStr, Fecha.Dia, Fecha.Mes, Fecha.Anio);
+  FechaAux := ObtenerFechaStr;
+  FechaAuxPas := StrToDate(FechaAux, '/');
+  if FechaAuxPas > FechaActualPas then
+  begin
+    TextColor(Red);
+    Write(UTF8Decode('La fecha de la infracción no puede ser posterior a la fecha actual!'));
+    TextColor(White);
+    GotoXY(1,1);
+  end;
+  until FechaAuxPas <= FechaActualPas;
+  
+  with Fecha do
+    CadARegFecha(FechaAux, Dia, Mes, Anio);
 end;
 
 function ObtenerOpcionAlta: String;
@@ -97,9 +118,9 @@ var
 begin
   ObtenerOpcionAlta := '';
   WriteLn('¿Son correctos los datos ingresados?');
-  WriteLn('[1] Sí');
-  WriteLn('[2] No (Modificar)');
-  WriteLn('[0] CANCELAR ALTA');
+  WriteLn('[1] Sí.');
+  WriteLn('[2] No (Modificar).');
+  WriteLn('[0] CANCELAR ALTA.');
   WriteLn;
 
   while ObtenerOpcionAlta = '' do
