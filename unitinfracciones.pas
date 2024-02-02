@@ -255,26 +255,10 @@ end;
 
 procedure MostrarDatosInf(Infraccion: TDatoInfracciones);
 begin
-  WriteLn('DNI: ', Infraccion.DNI);
-  WriteLn;
   MostrarInfraccion('Infracción: ' + Infraccion.Tipo);
   WriteLn;
   WriteLn(UTF8Decode('Fecha de infracción: '), FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
   WriteLn('Puntos: ', Infraccion.Puntos);
-end;
-
-procedure MostrarInfracciones(var ArchInf: TArchInf);         // TEMP
-var
-  InfAux: TDatoInfracciones;
-begin
-  Seek(ArchInf, 0);
-  while not (EOF(ArchInf)) do
-  begin
-    Read(ArchInf, InfAux);
-    MostrarInfraccion('[' + IntToStr(FilePos(ArchInf)) + '] Infracción: ' + InfAux.Tipo);
-    WriteLn('Fecha: ', FormatoFecha(InfAux.Fecha.Dia, InfAux.Fecha.Mes, InfAux.Fecha.Anio));
-  end;
-  ReadLn;
 end;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
@@ -290,6 +274,9 @@ begin
     Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
     repeat
       ClrScr;
+      WriteLn('DNI: ', Infraccion.DNI);
+      WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+      WriteLn;
       MostrarDatosInf(Infraccion);
       Write('Scoring: ', DatosCon.Scoring, ' ==> ');
       if DatosCon.Scoring - Infraccion.Puntos < 0 then
@@ -304,7 +291,7 @@ begin
       WriteLn;
       Write(UTF8Decode('Opción: '));
       ReadLn(Rta);
-      if (Rta <> '1') and (Rta <> '0') then
+      if not ((Rta = '1') or (Rta = '0')) then
         ClrScr;
       case Rta of
         '1':
@@ -312,6 +299,7 @@ begin
           AgregarInfraccion(Infraccion, ArchInf);
           DescontarPuntos(DatosCon, Infraccion.Puntos);
           TextColor(Green);
+          WriteLn;
           WriteLn('Alta exitosa!');
           TextColor(White);
           Delay(1500);
@@ -321,6 +309,7 @@ begin
         '0':
         begin
           TextColor(Red);
+          WriteLn;
           WriteLn('Alta cancelada!');
           TextColor(White);
           Delay(1500);
