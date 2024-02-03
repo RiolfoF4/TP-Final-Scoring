@@ -14,7 +14,7 @@ function ObtenerEMail: String;
 procedure ObtenerFechaActual(var Fecha: TRegFecha);
 procedure ObtenerFechaNac(var Fecha: TRegFecha);
 procedure ObtenerFechaInf(var Fecha: TRegFecha);
-function ObtenerOpcionAlta: String;
+function ObtenerOpcion(Texto: String; CotaInf, CotaSup: Byte): String;
 function ObtenerRtaSN: String;
 
 implementation
@@ -96,43 +96,20 @@ begin
   with FechaActual do
     FechaActualPas := StrToDate(FormatoFecha(Dia, Mes, Anio), '/');
   repeat
-  Write('Fecha de Infracción: ');
-  FechaAux := ObtenerFechaStr;
-  FechaAuxPas := StrToDate(FechaAux, '/');
-  if FechaAuxPas > FechaActualPas then
-  begin
-    TextColor(Red);
-    Write(UTF8Decode('La fecha de la infracción no puede ser posterior a la fecha actual!'));
-    TextColor(White);
-    GotoXY(1,1);
-  end;
+    Write('Fecha de Infracción: ');
+    FechaAux := ObtenerFechaStr;
+    FechaAuxPas := StrToDate(FechaAux, '/');
+    if FechaAuxPas > FechaActualPas then
+    begin
+      TextColor(Red);
+      Write(UTF8Decode('La fecha de la infracción no puede ser posterior a la fecha actual!'));
+      TextColor(White);
+      GotoXY(1,1);
+    end;
   until FechaAuxPas <= FechaActualPas;
   
   with Fecha do
     CadARegFecha(FechaAux, Dia, Mes, Anio);
-end;
-
-function ObtenerOpcionAlta: String;
-var
-  Op: String[2];
-begin
-  ObtenerOpcionAlta := '';
-  WriteLn('¿Son correctos los datos ingresados?');
-  WriteLn('[1] Sí.');
-  WriteLn('[2] No (Modificar).');
-  WriteLn('[0] CANCELAR ALTA.');
-  WriteLn;
-
-  while ObtenerOpcionAlta = '' do
-  begin
-    Write('Opción: ');
-    ClrEol;
-    ReadLn(Op);
-    if (Op = '1') or (Op = '2') or (Op = '0') then
-      ObtenerOpcionAlta := Op
-    else
-      GotoXY(1, WhereY-1);
-  end;
 end;
 
 function ObtenerRtaSN: String;
@@ -149,4 +126,25 @@ begin
   until (LowerCase(Rta) = 's') or (LowerCase(Rta) = 'n');
   ObtenerRtaSN := LowerCase(Rta);
 end;
+
+function ObtenerOpcion(Texto: String; CotaInf, CotaSup: Byte): String;
+var
+  Op: String[2];
+begin
+  ObtenerOpcion := '';
+  while ObtenerOpcion = '' do
+  begin
+    Write(Texto);
+    ClrEol;
+    ReadLn(Op);
+    if EsNum(Op) then
+      if (CotaInf <= StrToInt(Op)) and (StrToInt(Op) <= CotaSup) then
+        ObtenerOpcion := Op
+      else
+        GotoXY(1, WhereY-1)
+    else
+      GotoXY(1, WhereY-1);
+  end;
+end;
+
 end.
