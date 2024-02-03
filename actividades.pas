@@ -75,29 +75,26 @@ end;
 procedure ComprobarInhabilitaciones(var ArchCon: TArchCon);
 var
   FechaActual: TRegFecha;
-  FechaActualPas: TDateTime;
   xAux: TDatoConductores;
-  FechaHabPas: TDateTime;
 begin
-  // Guarda la fecha de hoy en formato Pascal
+  // Guarda la fecha de hoy
   ObtenerFechaActual(FechaActual);
-  FechaActualPas := StrToDate(FormatoFecha(FechaActual.Dia, FechaActual.Mes, FechaActual.Anio), '/');
 
   Seek(ArchCon, 0);
   while not (EOF(ArchCon)) do
   begin
     Read(ArchCon, xAux);
     if not (xAux.Habilitado) then
-    begin
-      FechaHabPas := StrToDate(FormatoFecha(xAux.FechaHab.Dia, xAux.FechaHab.Mes, xAux.FechaHab.Anio), '/');
-      if FechaHabPas <= FechaActualPas then
-      begin
-        xAux.Habilitado := True;
-        xAux.Scoring := 20;
-        Seek(ArchCon, FilePos(ArchCon) - 1);
-        Write(ArchCon,xAux);
-      end;
-    end;
+      with xAux do
+        // Si la fecha de habilitación NO es posterior a la fecha actual (es anterior o igual)
+        if not (EsFechaPosterior(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio, 
+          FechaActual.Dia, FechaActual.Mes, FechaActual.Anio)) then
+        begin
+          xAux.Habilitado := True;
+          xAux.Scoring := 20;
+          Seek(ArchCon, FilePos(ArchCon) - 1);
+          Write(ArchCon,xAux);
+        end;
   end;
 end;
 
@@ -187,7 +184,12 @@ begin
       ClrScr;
       MostrarDatosCon(DatosCon);
       WriteLn;
-      Op := ObtenerOpcionAlta;
+      WriteLn('¿Son correctos los datos ingresados?');
+      WriteLn('[1] Sí.');
+      WriteLn('[2] No (Modificar).');
+      WriteLn('[0] CANCELAR ALTA.');
+      WriteLn;
+      Op := ObtenerOpcion('Opción: ', 0, 2);
       case Op of
         '1':
         begin
@@ -245,8 +247,7 @@ begin
       WriteLn('[4] Dar de Baja.');
       WriteLn('[0] Volver.');
       WriteLn;
-      Write('Opción: ');
-      ReadLn(Op);
+      Op := ObtenerOpcion('Opción: ', 0, 4);
       if Op <> '0' then
         ClrScr;
       case Op of
@@ -356,8 +357,7 @@ begin
     ClrScr;
     MostrarOpDatosCon(DatosConAux);
     WriteLn;
-    Write('Opción: ');
-    ReadLn(Op);
+    Op := ObtenerOpcion('Opción: ', 0, 5);
     ClrScr;
     case Op of
       '1': 
