@@ -9,6 +9,7 @@ function ObtenerFechaStr: String;
 procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
 function FormatoFecha(Dia, Mes, Anio: Word): String;
 procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
+function EsFechaPosterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
 
 implementation
 function ObtenerFechaStr: String;
@@ -130,26 +131,17 @@ begin
     end;
   end;
 end;
+
+function EsFechaPosterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
+begin
+  EsFechaPosterior := False;
+  if Anio0 > Anio1 then
+    EsFechaPosterior := True
+  else
+  if (Anio0 = Anio1) and (Mes0 > Mes1) then
+    EsFechaPosterior := True
+  else
+  if (Anio0 = Anio1) and (Mes0 = Mes1) and (Dia0 > Dia1) then
+    EsFechaPosterior := True;
+end;
 end.
-procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
-begin
-XDia := Dia;
-XMes := Mes;
-XAnio := Anio;
-while CantDias > 0 do
-begin
-Inc(XDia);
-Dec(CantDias);
-if XDia > MaxDiasMes(XMes, XAnio) then
-begin
-XDia := 1;
-if XMes <> 12 then
-Inc(XMes)
-else
-begin
-Inc(XAnio);
-XMes := 1;
-end;
-end;
-end;
-end;

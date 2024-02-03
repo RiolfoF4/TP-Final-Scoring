@@ -4,19 +4,21 @@ uses
   UnitManejoFecha;
 
 var
-  FechaStr: String;
-  Anio, Mes, Dia: Word;
+  FechaStr1, FechaStr2: String;
+  Anio0, Mes0, Dia0: Word;
   XAnio, XMes, XDia: Word;
   CantDias: Word;
 begin
   repeat
-  FechaStr := ObtenerFechaStr();
-  CadARegFecha(FechaStr, Dia, Mes, Anio);
-  WriteLn('Fecha: ', FormatoFecha(Dia, Mes, Anio));
-  Write('Dias: ');
-  ReadLn(CantDias);
-  NuevaFechaAXDias(Dia, Mes, Anio, CantDias, XDia, XMes, XAnio);
-  WriteLn('Nueva Fecha: ', FormatoFecha(XDia, XMes, XAnio));
-  ReadLn;
-  until FechaStr = '11/11/1111';
+  FechaStr1 := ObtenerFechaStr();
+  CadARegFecha(FechaStr1, Dia0, Mes0, Anio0);
+  WriteLn('Fecha1: ', FormatoFecha(Dia0, Mes0, Anio0));
+  FechaStr2 := ObtenerFechaStr();
+  CadARegFecha(FechaStr2, XDia, XMes, XAnio);
+  WriteLn('Fecha2: ', FormatoFecha(XDia, XMes, XAnio));
+  if EsFechaPosterior(Dia0, Mes0, Anio0, XDia, XMes, XAnio) then
+    WriteLn('Apa, funca')
+  else
+    WriteLn('Nose che');
+  until FechaStr1 = '11/11/1111';
 end.
