@@ -17,7 +17,7 @@ begin
   while not (EOF(ArchListaInf)) do
   begin
     ReadLn(ArchListaInf, x);
-    if x <> '' then
+    if (x <> '') and (Pos('|', x) <> 0) and (not ListaLlena(Lista)) then
       Agregar(Lista, x);
   end;
   Reset(ArchListaInf);
@@ -52,7 +52,7 @@ function UltimoEspacioEnLinea(Texto: String): Integer;
 var
   i: Word;
 begin
-  // WindMaxX representa el borde derecho y WindMinX el borde izquierdo
+  // WindMaxX representa el margen derecho y WindMinX el margen izquierdo
   i := WindMaxX - WindMinX;
   while (Texto[i] <> ' ') and (i > 0) do
     Dec(i);
@@ -65,8 +65,11 @@ end;
 procedure MostrarInfraccion(Infraccion: String);
 var
   UltimoEspacio: Integer;
-  SeparadorPuntos: Word;
 begin
+  // Remueve los puntos de la infracción, si los hay
+  if Pos('|', Infraccion) > 0 then
+    Infraccion := Copy(Infraccion, 1, Pos('|', Infraccion)-1);
+
   // Si el texto excede el largo de un línea
   if Length(Utf8ToAnsi(Infraccion)) > (WindMaxX - WindMinX) then
   begin
@@ -78,14 +81,11 @@ begin
     MostrarInfraccion(Copy(Infraccion, UltimoEspacio + 1));
   end
   else
-  begin
-    // Muestra la infracción
-    SeparadorPuntos := Pos('|', Infraccion);
-    WriteLn(UTF8Decode(Copy(Infraccion, 1, SeparadorPuntos-1)));
-  end;
+    WriteLn(UTF8Decode(Infraccion));
 end;
 
-function ObtenerInfraccion: ShortString;
+function MostrarListaInfracciones: ShortString;
+  // TODO: function MostrarListaInfracciones(Lista: TLista): ShortString;
 const
   LimiteInferior = 16;
 var
@@ -95,11 +95,11 @@ var
   i, Anterior: Byte;
   Tecl: String[2];
   Infraccion: ShortString;
-
 begin
-  CrearAbrirArchivoListInf(ArchListaInf);
-  CrearLista(ListaInf);
-  InicializarListaInf(ListaInf, ArchListaInf);
+  // Inicialización
+  CrearAbrirArchivoListInf(ArchListaInf); //
+  CrearLista(ListaInf); //
+  InicializarListaInf(ListaInf, ArchListaInf); //
   CrearPila(PosAnterior);
 
   i := 1;
@@ -118,8 +118,8 @@ begin
     end;
 
     // Recibe una entrada del usuario si el texto supera un límite inferior
-    // o se llega al final de la lista
-    if (WhereY > LimiteInferior) or (i = TamanioLista(ListaInf)) then
+    // o supera el final de la lista
+    if (WhereY > LimiteInferior) or (i > TamanioLista(ListaInf)) then
     begin
       WriteLn('[S] iguiente.');
       WriteLn('[A] nterior.');
@@ -133,7 +133,7 @@ begin
         's':
           // Si NO se llegó al final de la lista, apila el índice de la infracción que se muestra actualmente
           // Si se llegó el final de la lista, muestra lo mismo
-          if not (i = TamanioLista(ListaInf)) then
+          if not (i > TamanioLista(ListaInf)) then
             Apilar(PosAnterior, Anterior)
           else
             i := Anterior;
@@ -156,15 +156,15 @@ begin
 
   // Devolver la infraccion seleccionada, o una string vacía si selecciona 'Salir'
   if InfraccionValida(Tecl, ListaInf) then
-    Recuperar(ListaInf, StrToInt(Tecl), ObtenerInfraccion)
+    Recuperar(ListaInf, StrToInt(Tecl), MostrarListaInfracciones)
   else
-    ObtenerInfraccion := '';
-  CerrarArchivoListInf(ArchListaInf);
+    MostrarListaInfracciones := '';
+  CerrarArchivoListInf(ArchListaInf); //
 end;
 
 procedure ModificarTipoInfraccion(var Infraccion: TDatoInfracciones);
 begin
-  Infraccion.Tipo := ObtenerInfraccion;
+  Infraccion.Tipo := MostrarListaInfracciones;
   Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
 end;
 
@@ -185,7 +185,6 @@ procedure AgregarInfraccion(Infraccion: TDatoInfracciones; var ArchInf: TArchInf
 var
   Pos: Word;
   xAux: TDatoInfracciones;
-  FechaInf, FechaAux: TDateTime;
 begin
   Seek(ArchInf, 0);
 
@@ -200,11 +199,11 @@ begin
       Pos := FilePos(ArchInf);
       if not (EOF(ArchInf)) then
         Read(ArchInf, xAux);
-
-      // Guarda las fechas en el formato de Pascal
-      FechaInf := StrToDate(FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio), '/');
-      FechaAux := StrToDate(FormatoFecha(xAux.Fecha.Dia, xAux.Fecha.Mes, xAux.Fecha.Anio), '/');
-    until (FechaInf < FechaAux) or (Pos = FileSize(ArchInf));
+    until (
+        EsFechaPosterior(xAux.Fecha.Dia, xAux.Fecha.Mes, xAux.Fecha.Anio, 
+        Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio) 
+        or (Pos = FileSize(ArchInf))
+      );
 
     // Si se llegó al final del archivo, agregar la infraccion
     if Pos = FileSize(ArchInf) then
@@ -264,9 +263,9 @@ end;
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
   Infraccion: TDatoInfracciones;
-  Rta: String[2];
+  Op: String[2];
 begin
-  Infraccion.Tipo := ObtenerInfraccion;
+  Infraccion.Tipo := MostrarListaInfracciones;
   if Infraccion.Tipo <> '' then
   begin
     Infraccion.DNI := DatosCon.DNI;
@@ -289,11 +288,10 @@ begin
       WriteLn(UTF8Decode('[3] Modifiar Fecha de Infracción.'));
       WriteLn('[0] CANCELAR ALTA.');
       WriteLn;
-      Write(UTF8Decode('Opción: '));
-      ReadLn(Rta);
-      if not ((Rta = '1') or (Rta = '0')) then
+      Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 3);
+      if not ((Op = '1') or (Op = '0')) then
         ClrScr;
-      case Rta of
+      case Op of
         '1':
         begin
           AgregarInfraccion(Infraccion, ArchInf);
@@ -315,7 +313,7 @@ begin
           Delay(1500);
         end;
       end;
-    until (Rta = '1') or (Rta = '0');
+    until (Op = '1') or (Op = '0');
   end;
 end;
 
