@@ -6,11 +6,11 @@ uses
   crt, sysutils, Math, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
-//procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 
 
 implementation
-procedure InicializarListaInf(var Lista: TListaTiposInf; var ArchListaInf: TArchListInf);
+procedure InicializarListaInf(var Lista: TListaInf; var ArchListaInf: TArchListInf);
 var
   x: String;
 begin
@@ -35,7 +35,7 @@ begin
     PuntosInfraccion := -1;
 end;
 
-function InfraccionValida(NumeroInfrac: String; var ListaInfracciones: TListaTiposInf): Boolean;
+function InfraccionValida(NumeroInfrac: String; var ListaInfracciones: TListaInf): Boolean;
 var
   Num: Integer;
 begin
@@ -84,24 +84,17 @@ begin
     WriteLn(UTF8Decode(Infraccion));
 end;
 
-function MostrarListaInfracciones: ShortString;
-  // TODO: function MostrarListaInfracciones(Lista: TLista): ShortString;
+function MostrarListaInfracciones(var ListaInf: TListaInf): ShortString;
 const
   LimiteInferior = 16;
 var
-  ArchListaInf: TArchListInf;
-  ListaInf: TListaTiposInf;
   PosAnterior: TPila;
   i, Anterior: Byte;
   Tecl: String[2];
   Infraccion: ShortString;
 begin
   // Inicialización
-  CrearAbrirArchivoListInf(ArchListaInf); //
-  CrearLista(ListaInf); //
-  InicializarListaInf(ListaInf, ArchListaInf); //
   CrearPila(PosAnterior);
-
   i := 1;
   Anterior := 1;
   Tecl := '';
@@ -159,13 +152,18 @@ begin
     Recuperar(ListaInf, StrToInt(Tecl), MostrarListaInfracciones)
   else
     MostrarListaInfracciones := '';
-  CerrarArchivoListInf(ArchListaInf); //
 end;
 
-procedure ModificarTipoInfraccion(var Infraccion: TDatoInfracciones);
+procedure ModificarTipoInfraccion(var Infraccion: TDatoInfracciones; var ListaInf: TListaInf);
+var
+  InfAux: ShortString;
 begin
-  Infraccion.Tipo := MostrarListaInfracciones;
-  Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
+  InfAux := MostrarListaInfracciones(ListaInf);
+  if InfAux <> '' then
+  begin
+    Infraccion.Tipo := InfAux;
+    Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);   
+  end;
 end;
 
 procedure DesplazarDerecha(var ArchInf: TArchInf; Pos: Word);
@@ -263,9 +261,17 @@ end;
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
   Infraccion: TDatoInfracciones;
+  ListaInf: TListaInf;
+  ArchListaInf: TArchListInf;
   Op: String[2];
 begin
-  Infraccion.Tipo := MostrarListaInfracciones;
+  // Inicialización
+  CrearAbrirArchivoListInf(ArchListaInf);
+  CrearLista(ListaInf);
+  InicializarListaInf(ListaInf, ArchListaInf);
+  CerrarArchivoListInf(ArchListaInf);
+  Infraccion.Tipo := MostrarListaInfracciones(ListaInf);
+
   if Infraccion.Tipo <> '' then
   begin
     Infraccion.DNI := DatosCon.DNI;
@@ -282,6 +288,7 @@ begin
         WriteLn(0)
       else
         WriteLn(DatosCon.Scoring - Infraccion.Puntos);
+
       WriteLn;
       WriteLn('[1] Confirmar Alta.');
       WriteLn(UTF8Decode('[2] Modificar Infracción.'));
@@ -302,7 +309,7 @@ begin
           TextColor(White);
           Delay(1500);
         end;
-        '2': ModificarTipoInfraccion(Infraccion);
+        '2': ModificarTipoInfraccion(Infraccion, ListaInf);
         '3': ObtenerFechaInf(Infraccion.Fecha);
         '0':
         begin
@@ -317,17 +324,53 @@ begin
   end;
 end;
 
-
-{procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+procedure ObtenerInfraccionesCon(var ArchInf: TArchInf; DNICon: Cardinal; var ListaInf: TListaInf);
 var
-  Infraccion: TDatoInfracciones;
-  Op: String[2];
-  //ListaInf: Lista de TDatoInfracciones?;
+  InfAux: TDatoInfracciones;
+  TipoInfAux: ShortString;
 begin
-  ObtenerInfracciones(DatosCon.DNI, ListaInf);
-  Op := ObtenerOpInfracciones(ListaInf);
-  if Op <> '0' then
-    Recuperar(ListaInf, StrToInt(Op), Infraccion);
-end;}
+  Seek(ArchInf, 0);
+  while not (EOF(ArchInf)) do
+  begin
+    Read(ArchInf, InfAux);
+    
+    if InfAux.DNI = DNICon then
+      with InfAux do
+      begin
+        TipoInfAux := Copy(Tipo, 1, Pos('|', Tipo) - 1) + #13#10 + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio) + Copy(Tipo, Pos('|', Tipo));
+        Agregar(ListaInf, TipoInfAux);
+      end;
+  end;
+end;
 
+procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
+var
+  Op: String[2];
+  InfAux: ShortString;
+  DatosInf: TDatoInfracciones;
+  ListaInf: TListaInf;
+begin
+  CrearLista(ListaInf);
+  ObtenerInfraccionesCon(ArchInf, DatosCon.DNI, ListaInf);
+  if not ListaVacia(ListaInf) then
+  begin
+    InfAux := MostrarListaInfracciones(ListaInf);
+    DatosInf.Tipo := Copy(InfAux, 1, Pos(#13, InfAux));
+    DatosInf.Puntos := PuntosInfraccion(InfAux);
+    CadARegFecha(Copy(InfAux, Pos(#10, InfAux) + 1, 10), DatosInf.Fecha.Dia, DatosInf.Fecha.Mes, DatosInf.Fecha.Anio);
+    DatosInf.DNI := DatosCon.DNI;
+    WriteLn('DNI: ', DatosInf.DNI);
+    WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+    WriteLn;
+    MostrarDatosInf(DatosInf);
+    ReadLn;
+  end
+  else
+  begin
+    TextColor(Red);
+    WriteLn('El conductor no posee infracciones!');
+    TextColor(White);
+    Delay(1500);
+  end;
+end;
 end.
