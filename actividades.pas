@@ -100,6 +100,7 @@ end;
 
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 begin
+  ClrScr;
   Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY);
   TextColor(White);
   CrearAbrirArchivoCon(ArchCon);
@@ -252,7 +253,7 @@ begin
         ClrScr;
       case Op of
         '1': AltaInfraccion(DatosCon, ArchInf);
-        //'2': ConsultaInfraccion(DatosCon, ArchInf);
+        '2': ConsultaInfraccion(DatosCon, ArchInf);
         '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
         '4': BajaConductor(DatosCon);
       end;
