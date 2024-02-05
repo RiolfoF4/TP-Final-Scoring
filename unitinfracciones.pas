@@ -84,11 +84,12 @@ begin
     WriteLn(UTF8Decode(Infraccion));
 end;
 
-function MostrarListaInfracciones(var ListaInf: TListaInf): ShortString;
+function MostrarListaInfracciones(var ListaInf: TListaInf): Integer;
 const
   LimiteInferior = 16;
 var
   PosAnterior: TPila;
+  CantInf: String[7];
   i, Anterior: Byte;
   Tecl: String[2];
   Infraccion: ShortString;
@@ -114,7 +115,8 @@ begin
     // o supera el final de la lista
     if (WhereY > LimiteInferior) or (i > TamanioLista(ListaInf)) then
     begin
-      WriteLn('[S] iguiente.');
+      CantInf := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaInf));
+      WriteLn('[S] iguiente.', CantInf:(WindMaxX - WindMinX - 13));
       WriteLn('[A] nterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
@@ -147,20 +149,22 @@ begin
     end;
   end;
 
-  // Devolver la infraccion seleccionada, o una string vacía si selecciona 'Salir'
+  // Devolver la posición de la infraccion seleccionada, o -1 si selecciona 'Salir'
   if InfraccionValida(Tecl, ListaInf) then
-    Recuperar(ListaInf, StrToInt(Tecl), MostrarListaInfracciones)
+    Val(Tecl, MostrarListaInfracciones)
   else
-    MostrarListaInfracciones := '';
+    MostrarListaInfracciones := -1;
 end;
 
 procedure ModificarTipoInfraccion(var Infraccion: TDatoInfracciones; var ListaInf: TListaInf);
 var
+  PosInf: Integer;
   InfAux: ShortString;
 begin
-  InfAux := MostrarListaInfracciones(ListaInf);
-  if InfAux <> '' then
+  PosInf := MostrarListaInfracciones(ListaInf);
+  if PosInf <> -1 then
   begin
+    Recuperar(ListaInf, PosInf, InfAux);
     Infraccion.Tipo := InfAux;
     Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);   
   end;
@@ -263,6 +267,7 @@ var
   Infraccion: TDatoInfracciones;
   ListaInf: TListaInf;
   ArchListaInf: TArchListInf;
+  PosInf: Integer;
   Op: String[2];
 begin
   // Inicialización
@@ -270,13 +275,17 @@ begin
   CrearLista(ListaInf);
   InicializarListaInf(ListaInf, ArchListaInf);
   CerrarArchivoListInf(ArchListaInf);
-  Infraccion.Tipo := MostrarListaInfracciones(ListaInf);
 
-  if Infraccion.Tipo <> '' then
+  PosInf := MostrarListaInfracciones(ListaInf);
+  
+  if PosInf <> -1 then
   begin
+    // Carga los datos inciales de la infracción
+    Recuperar(ListaInf, PosInf, Infraccion.Tipo);
     Infraccion.DNI := DatosCon.DNI;
     ObtenerFechaActual(Infraccion.Fecha);
     Infraccion.Puntos := PuntosInfraccion(Infraccion.Tipo);
+
     repeat
       ClrScr;
       WriteLn('DNI: ', Infraccion.DNI);
@@ -324,46 +333,59 @@ begin
   end;
 end;
 
-procedure ObtenerInfraccionesCon(var ArchInf: TArchInf; DNICon: Cardinal; var ListaInf: TListaInf);
+procedure ObtenerInfraccionesCon(var ArchInf: TArchInf; DNICon: Cardinal; var ListaDatosInf: TListaDatosInf);
 var
   InfAux: TDatoInfracciones;
-  TipoInfAux: ShortString;
 begin
   Seek(ArchInf, 0);
   while not (EOF(ArchInf)) do
   begin
     Read(ArchInf, InfAux);
-    
-    if InfAux.DNI = DNICon then
-      with InfAux do
-      begin
-        TipoInfAux := Copy(Tipo, 1, Pos('|', Tipo) - 1) + #13#10 + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio) + Copy(Tipo, Pos('|', Tipo));
-        Agregar(ListaInf, TipoInfAux);
-      end;
+    if (InfAux.DNI = DNICon) and not (ListaLlena(ListaDatosInf)) then
+      Agregar(ListaDatosInf, InfAux);
   end;
 end;
 
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
   Op: String[2];
-  InfAux: ShortString;
+  i: Word;
+  PosInf: Integer;
   DatosInf: TDatoInfracciones;
-  ListaInf: TListaInf;
+  ListaDatosInf: TListaDatosInf;
+  ListaInfAux: TListaInf;
 begin
-  CrearLista(ListaInf);
-  ObtenerInfraccionesCon(ArchInf, DatosCon.DNI, ListaInf);
-  if not ListaVacia(ListaInf) then
+  CrearLista(ListaDatosInf);
+  ObtenerInfraccionesCon(ArchInf, DatosCon.DNI, ListaDatosInf);
+  if not ListaVacia(ListaDatosInf) then
   begin
-    InfAux := MostrarListaInfracciones(ListaInf);
-    DatosInf.Tipo := Copy(InfAux, 1, Pos(#13, InfAux));
-    DatosInf.Puntos := PuntosInfraccion(InfAux);
-    CadARegFecha(Copy(InfAux, Pos(#10, InfAux) + 1, 10), DatosInf.Fecha.Dia, DatosInf.Fecha.Mes, DatosInf.Fecha.Anio);
-    DatosInf.DNI := DatosCon.DNI;
-    WriteLn('DNI: ', DatosInf.DNI);
-    WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
-    WriteLn;
-    MostrarDatosInf(DatosInf);
-    ReadLn;
+    CrearLista(ListaInfAux);
+    for i := 1 to TamanioLista(ListaDatosInf) do
+      with DatosInf do
+      begin
+        Recuperar(ListaDatosInf, i, DatosInf);
+        Tipo := Copy(Tipo, 1, Pos('|', Tipo) - 1) + #13#10  + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio);
+        Agregar(ListaInfAux, Tipo);
+      end;
+
+    PosInf := MostrarListaInfracciones(ListaInfAux);
+
+    if PosInf <> -1 then
+      repeat
+        Recuperar(ListaDatosInf, PosInf, DatosInf);
+        WriteLn('DNI: ',DatosInf.DNI);
+        WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+        WriteLn;
+        MostrarDatosInf(DatosInf);
+        WriteLn;
+        WriteLn('[0] Volver.');
+        WriteLn;
+        Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
+        ClrScr;
+        case Op of
+          '0': PosInf := MostrarListaInfracciones(ListaInfAux);
+        end;
+      until PosInf = -1;
   end
   else
   begin
