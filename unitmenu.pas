@@ -27,8 +27,8 @@ begin
     ReadLn(Op);
     ClrScr;
     case Op of
-      '1': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 1);
-      '2': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 2);
+      '1': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 'apynom');
+      '2': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 'dni');
     end;
   until Op = '0';
   Cerrar(ArchCon, ArchInf);
