@@ -14,11 +14,11 @@ const
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);               
 
 implementation
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte); forward;
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString); forward;
 procedure ConsultaConductor(var ArchCon: TArchCon; Pos: Word; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
 procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
@@ -118,14 +118,14 @@ begin
 end;
 
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);               
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);               
 var
   ApYNom: String[50];
   DNI: Cardinal;
   Pos: LongInt;
   DatoIng: String[50];
 begin
-  if Caso = 1 then
+  if Caso = 'apynom' then
   begin
     ApYNom := ObtenerApYNom;
     DatoIng := ApYNom;
@@ -144,7 +144,7 @@ begin
 end;
 
 procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: Byte);
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);
 var
   DatosCon: TDatoConductores;
   PosArch: Word;
@@ -158,7 +158,7 @@ begin
   if LowerCase(Rta) = 's' then
   begin
     // Guardar automáticamente el dato que se ingresa al consultar conductor
-    if Caso = 1 then
+    if Caso = 'apynom' then
     begin
       DatosCon.ApYNom := DatoIngresado;
       DatosCon.DNI := ObtenerDNI;
