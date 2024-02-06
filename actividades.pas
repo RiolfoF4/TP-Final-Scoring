@@ -151,7 +151,7 @@ var
   Op, Rta: String[2];
 begin
   WriteLn;
-  WriteLn('No se encontró el conductor ingresado!');
+  WriteLn('¡No se encontró el conductor ingresado!');
   Write('¿Desea darlo de Alta? (s/N): ');
   ReadLn(Rta);
   ClrScr;
@@ -205,7 +205,7 @@ begin
 
           WriteLn;
           TextColor(Green);
-          WriteLn('Alta exitosa!');
+          WriteLn('¡Alta exitosa!');
           TextColor(White);
           Delay(1000);
           ClrScr;
@@ -215,7 +215,7 @@ begin
         '0': 
         begin
           TextColor(Red);
-          WriteLn('Alta cancelada!');
+          WriteLn('¡Alta cancelada!');
           TextColor(White);
           Delay(1000);
         end;
@@ -370,11 +370,12 @@ begin
           DatosConAux.DNI := ObtenerDNI
         else
         begin
+          // Muestra un error si el DNI del conductor ya está guardado en el archivo
           TextColor(Red);
           WriteLn('ERROR: No es posible modificar un DNI ya cargado.');
           Delay(1500);
           TextColor(White);
-        end;// Muestra un error si el DNI del conductor ya está guardado en el archivo
+        end;
 
       '2': DatosConAux.ApYNom := ObtenerApYNom;
       '3': ObtenerFechaNac(DatosConAux.FechaNac);
@@ -415,7 +416,7 @@ end;
 procedure BajaConductor(var DatosCon: TDatoConductores);
 begin
   TextColor(Red);
-  WriteLn('Advertencia!');
+  WriteLn('¡Advertencia!');
   WriteLn;
   TextColor(White);
   WriteLn('Se dará de baja al siguiente conductor:');
@@ -431,14 +432,14 @@ begin
     DatosCon.BajaLogica := True;
     TextColor(Green);
     WriteLn;
-    WriteLn('Baja Exitosa!');
+    WriteLn('¡Baja Exitosa!');
     TextColor(White);
   end
   else
   begin
     TextColor(Red);
     WriteLn;
-    WriteLn('Baja Cancelada!');
+    WriteLn('¡Baja Cancelada!');
     TextColor(White);
   end;
   Delay(1500);
@@ -447,7 +448,7 @@ end;
 procedure ConsultaBajaConductor(var DatosCon: TDatoConductores);
 begin
   TextColor(Red);
-  WriteLn('Advertencia!');
+  WriteLn('¡Advertencia!');
   WriteLn;
   TextColor(White);
   WriteLn('El conductor ingresado se encuentra dado de baja:');
@@ -462,14 +463,14 @@ begin
     DatosCon.BajaLogica := False;
     WriteLn;
     TextColor(Green);
-    WriteLn('Alta Exitosa!');
+    WriteLn('¡Alta Exitosa!');
     TextColor(White);
   end
   else
   begin
     WriteLn;
     TextColor(Red);
-    WriteLn('Alta Cancelada!');
+    WriteLn('¡Alta Cancelada!');
     TextColor(White);
   end;
   Delay(1500);
