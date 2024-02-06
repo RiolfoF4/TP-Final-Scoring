@@ -328,6 +328,7 @@ const
 begin
   // Muestra los datos modificados
   WriteLn('DNI: ', DatosOriginales.DNI);
+  WriteLn;
   if DatosOriginales.ApYNom <> DatosModificados.ApYNom then
     WriteLn('Apellido y Nombres: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);
   if (DatosOriginales.FechaNac.Dia <> DatosModificados.FechaNac.Dia) or 
@@ -335,7 +336,7 @@ begin
     (DatosOriginales.FechaNac.Anio <> DatosModificados.FechaNac.Anio) then
   begin
     with DatosOriginales do
-      WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
+      Write('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
     Write(f);
     with DatosModificados do
       WriteLn(FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
@@ -349,16 +350,19 @@ end;
 procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 var
   DatosConAux: TDatoConductores;
-  EsAlta: Boolean;
+  EsAlta, ModificaDatos: Boolean;
   Op, Rta: String[2];
 begin
   DatosConAux := DatosCon;
   EsAlta := (PreordenDNI(ArbolDNI, DatosCon.DNI) = -1);
+  ModificaDatos := False;
   repeat
     ClrScr;
     MostrarOpDatosCon(DatosConAux);
     WriteLn;
     Op := ObtenerOpcion('Opción: ', 0, 5);
+    if (Op <> '0') and (Op <> '1') and not (EsAlta) then
+      ModificaDatos := True;
     ClrScr;
     case Op of
       '1': 
@@ -382,6 +386,7 @@ begin
   if EsAlta then
     DatosCon := DatosConAux
   else
+  if ModificaDatos then
   begin
     MostrarModifCon(DatosCon, DatosConAux);
     WriteLn;
