@@ -25,6 +25,24 @@ begin
   CerrarArchivoListInf(ArchListaInf);
 end;
 
+procedure InicializarListaDatosInf(var ListaDatosInf: TListaDatosInf; var ListaInfCon: TListaInf);
+var
+  i: Word;
+  Sep: String;
+  DatosInf: TDatoInfracciones;
+begin
+  for i := 1 to TamanioLista(ListaDatosInf) do
+    with DatosInf do
+    begin
+      Sep := ' ' + #13#10 + '    ';
+      if i >= 10 then
+        Sep := Sep + ' ';
+      Recuperar(ListaDatosInf, i, DatosInf);
+      Tipo := Copy(Tipo, 1, Pos('|', Tipo) - 1)  + Sep + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio);
+      Agregar(ListaInfCon, Tipo);
+    end;
+end;
+
 function PuntosInfraccion(Infraccion: String): Integer;
 var
   SeparadorPuntos: Word;
@@ -77,6 +95,7 @@ begin
   begin
     // Muestra el texto hasta el último espacio de la línea
     UltimoEspacio := UltimoEspacioEnLinea(Infraccion);
+
     WriteLn(UTF8Decode(Copy(Infraccion, 1, UltimoEspacio)));
 
     // Llama recursivamente al procedimiento con el resto del texto
@@ -313,7 +332,7 @@ begin
           DescontarPuntos(DatosCon, Infraccion.Puntos);
           TextColor(Green);
           WriteLn;
-          WriteLn('Alta exitosa!');
+          WriteLn(UTF8Decode('¡Alta exitosa!'));
           TextColor(White);
           Delay(1500);
         end;
@@ -323,7 +342,7 @@ begin
         begin
           TextColor(Red);
           WriteLn;
-          WriteLn('Alta cancelada!');
+          WriteLn(UTF8Decode('¡Alta cancelada!'));
           TextColor(White);
           Delay(1500);
         end;
@@ -348,61 +367,48 @@ end;
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
   Op: String[2];
-  i: Word;  //
   PosInf: Integer;
+  ModificaDatos: Boolean;
   DatosInf: TDatoInfracciones;
-  ListaDatosInf: TListaDatosInf;
-  ListaInf: TListaInf;
-  ListaInfCon: TListaInf;
+
+  ListaInfCon: TListaDatosInf;      // Lista de las infracciones del conductor
+  ListaInfDisponibles: TListaInf;   // Lista de las infracc
+  ListaTiposInfCon: TListaInf;
 begin
-  CrearLista(ListaDatosInf);
-  ObtenerInfraccionesCon(ArchInf, DatosCon.DNI, ListaDatosInf);
-  if not ListaVacia(ListaDatosInf) then
+  // Guardar las infracciones del conductor en una lista
+  CrearLista(ListaInfCon);
+  ObtenerInfraccionesCon(ArchInf, DatosCon.DNI, ListaInfCon);
+
+  if not ListaVacia(ListaInfCon) then
   begin
-    // Inicializar listas
-    CrearLista(ListaInfCon);
-    CrearLista(ListaInf);
+    // Crear e inicializar listas
+    CrearLista(ListaTiposInfCon);
+    CrearLista(ListaInfDisponibles);
+    InicializarListaDatosInf(ListaInfCon, ListaTiposInfCon);
+    InicializarListaInf(ListaInfDisponibles);
 
-    // Crear InicializarListaDatosInf
-    for i := 1 to TamanioLista(ListaDatosInf) do
-      with DatosInf do
-      begin
-        Recuperar(ListaDatosInf, i, DatosInf);
-        Tipo := Copy(Tipo, 1, Pos('|', Tipo) - 1) + #13#10  + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio);
-        Agregar(ListaInfCon, Tipo);
-      end;
-    //
-    
-    InicializarListaInf(ListaInf);
-
-    PosInf := MostrarListaInfracciones(ListaInfCon);
+    PosInf := MostrarListaInfracciones(ListaTiposInfCon);
     if PosInf <> -1 then
     begin
-      Recuperar(ListaDatosInf, PosInf, DatosInf);
-      repeat
-        ClrScr;
-        WriteLn('DNI: ',DatosInf.DNI);
-        WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
-        WriteLn;
-        MostrarDatosInf(DatosInf);
-        WriteLn;
-        WriteLn(UTF8Decode('[1] Modificar Infracción.'));
-        WriteLn(UTF8Decode('[2] Modificar Fecha de Infracción'));
-        WriteLn('[0] Volver.');
-        WriteLn;
-        Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
-        ClrScr;
-        case Op of
-          '1':; // ModificarTipoInfraccion(DatosInf, ListaInf);
-          '2': ObtenerFechaInf(DatosInf.Fecha);
-        end;
-      until Op = '0';
+      Recuperar(ListaInfCon, PosInf, DatosInf);
+      WriteLn('DNI: ', DatosInf.DNI);
+      WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+      WriteLn;
+      MostrarDatosInf(DatosInf);
+      WriteLn;
+      WriteLn(UTF8Decode('[1] Modificar Infracción.'));
+      WriteLn(UTF8Decode('[2] Modificar Fecha de Infracción.'));
+      WriteLn('[0] Volver.');
+      WriteLn;
+      Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
+      ReadLn;
     end;
+
   end
   else
   begin
     TextColor(Red);
-    WriteLn('El conductor no posee infracciones!');
+    WriteLn(UTF8Decode('¡El conductor no posee infracciones!'));
     TextColor(White);
     Delay(1500);
   end;
