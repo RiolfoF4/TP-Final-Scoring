@@ -25,7 +25,7 @@ begin
   CerrarArchivoListInf(ArchListaInf);
 end;
 
-procedure InicializarListaDatosInf(var ListaDatosInf: TListaDatosInf; var ListaInfCon: TListaInf);
+procedure InicializarListaTiposInf(var ListaDatosInf: TListaDatosInf; var ListaTiposInfCon: TListaInf);
 var
   i: Word;
   Sep: String;
@@ -39,7 +39,7 @@ begin
         Sep := Sep + ' ';
       Recuperar(ListaDatosInf, i, DatosInf);
       Tipo := Copy(Tipo, 1, Pos('|', Tipo) - 1)  + Sep + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio);
-      Agregar(ListaInfCon, Tipo);
+      Agregar(ListaTiposInfCon, Tipo);
     end;
 end;
 
@@ -372,8 +372,8 @@ var
   DatosInf: TDatoInfracciones;
 
   ListaInfCon: TListaDatosInf;      // Lista de las infracciones del conductor
-  ListaInfDisponibles: TListaInf;   // Lista de las infracc
-  ListaTiposInfCon: TListaInf;
+  ListaInfDisponibles: TListaInf;   // Lista de las infracciones en listado_infracciones.txt
+  ListaTiposInfCon: TListaInf;      // Lista de los tipos de infracciones del conductor, junto con la fecha
 begin
   // Guardar las infracciones del conductor en una lista
   CrearLista(ListaInfCon);
@@ -382,27 +382,39 @@ begin
   if not ListaVacia(ListaInfCon) then
   begin
     // Crear e inicializar listas
-    CrearLista(ListaTiposInfCon);
     CrearLista(ListaInfDisponibles);
-    InicializarListaDatosInf(ListaInfCon, ListaTiposInfCon);
     InicializarListaInf(ListaInfDisponibles);
 
-    PosInf := MostrarListaInfracciones(ListaTiposInfCon);
-    if PosInf <> -1 then
-    begin
-      Recuperar(ListaInfCon, PosInf, DatosInf);
-      WriteLn('DNI: ', DatosInf.DNI);
-      WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
-      WriteLn;
-      MostrarDatosInf(DatosInf);
-      WriteLn;
-      WriteLn(UTF8Decode('[1] Modificar Infracción.'));
-      WriteLn(UTF8Decode('[2] Modificar Fecha de Infracción.'));
-      WriteLn('[0] Volver.');
-      WriteLn;
-      Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
-      ReadLn;
-    end;
+    repeat
+      CrearLista(ListaTiposInfCon);
+      InicializarListaTiposInf(ListaInfCon, ListaTiposInfCon);
+      ModificaDatos := False;
+      ClrScr;
+      PosInf := MostrarListaInfracciones(ListaTiposInfCon);
+      if PosInf <> -1 then
+      begin
+        Recuperar(ListaInfCon, PosInf, DatosInf);
+        WriteLn('DNI: ', DatosInf.DNI);
+        WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+        WriteLn;
+        MostrarDatosInf(DatosInf);
+        WriteLn;
+        WriteLn(UTF8Decode('[1] Modificar Infracción.'));
+        WriteLn(UTF8Decode('[2] Modificar Fecha de Infracción.'));
+        WriteLn('[0] Volver.');
+        WriteLn;
+        Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
+        ClrScr;
+        if Op <> '0' then
+          ModificaDatos := True;
+        case Op of
+          '1': ModificarTipoInfraccion(DatosInf, ListaInfDisponibles);
+          '2': ObtenerFechaInf(DatosInf.Fecha);
+        end;
+        if ModificaDatos then
+          Modificar(ListaInfCon, PosInf, DatosInf);
+      end;
+    until PosInf = -1;
 
   end
   else
