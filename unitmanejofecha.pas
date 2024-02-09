@@ -10,6 +10,7 @@ procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Wo
 function FormatoFecha(Dia, Mes, Anio: Word): String;
 procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
 function EsFechaPosterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
+function EsFechaAnterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
 
 implementation
 function ObtenerFechaStr: String;
@@ -24,6 +25,7 @@ begin
   TextColor(White);
   GotoXY(PosX,WhereY);
   Fecha := '';
+  
   while not (EsCadenaFecha(Fecha)) do
   begin
     // Inicializa Car en NULL
@@ -143,6 +145,19 @@ begin
   else
   if (Anio0 = Anio1) and (Mes0 = Mes1) and (Dia0 > Dia1) then
     EsFechaPosterior := True;
+end;
+
+function EsFechaAnterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
+begin
+  EsFechaAnterior := False;
+  if Anio0 < Anio1 then
+    EsFechaAnterior := True
+  else
+  if (Anio0 = Anio1) and (Mes0 < Mes1) then
+    EsFechaAnterior := True
+  else
+  if (Anio0 = Anio1) and (Mes0 = Mes1) and (Dia0 < Dia1) then
+    EsFechaAnterior := True;
 end;
 
 end.
