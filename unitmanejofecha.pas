@@ -86,8 +86,8 @@ begin
 end;
 
 procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
-// Formato de fecha: DD/MM/AAAA
 begin
+  // Formato de fecha: DD/MM/AAAA
   Val(Copy(Fecha, 1, 2), Dia);
   Val(Copy(Fecha, 4, 2), Mes);
   Val(Copy(Fecha, 7), Anio);

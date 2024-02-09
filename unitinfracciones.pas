@@ -477,8 +477,14 @@ begin
         if ModificaDatos then
         begin
           // Si modifica algún dato, muestra el dato original y el dato modificado
+          TextColor(Red);
+          WriteLn(UTF8Decode('¡Atención!'));
+          TextColor(White);
+          WriteLn;
           WriteLn('DNI: ', DatosInf.DNI);
           WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+          WriteLn;
+          WriteLn(UTF8Decode('Se modificarán los siguientes datos:'));
           WriteLn;
           MostrarModifInf(DatosCon, DatosInf, DatosInfAux);
           WriteLn;
@@ -488,14 +494,17 @@ begin
             // TODO: Guardar las infracciones en el archivo.
             Modificar(ListaInfCon, PosInf, DatosInfAux);
             Modificar(ListaTiposInfCon, PosInf, '*' + FormatoTipoInfYFecha(DatosInfAux, PosInf));
+            WriteLn;
             TextColor(Green);
             Write('Cambios guardados correctamente.');
           end
           else
           begin
+            WriteLn;
             TextColor(LightRed);
             Write('Se han descartado los cambios.');
-          end;  
+          end;
+          Delay(1500);
         end;
       end;
     until PosInf = -1;
