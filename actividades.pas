@@ -125,7 +125,7 @@ var
   Pos: LongInt;
   DatoIng: String[50];
 begin
-  if Caso = 'apynom' then
+  if LowerCase(Caso) = 'apynom' then
   begin
     ApYNom := ObtenerApYNom;
     DatoIng := ApYNom;
@@ -272,7 +272,7 @@ begin
   with DatosCon do
   begin
     WriteLn('DNI: ', DNI);
-    WriteLn('Apellido y Nombre: ', ApYNom);
+    WriteLn('Apellido y Nombres: ', ApYNom);
     WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
     WriteLn('Teléfono: ', Tel);
     WriteLn('EMail: ', EMail);
@@ -373,7 +373,7 @@ begin
           // Muestra un error si el DNI del conductor ya está guardado en el archivo
           TextColor(Red);
           WriteLn('ERROR: No es posible modificar un DNI ya cargado.');
-          Delay(1500);
+          Delay(2000);
           TextColor(White);
         end;
 
