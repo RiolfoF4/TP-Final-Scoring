@@ -333,7 +333,7 @@ begin
       WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
       WriteLn;
       MostrarDatosInf(Infraccion);
-      Write('Scoring: ', DatosCon.Scoring, ' ==> ');
+      Write('Scoring: ', DatosCon.Scoring, ' --> ');
       if DatosCon.Scoring - Infraccion.Puntos < 0 then
         WriteLn(0)
       else
@@ -390,7 +390,7 @@ end;
 
 procedure MostrarModifInf(DatosCon: TDatoConductores; InfraccionOrig, InfraccionMod: TDatoInfracciones);
 const
-  f: String[5] = ' ==> ';
+  f: String[5] = ' --> ';
 var
   FechaOrigAux, FechaModAux: String[10];
   ScoringAux: Integer;

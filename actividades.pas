@@ -324,7 +324,7 @@ end;
 
 procedure MostrarModifCon(DatosOriginales, DatosModificados: TDatoConductores);
 const
-  f = ' ==> ';
+  f = ' --> ';
 begin
   // Muestra los datos modificados
   WriteLn('DNI: ', DatosOriginales.DNI);
