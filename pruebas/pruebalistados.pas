@@ -2,56 +2,91 @@ program PruebaListados;
 {$CODEPAGE UTF8}
 
 uses
-  sysutils, UnitLista, UnitArchivo, UnitTypes;
+  sysutils, crt, UnitLista, UnitArchivo, UnitTypes;
 
 {
   '┌', '┐', '└', '┘',
   '─', '│'
   '├', '┤', '┬', '┴', '┼'
 }
+{
+  '|', '+', '-', '_'
+}
 
 const
-  Encab: array[1..3] of String = 
-    ('   DNI   ', ' NOMBRE Y APELLIDOS ', ' SCORING ');
+  EncabTotales = 3;
+  Encab: array[1..EncabTotales] of String = 
+    ('     APELLIDO Y NOMBRES     ', '     DNI     ', ' SCORING ');
   Sep = '│';
+type
+  TVectorInt = array[1..EncabTotales] of Integer;
 
 var
-  i: Word;
+  ArchCon: TArchCon;
   ListaCon: TListaCon;
   DatosCon: TDatoConductores;
-  ArchCon: TArchCon;
+  PosSep: TVectorInt;
+  LenEncab: TVectorInt;
+  i: Word;
+
+procedure SeparadorLineas(PosSep: TVectorInt);
+begin
+  while WhereX <= PosSep[3] do
+    if (WhereX = 1) or (WhereX = PosSep[3]) then
+      Write('+')
+    else
+    if (WhereX = PosSep[1]) or (WhereX = PosSep[2]) then
+      Write('+')
+    else
+      Write('-');
+  WriteLn;
+end;
 
 begin
-  for i := 1 to 3 do
-  begin
-    Write(Sep);
-    Write(Encab[i]);
-    Write(Sep);
-  end;
-  WriteLn;
-
+  // Inicializar
+  CrearAbrirArchivoCon(ArchCon);
   CrearLista(ListaCon);
 
-  CrearAbrirArchivoCon(ArchCon);
+  for i := 1 to EncabTotales do
+    LenEncab[i] := Length(Encab[i]);
+
   while not (EOF(ArchCon)) do
   begin
     Read(ArchCon, DatosCon);
-    Agregar(ListaCon, DatosCon);
+    Agregar(ListaCon, DatosCon);  // Pasarla como parámetro, ya ordenada por ApYNom
   end;
 
-  i := 1;
-  while i <= TamanioLista(ListaCon) do
+  DatosCon.DNI := 46152098;
+  DatosCon.ApYNom := 'Riolfo Franco Ariel';
+  DatosCon.Scoring := 15;
+
+  Agregar(ListaCon, DatosCon);
+
+  for i := 1 to EncabTotales do
+  begin
+    if i = 1 then
+      Write('|');
+    Write(Encab[i], '|');
+    PosSep[i] := WhereX - 1;
+  end;
+
+  WriteLn;
+  for i := 1 to TamanioLista(ListaCon) do
   begin
     Recuperar(ListaCon, i, DatosCon);
-    Write(Sep);
-    Write(UIntToStr(DatosCon.DNI):Length(Encab[1]));
-    Write(Sep, Sep);
-    Write(DatosCon.ApYNom:Length(Encab[2]));
-    Write(Sep, Sep);
-    Write(IntToStr(DatosCon.Scoring):Length(Encab[3]));
-    WriteLn(Sep);
-    Inc(i);
+    with DatosCon do
+    begin
+      SeparadorLineas(PosSep);
+      Write('|', ApYNom:((LenEncab[1] + Length(AnsiString(ApyNom))) div 2));
+      GotoXY(PosSep[1], WhereY);
+      Write('|', DNI:((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
+      GotoXY(PosSep[2], WhereY);
+      Write('|', Scoring:((LenEncab[3] + Length(IntToStr(Scoring))) div 2));
+      GotoXY(PosSep[3], WhereY);
+      WriteLn('|');
+    end;
   end;
+
 
 {
   // ¿Procedure MostrarEncabezados?
