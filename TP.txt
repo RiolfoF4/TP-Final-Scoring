@@ -19,10 +19,13 @@ Se pide:
   ABMC de conductores (consulta por nombre y por DNI)
   AMC de Infracciones
   Actualización de scoring ante una infracción
+
   Listado ordenado por Apellido y Nombres de Conductores
+  Listado de los infractores a los cuales su scoring llegó a 0
+  
   Listado ordenado por fecha de todas las infracciones en un período determinado
   Listado ordenado por fecha de todas las infracciones de un conductor en un período determinado
-  Listado de los infractores a los cuales su scoring llegó a 0
+  
   Estadísticas:
 	- Cantidad de infracciones entre dos fechas
 	- Porcentaje de conductores con reincidencia
