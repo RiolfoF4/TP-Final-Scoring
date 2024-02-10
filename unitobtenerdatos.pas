@@ -35,7 +35,7 @@ var
   Cad: String[10];
 begin
   ObtenerDNI := 0;
-  while (ObtenerDNI < 10000000) do
+  while (10000000 < ObtenerDNI ) or (ObtenerDNI > 100000000) do
   begin
     ClrEol;
     Write('DNI (Sin puntos ni espacios): ');
@@ -43,7 +43,7 @@ begin
     if EsNum(Cad) then
     begin
       ObtenerDNI := StrToDWord(Cad);
-      if ObtenerDNI < 10000000 then
+      if (10000000 < ObtenerDNI ) or (ObtenerDNI > 100000000) then
         GotoXY(1, WhereY-1);
     end
     else
