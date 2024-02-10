@@ -14,31 +14,68 @@ uses
 }
 
 const
-  EncabTotales = 3;
-  Encab: array[1..EncabTotales] of String = 
-    ('     APELLIDO Y NOMBRES     ', '     DNI     ', ' SCORING ');
-  Sep = '│';
+  EncabTotales = 5;
+
 type
   TVectorInt = array[1..EncabTotales] of Integer;
+  TVectorEncab = array[1..EncabTotales] of String;
 
 var
   ArchCon: TArchCon;
   ListaCon: TListaCon;
   DatosCon: TDatoConductores;
   PosSep: TVectorInt;
+  Encab: TVectorEncab;
+
   LenEncab: TVectorInt;
+
+  LenAux: TVectorInt;
+
   i: Word;
 
-procedure SeparadorLineas(PosSep: TVectorInt);
+procedure SeparadorEncabezado(Encabezados: TVectorEncab);
+var
+  i, j: Word;
 begin
-  while WhereX <= PosSep[3] do
-    if (WhereX = 1) or (WhereX = PosSep[3]) then
-      Write('+')
-    else
-    if (WhereX = PosSep[1]) or (WhereX = PosSep[2]) then
-      Write('+')
-    else
-      Write('-');
+  for i := 1 to EncabTotales do
+  begin
+    Write('+');
+    for j := 1 to Length(Encabezados[i]) do
+      Write('=');
+  end;
+  WriteLn('+');
+end;
+
+procedure MostrarEncabezado(Encabezados: TVectorEncab);
+var
+  i: Word;
+begin
+  SeparadorEncabezado(Encabezados);
+
+  for i := 1 to EncabTotales do
+  begin
+    Write('|');
+    Write(Encabezados[i]);
+  end;
+  WriteLn('|');
+
+  SeparadorEncabezado(Encabezados);
+end;
+
+procedure SeparadorLineas(PosSep: TVectorInt);
+var
+  i: Word;
+begin
+  Write('+');
+
+  while WhereX < PosSep[EncabTotales] do
+  begin
+    Write('-');
+    for i := 1 to EncabTotales do
+      if WhereX = PosSep[i] then
+        Write('+');
+  end;
+
   WriteLn;
 end;
 
@@ -47,117 +84,63 @@ begin
   CrearAbrirArchivoCon(ArchCon);
   CrearLista(ListaCon);
 
-  for i := 1 to EncabTotales do
-    LenEncab[i] := Length(Encab[i]);
+  Encab[1] := 'APELLIDO Y NOMBRES';
+  Encab[2] := 'DNI';
+  Encab[3] := 'SCORING';
+  Encab[4] := 'HABILITADO';
+  Encab[5] := 'FECHA DE HABILITACIÓN';
+
+  LenAux[2] := 8;   // DNI 12.345.678
+  LenAux[3] := 2;   // Scoring <= 20
+  LenAux[4] := 2;   // Habilitado Si / No
+  LenAux[5] := 10;  // Fecha DD/MM/AAAA
 
   while not (EOF(ArchCon)) do
   begin
     Read(ArchCon, DatosCon);
+    LenAux[1] := Length(AnsiString(DatosCon.ApYNom));
+    if Length(Encab[1]) < LenAux[1] then
+      LenEncab[1] := LenAux[1];
     Agregar(ListaCon, DatosCon);  // Pasarla como parámetro, ya ordenada por ApYNom
   end;
 
-  DatosCon.DNI := 46152098;
-  DatosCon.ApYNom := 'Riolfo Franco Ariel';
-  DatosCon.Scoring := 15;
-
-  Agregar(ListaCon, DatosCon);
-
   for i := 1 to EncabTotales do
   begin
-    if i = 1 then
-      Write('|');
-    Write(Encab[i], '|');
-    PosSep[i] := WhereX - 1;
+    Encab[i] := ' ' + Encab[i] + ' ';
+    while Length(Encab[i]) < LenAux[i] + 2 do
+      Encab[i] := ' ' + Encab[i] + ' ';
+    LenEncab[i] := Length(Encab[i]);
   end;
 
-  WriteLn;
+  MostrarEncabezado(Encab);
+
+  for i := 1 to EncabTotales do
+    if i = 1 then
+      PosSep[i] := LenEncab[i] + 2
+    else
+      PosSep[i] := PosSep[i-1] + LenEncab[i] + 1;
+
   for i := 1 to TamanioLista(ListaCon) do
   begin
     Recuperar(ListaCon, i, DatosCon);
     with DatosCon do
     begin
-      SeparadorLineas(PosSep);
       Write('|', ApYNom:((LenEncab[1] + Length(AnsiString(ApyNom))) div 2));
       GotoXY(PosSep[1], WhereY);
       Write('|', DNI:((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
       GotoXY(PosSep[2], WhereY);
       Write('|', Scoring:((LenEncab[3] + Length(IntToStr(Scoring))) div 2));
       GotoXY(PosSep[3], WhereY);
+      Write('|');
+      if Habilitado then
+        Write('Si':((LenEncab[4] + 2)) div 2)
+      else
+        Write('No':((LenEncab[4] + 2)) div 2);
+      GotoXY(PosSep[4], WhereY);
+      Write('|');
+      GotoXY(PosSep[5], WhereY);
       WriteLn('|');
+      SeparadorLineas(PosSep);
     end;
   end;
-
-
-{
-  // ¿Procedure MostrarEncabezados?
-  i := 1;
-
-  while i <= TamanioLista(Lista) do
-  begin
-    Recuperar(Lista, i, Texto);
-    if i = 1 then
-      Write('┌');
-    for j := 1 to Length(Texto) do
-      Write('─');
-    if i = TamanioLista(Lista) then
-      WriteLn('┐')
-    else
-      Write('┬');
-    Inc(i);
-  end;
-
-  i := 1;
-
-  while i <= TamanioLista(Lista) do
-  begin
-    Recuperar(Lista, i, Texto);
-    Write('│'+ Texto);
-    if i = TamanioLista(Lista) then
-      WriteLn('│');
-    Inc(i);
-  end;
-
-  i := 1;
-
-  while i <= TamanioLista(Lista) do
-  begin
-    Recuperar(Lista, i, Texto);
-    if i = 1 then
-      Write('├');
-    for j := 1 to Length(Texto) do
-      Write('─');
-    if i = TamanioLista(Lista) then
-      WriteLn('┤')
-    else
-      Write('┼');
-    Inc(i);
-  end;
-
-  i := 1;
-
-  while i <= TamanioLista(ListaCon) do
-  begin
-    Recuperar(ListaCon, i, DatosCon);
-    Write('│');
-    Write(UIntToStr(DatosCon.DNI):11);
-    Write('│');
-    Write(DatosCon.ApYNom:22);
-    Write('│');
-    Write(DatosCon.Scoring:11);
-    WriteLn('│');
-    Inc(i);
-  end;}
-
-{  Texto := 'Holol';
-  Write('┌');
-  for i := 1 to Length(Texto) do
-    Write('─');
-  WriteLn('┐');
-  WriteLn('│' + Texto + '│');
-  Write('└');
-  for i := 1 to Length(Texto) do
-    Write('─');
-  WriteLn('┘');
-}
-  
 end.
