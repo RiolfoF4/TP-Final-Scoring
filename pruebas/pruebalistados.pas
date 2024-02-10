@@ -10,21 +10,27 @@ uses
   '├', '┤', '┬', '┴', '┼'
 }
 
+const
+  Encab: array[1..3] of String = 
+    ('   DNI   ', ' NOMBRE Y APELLIDOS ', ' SCORING ');
+  Sep = '│';
+
 var
-  ArchCon: TArchCon;
-  DatosCon: TDatoConductores;
+  i: Word;
   ListaCon: TListaCon;
-  Lista: TListaInf;
-  Box: WideString;
-  Texto: String;
-  i, j: Word;
+  DatosCon: TDatoConductores;
+  ArchCon: TArchCon;
 
 begin
-  CrearLista(Lista);
+  for i := 1 to 3 do
+  begin
+    Write(Sep);
+    Write(Encab[i]);
+    Write(Sep);
+  end;
+  WriteLn;
+
   CrearLista(ListaCon);
-  Agregar(Lista, '    DNI    ');
-  Agregar(Lista, '  NOMBRE Y APELLIDOS  ');
-  Agregar(Lista, '  SCORING  ');
 
   CrearAbrirArchivoCon(ArchCon);
   while not (EOF(ArchCon)) do
@@ -33,7 +39,21 @@ begin
     Agregar(ListaCon, DatosCon);
   end;
 
+  i := 1;
+  while i <= TamanioLista(ListaCon) do
+  begin
+    Recuperar(ListaCon, i, DatosCon);
+    Write(Sep);
+    Write(UIntToStr(DatosCon.DNI):Length(Encab[1]));
+    Write(Sep, Sep);
+    Write(DatosCon.ApYNom:Length(Encab[2]));
+    Write(Sep, Sep);
+    Write(IntToStr(DatosCon.Scoring):Length(Encab[3]));
+    WriteLn(Sep);
+    Inc(i);
+  end;
 
+{
   // ¿Procedure MostrarEncabezados?
   i := 1;
 
@@ -83,9 +103,15 @@ begin
   while i <= TamanioLista(ListaCon) do
   begin
     Recuperar(ListaCon, i, DatosCon);
-    WriteLn('│' + UIntToStr(DatosCon.DNI) + '│' + DatosCon.ApYNom + '│' + IntToStr(DatosCon.Scoring) + '│');
+    Write('│');
+    Write(UIntToStr(DatosCon.DNI):11);
+    Write('│');
+    Write(DatosCon.ApYNom:22);
+    Write('│');
+    Write(DatosCon.Scoring:11);
+    WriteLn('│');
     Inc(i);
-  end;
+  end;}
 
 {  Texto := 'Holol';
   Write('┌');
