@@ -14,7 +14,7 @@ uses
 }
 
 const
-  EncabTotales = 5;
+  EncabTotales = 4;
 
 type
   TVectorInt = array[1..EncabTotales] of Integer;
@@ -83,17 +83,16 @@ begin
   // Inicializar
   CrearAbrirArchivoCon(ArchCon);
   CrearLista(ListaCon);
+  ClrScr;
 
   Encab[1] := 'APELLIDO Y NOMBRES';
   Encab[2] := 'DNI';
   Encab[3] := 'SCORING';
   Encab[4] := 'HABILITADO';
-  Encab[5] := 'FECHA DE HABILITACIÓN';
 
   LenAux[2] := 8;   // DNI 12.345.678
   LenAux[3] := 2;   // Scoring <= 20
   LenAux[4] := 2;   // Habilitado Si / No
-  LenAux[5] := 10;  // Fecha DD/MM/AAAA
 
   while not (EOF(ArchCon)) do
   begin
@@ -101,7 +100,8 @@ begin
     LenAux[1] := Length(AnsiString(DatosCon.ApYNom));
     if Length(Encab[1]) < LenAux[1] then
       LenEncab[1] := LenAux[1];
-    Agregar(ListaCon, DatosCon);  // Pasarla como parámetro, ya ordenada por ApYNom
+      {if not DatosCon.Habilitado then}
+        Agregar(ListaCon, DatosCon);  // Pasarla como parámetro, ya ordenada por ApYNom
   end;
 
   for i := 1 to EncabTotales do
@@ -110,15 +110,15 @@ begin
     while Length(Encab[i]) < LenAux[i] + 2 do
       Encab[i] := ' ' + Encab[i] + ' ';
     LenEncab[i] := Length(Encab[i]);
-  end;
 
-  MostrarEncabezado(Encab);
-
-  for i := 1 to EncabTotales do
+    {for i := 1 to EncabTotales do}
     if i = 1 then
       PosSep[i] := LenEncab[i] + 2
     else
       PosSep[i] := PosSep[i-1] + LenEncab[i] + 1;
+  end;
+
+  MostrarEncabezado(Encab);
 
   for i := 1 to TamanioLista(ListaCon) do
   begin
@@ -137,10 +137,18 @@ begin
       else
         Write('No':((LenEncab[4] + 2)) div 2);
       GotoXY(PosSep[4], WhereY);
-      Write('|');
-      GotoXY(PosSep[5], WhereY);
       WriteLn('|');
-      SeparadorLineas(PosSep);
+    end;
+
+    SeparadorLineas(PosSep);
+    if WhereY > 20 then
+    begin
+      WriteLn;
+      WriteLn('PULSE UNA TECLA');
+      ReadLn;
+      ClrScr;
+      MostrarEncabezado(Encab);
     end;
   end;
+  Write('FIN':PosSep[4]);
 end.
