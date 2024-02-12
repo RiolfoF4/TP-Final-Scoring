@@ -31,6 +31,50 @@ var
 
   i: Word;
 
+function EsCadMayorAlf(Cad1, Cad2: String): Boolean;
+var
+  i, Min: Word;
+begin
+  Cad1 := LowerCase(Cad1);
+  Cad2 := LowerCase(Cad2);
+  if Length(Cad1) < Length(Cad2) then
+    Min := Length(Cad1)
+  else
+    Min := Length(Cad2);
+  
+  i := 1;
+  EsCadMayorAlf := False;
+
+  while (i <= Min) and (not EsCadMayorAlf)  do
+  begin
+    if Cad1[i] > Cad2[i] then
+      EsCadMayorAlf := True
+    else
+    if Cad1[i] < Cad2[i] then
+      i := Min + 1
+    else
+      Inc(I);
+  end;
+end;
+
+procedure Burbuja_ApYNom(var L: TListaCon);
+var
+  i, j: Word;
+  Ant, Sig: TDatoConductores;
+begin
+  for i := 1 to TamanioLista(ListaCon) - 1 do
+    for j := 1 to TamanioLista(ListaCon) - i do
+    begin
+      Recuperar(L, j, Ant);
+      Recuperar(L, j + 1, Sig);
+      if EsCadMayorAlf(AnsiString(Ant.ApYNom), AnsiString(Sig.ApYNom)) then
+      begin
+        Modificar(L, j, Sig);
+        Modificar(L, j + 1, Ant);
+      end;
+    end;
+end;
+
 procedure SeparadorEncabezado(Encabezados: TVectorEncab);
 var
   i, j: Word;
@@ -218,6 +262,8 @@ begin
     {if not DatosCon.Habilitado then}
     Agregar(ListaCon, DatosCon);
   end;
+
+  Burbuja_ApYNom(ListaCon);
 
 {  for i := 1 to EncabTotales do
   begin
