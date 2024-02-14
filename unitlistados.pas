@@ -3,7 +3,7 @@ unit UnitListados;
 interface
 
 uses
-  sysutils, crt, UnitLista , UnitTypes, UnitPila;
+  sysutils, crt, UnitLista , UnitTypes, UnitPilaDinamica;
 
 const
   EncabTotalesCon = 5; 
@@ -151,7 +151,7 @@ procedure ListadoConductores(Encabezados: TVectorEncab; var ListaCon: TListaDato
 const
   LimiteInferior = 20;
 var
-  PosAnterior: TPila;
+  PosAnterior: TPilaDin;
   CantCon: String[7];
   i, Anterior: Byte;
   Tecl: String[2];

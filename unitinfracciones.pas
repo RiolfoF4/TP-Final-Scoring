@@ -3,7 +3,7 @@ unit UnitInfracciones;
 interface
 
 uses
-  crt, sysutils, Math, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes;
+  crt, sysutils, Math, UnitValidacion, UnitArchivo, UnitPilaDinamica, UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
@@ -120,7 +120,7 @@ function MostrarListaInfracciones(var ListaInf: TListaInf): Integer;
 const
   LimiteInferior = 16;
 var
-  PosAnterior: TPila;
+  PosAnterior: TPilaDin;
   CantInf: String[7];
   i, Anterior: Byte;
   Tecl: String[2];
