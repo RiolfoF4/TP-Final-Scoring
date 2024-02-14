@@ -1,6 +1,7 @@
 *.exe
 *.o
 *.ppu
+backup/
 archivo/conductores.dat
 archivo/infracciones.dat
 archivo/posicionesapynom.dat
