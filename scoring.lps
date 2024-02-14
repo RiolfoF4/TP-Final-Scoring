@@ -9,12 +9,162 @@
         <Filename Value="scoring.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Scoring"/>
-        <IsVisibleTab Value="True"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="unitmenu.pas"/>
+        <UnitName Value="UnitMenu"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="5" Y="6"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="actividades.pas"/>
+        <UnitName Value="Actividades"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="34"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitarchivo.pas"/>
+        <UnitName Value="UnitArchivo"/>
+        <EditorIndex Value="9"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitconductores.pas"/>
+        <UnitName Value="UnitConductores"/>
+        <EditorIndex Value="3"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitinfracciones.pas"/>
+        <UnitName Value="UnitInfracciones"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="162"/>
+        <CursorPos X="20" Y="172"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitlista.pas"/>
+        <UnitName Value="UnitLista"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="22"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitlistados.pas"/>
+        <UnitName Value="UnitListados"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="144"/>
+        <CursorPos X="24" Y="154"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitmanejofecha.pas"/>
+        <UnitName Value="UnitManejoFecha"/>
+        <EditorIndex Value="12"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitobtenerdatos.pas"/>
+        <UnitName Value="UnitObtenerDatos"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitpila.pas"/>
+        <UnitName Value="UnitPila"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="4"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitposiciones.pas"/>
+        <UnitName Value="UnitPosiciones"/>
+        <EditorIndex Value="6"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unittypes.pas"/>
+        <UnitName Value="UnitTypes"/>
+        <EditorIndex Value="7"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitvalidacion.pas"/>
+        <UnitName Value="UnitValidacion"/>
+        <EditorIndex Value="8"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitpiladinamica.pas"/>
+        <UnitName Value="UnitPilaDinamica"/>
+        <EditorIndex Value="13"/>
+        <CursorPos X="22" Y="6"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory HistoryIndex="10">
+      <Position>
+        <Filename Value="scoring.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret TopLine="22"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="6" Column="69"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="123" Column="24" TopLine="107"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret TopLine="19"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret Line="6" Column="57"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret Line="154" Column="21" TopLine="138"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret Line="163" Column="12" TopLine="147"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret Line="154" Column="17" TopLine="147"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret Line="163" Column="12" TopLine="147"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlistados.pas"/>
+        <Caret Line="159" Column="32" TopLine="147"/>
+      </Position>
+    </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes ActiveMode=""/>
