@@ -14,7 +14,7 @@ uses
 }
 
 const
-  EncabTotales = 4;
+  EncabTotales = 5;
 
 type
   TVectorInt = array[1..EncabTotales] of Integer;
@@ -24,12 +24,7 @@ var
   ArchCon: TArchCon;
   ListaCon: TListaCon;
   DatosCon: TDatoConductores;
-  {  PosSep: TVectorInt;}
   Encab: TVectorEncab;
-{  LenEncab: TVectorInt;
-  LenAux: TVectorInt;}
-
-  i: Word;
 
 function EsCadMayorAlf(Cad1, Cad2: String): Boolean;
 var
@@ -46,7 +41,6 @@ begin
   EsCadMayorAlf := False;
 
   while (i <= Min) and (not EsCadMayorAlf)  do
-  begin
     if Cad1[i] > Cad2[i] then
       EsCadMayorAlf := True
     else
@@ -54,7 +48,6 @@ begin
       i := Min + 1
     else
       Inc(I);
-  end;
 end;
 
 procedure Burbuja_ApYNom(var L: TListaCon);
@@ -124,7 +117,7 @@ end;
 procedure InicializarListadoCon(var Encabezados: TVectorEncab; var ListaCon: TListaCon;
   var LenEncab: TVectorInt; var PosSep: TVectorInt);
 var
-  i: Word;
+  i, j: Word;
   DatosCon: TDatoConductores;
   LenAux: TVectorInt;
 begin
@@ -132,21 +125,32 @@ begin
   LenAux[3] := 2;   // Scoring <= 20
   LenAux[4] := 2;   // Habilitado Si / No
 
+  for i := 1 to EncabTotales do
+    LenEncab[i] := Length(Encabezados[i]);
+
   for i := 1 to TamanioLista(ListaCon) do
   begin
+    // Determinar la longitud de la string más larga
     Recuperar(ListaCon, i, DatosCon);
+
     LenAux[1] := Length(AnsiString(DatosCon.ApYNom));
-    if Length(Encabezados[1]) < LenAux[1] then
-      LenEncab[1] := LenAux[1];
+    LenAux[5] := Length(AnsiString(DatosCon.EMail));
+
+    for j := 1 to EncabTotales do
+      if LenEncab[i] < LenAux[i] then
+        LenEncab[i] := LenAux[5];
   end;
+
   for i := 1 to EncabTotales do
   begin
+    // Agregar espacios a cada lado del encabezado hasta que su longitud sea mayor
+    // que la string más larga
     Encabezados[i] := ' ' + Encabezados[i] + ' ';
-    while Length(Encabezados[i]) < LenAux[i] + 2 do
+    while Length(Encabezados[i]) < LenEncab[i] + 3 do
       Encabezados[i] := ' ' + Encabezados[i] + ' ';
     LenEncab[i] := Length(Encabezados[i]);
 
-    {for i := 1 to EncabTotales do}
+    // Calcular la posición de los separadores '|'
     if i = 1 then
       PosSep[i] := LenEncab[i] + 2
     else
@@ -193,6 +197,8 @@ begin
         else
           Write('No':((LenEncab[4] + 2)) div 2);
         GotoXY(PosSep[4], WhereY);
+        Write('|', EMail:((LenEncab[5] + Length(AnsiString(EMail))) div 2));
+        GotoXY(PosSep[5], WhereY);
         WriteLn('|');
         SeparadorLineas(PosSep);
       end;
@@ -206,7 +212,8 @@ begin
       CantCon := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaCon));
       WriteLn;
       {WriteLn('[S] iguiente.', CantCon:(WindMaxX - WindMinX - 13));}
-      WriteLn('[S] iguiente.', CantCon:46);
+      Write('[S] iguiente.');
+      WriteLn(CantCon:PosSep[EncabTotales] - WhereX + 1);
       WriteLn('[A] nterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
@@ -251,10 +258,7 @@ begin
   Encab[2] := 'DNI';
   Encab[3] := 'SCORING';
   Encab[4] := 'HABILITADO';
-
-{  LenAux[2] := 8;   // DNI 12.345.678
-  LenAux[3] := 2;   // Scoring <= 20
-  LenAux[4] := 2;   // Habilitado Si / No}
+  Encab[5] := 'EMAIL';
 
   while not (EOF(ArchCon)) do
   begin
@@ -265,54 +269,5 @@ begin
 
   Burbuja_ApYNom(ListaCon);
 
-{  for i := 1 to EncabTotales do
-  begin
-    Encab[i] := ' ' + Encab[i] + ' ';
-    while Length(Encab[i]) < LenAux[i] + 2 do
-      Encab[i] := ' ' + Encab[i] + ' ';
-    LenEncab[i] := Length(Encab[i]);
-
-    {for i := 1 to EncabTotales do}
-    if i = 1 then
-      PosSep[i] := LenEncab[i] + 2
-    else
-      PosSep[i] := PosSep[i-1] + LenEncab[i] + 1;
-  end;}
-
   ListadoConductores(Encab, ListaCon);
-
-{  MostrarEncabezado(Encab);
-
-  for i := 1 to TamanioLista(ListaCon) do
-  begin
-    Recuperar(ListaCon, i, DatosCon);
-    with DatosCon do
-    begin
-      Write('|', ApYNom:((LenEncab[1] + Length(AnsiString(ApyNom))) div 2));
-      GotoXY(PosSep[1], WhereY);
-      Write('|', DNI:((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
-      GotoXY(PosSep[2], WhereY);
-      Write('|', Scoring:((LenEncab[3] + Length(IntToStr(Scoring))) div 2));
-      GotoXY(PosSep[3], WhereY);
-      Write('|');
-      if Habilitado then
-        Write('Si':((LenEncab[4] + 2)) div 2)
-      else
-        Write('No':((LenEncab[4] + 2)) div 2);
-      GotoXY(PosSep[4], WhereY);
-      WriteLn('|');
-    end;
-
-    SeparadorLineas(PosSep);
-    if WhereY > 20 then
-    begin
-      WriteLn;
-      WriteLn('PULSE UNA TECLA');
-      ReadLn;
-      ClrScr;
-      MostrarEncabezado(Encab);
-    end;
-  end;}
-
-  {Write('FIN':PosSep[4]);}
 end.
