@@ -10,3 +10,5 @@ temp/test.dat
 archivo/listado_infracciones.dat
 .vscode/settings.json
 lib/x86_64-win64/scoring.compiled
+scoring.lps
+scoring.lpi
