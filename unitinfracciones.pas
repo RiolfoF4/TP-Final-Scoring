@@ -61,7 +61,7 @@ begin
     PuntosInfraccion := -1;
 end;
 
-procedure QuitarSeparadorPuntos(var Infraccion: String);
+procedure QuitarSeparadorPuntos(var Infraccion: ShortString);
 begin
   Infraccion := Copy(Infraccion, 1, Pos('|', Infraccion) - 1);
 end;
