@@ -17,9 +17,12 @@ procedure ConsultaConductor(var ArchCon: TArchCon; Pos: word;
 implementation
 
 procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
+
 procedure ModificarDatos(var DatosCon: TDatoConductores;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
+
 procedure BajaConductor(var DatosCon: TDatoConductores) forward;
+
 procedure ConsultaBajaConductor(var DatosCon: TDatoConductores) forward;
 
 procedure GuardarPosApYNom(var ArbolApYNom: TPuntApYNom; ApYNom: string; Pos: cardinal);
@@ -68,11 +71,13 @@ begin
     // Guardar automáticamente el dato que se ingresa al consultar conductor
     if Caso = 'apynom' then
     begin
+      WriteLn('Apellido y Nombres: ', DatoIngresado);
       DatosCon.ApYNom := DatoIngresado;
       DatosCon.DNI := ObtenerDNI;
     end
     else
     begin
+      WriteLn('DNI: ', DatoIngresado);
       DatosCon.ApYNom := ObtenerApYNom;
       Val(DatoIngresado, DatosCon.DNI);
     end;
