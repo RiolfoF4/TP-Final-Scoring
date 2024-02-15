@@ -14,7 +14,7 @@ uses
 }
 
 const
-  EncabTotales = 5;
+  EncabTotales = 4;
 
 type
   TVectorInt = array[1..EncabTotales] of Integer;
@@ -134,11 +134,10 @@ begin
     Recuperar(ListaCon, i, DatosCon);
 
     LenAux[1] := Length(AnsiString(DatosCon.ApYNom));
-    LenAux[5] := Length(AnsiString(DatosCon.EMail));
 
     for j := 1 to EncabTotales do
-      if LenEncab[i] < LenAux[i] then
-        LenEncab[i] := LenAux[5];
+      if LenEncab[j] < LenAux[j] then
+        LenEncab[j] := LenAux[j];
   end;
 
   for i := 1 to EncabTotales do
@@ -146,7 +145,7 @@ begin
     // Agregar espacios a cada lado del encabezado hasta que su longitud sea mayor
     // que la string más larga
     Encabezados[i] := ' ' + Encabezados[i] + ' ';
-    while Length(Encabezados[i]) < LenEncab[i] + 3 do
+    while Length(Encabezados[i]) < LenEncab[i] + 2 do
       Encabezados[i] := ' ' + Encabezados[i] + ' ';
     LenEncab[i] := Length(Encabezados[i]);
 
@@ -197,8 +196,6 @@ begin
         else
           Write('No':((LenEncab[4] + 2)) div 2);
         GotoXY(PosSep[4], WhereY);
-        Write('|', EMail:((LenEncab[5] + Length(AnsiString(EMail))) div 2));
-        GotoXY(PosSep[5], WhereY);
         WriteLn('|');
         SeparadorLineas(PosSep);
       end;
@@ -249,8 +246,6 @@ begin
 end;
 
 begin
-  // Inicializar
-  CrearAbrirArchivoCon(ArchCon);
   CrearLista(ListaCon);
   ClrScr;
 
@@ -258,7 +253,6 @@ begin
   Encab[2] := 'DNI';
   Encab[3] := 'SCORING';
   Encab[4] := 'HABILITADO';
-  Encab[5] := 'EMAIL';
 
   while not (EOF(ArchCon)) do
   begin
