@@ -5,20 +5,21 @@ unit UnitObtenerDatos;
 interface
 
 uses
-  crt, sysutils, UnitTypes, UnitValidacion, UnitManejoFecha;
+  crt, SysUtils, UnitTypes, UnitValidacion, UnitManejoFecha;
 
-function ObtenerApYNom: String;
-function ObtenerDNI: Cardinal;
-function ObtenerTel: String;
-function ObtenerEMail: String;
+function ObtenerApYNom: string;
+function ObtenerDNI: cardinal;
+function ObtenerTel: string;
+function ObtenerEMail: string;
 procedure ObtenerFechaActual(var Fecha: TRegFecha);
 procedure ObtenerFechaNac(var Fecha: TRegFecha);
 procedure ObtenerFechaInf(var Fecha: TRegFecha);
-function ObtenerOpcion(Texto: String; CotaInf, CotaSup: Byte): String;
-function ObtenerRtaSN: String;
+function ObtenerOpcion(Texto: string; CotaInf, CotaSup: byte): string;
+function ObtenerRtaSN: string;
 
 implementation
-function ObtenerApYNom: String;
+
+function ObtenerApYNom: string;
 begin
   ObtenerApYNom := '';
   while ObtenerApYNom = '' do
@@ -26,13 +27,13 @@ begin
     Write('Apellido y Nombres: ');
     ReadLn(ObtenerApYNom);
     if ObtenerApYNom = '' then
-      GotoXY(1, WhereY-1);
+      GotoXY(1, WhereY - 1);
   end;
 end;
 
-function ObtenerDNI: Cardinal;
+function ObtenerDNI: cardinal;
 var
-  Cad: String[10];
+  Cad: string[10];
 begin
   ObtenerDNI := 0;
   while not ((ObtenerDNI > 10000000) and (ObtenerDNI < 100000000)) do
@@ -44,16 +45,16 @@ begin
     begin
       ObtenerDNI := StrToDWord(Cad);
       if not ((ObtenerDNI > 10000000) and (ObtenerDNI < 100000000)) then
-        GotoXY(1, WhereY-1);
+        GotoXY(1, WhereY - 1);
     end
     else
-      GotoXY(1, WhereY-1);
+      GotoXY(1, WhereY - 1);
   end;
 end;
 
-function ObtenerTel: String;
+function ObtenerTel: string;
 var
-  Cad: String[20];
+  Cad: string[20];
 begin
   ObtenerTel := '';
   while ObtenerTel = '' do
@@ -64,11 +65,11 @@ begin
     if EsNum(Cad) then
       ObtenerTel := Cad
     else
-      GotoXY(1, WhereY-1);
+      GotoXY(1, WhereY - 1);
   end;
 end;
 
-function ObtenerEMail: String;
+function ObtenerEMail: string;
 begin
   Write('EMail: ');
   ReadLn(ObtenerEMail);
@@ -89,7 +90,7 @@ procedure ObtenerFechaInf(var Fecha: TRegFecha);
 var
   FechaActual: TRegFecha;
   FechaActualPas: TDateTime;
-  FechaAux: String[10];
+  FechaAux: string[10];
   FechaAuxPas: TDateTime;
 begin
   ObtenerFechaActual(FechaActual);
@@ -102,20 +103,21 @@ begin
     if FechaAuxPas > FechaActualPas then
     begin
       TextColor(Red);
-      Write(UTF8Decode('La fecha de la infracción no puede ser posterior a la fecha actual!'));
+      Write(UTF8Decode(
+        'La fecha de la infracción no puede ser posterior a la fecha actual!'));
       TextColor(White);
-      GotoXY(1,1);
+      GotoXY(1, 1);
     end;
   until FechaAuxPas <= FechaActualPas;
-  
+
   with Fecha do
     CadARegFecha(FechaAux, Dia, Mes, Anio);
 end;
 
-function ObtenerRtaSN: String;
+function ObtenerRtaSN: string;
 var
-  Rta: String[2];
-  PosX, PosY: Word;
+  Rta: string[2];
+  PosX, PosY: word;
 begin
   PosX := WhereX;
   PosY := WhereY;
@@ -127,9 +129,9 @@ begin
   ObtenerRtaSN := LowerCase(Rta);
 end;
 
-function ObtenerOpcion(Texto: String; CotaInf, CotaSup: Byte): String;
+function ObtenerOpcion(Texto: string; CotaInf, CotaSup: byte): string;
 var
-  Op: String[2];
+  Op: string[2];
 begin
   ObtenerOpcion := '';
   while ObtenerOpcion = '' do
@@ -141,9 +143,9 @@ begin
       if (CotaInf <= StrToInt(Op)) and (StrToInt(Op) <= CotaSup) then
         ObtenerOpcion := Op
       else
-        GotoXY(1, WhereY-1)
+        GotoXY(1, WhereY - 1)
     else
-      GotoXY(1, WhereY-1);
+      GotoXY(1, WhereY - 1);
   end;
 end;
 

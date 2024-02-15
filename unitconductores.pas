@@ -4,21 +4,25 @@ unit UnitConductores;
 interface
 
 uses
-  sysutils, crt, UnitArchivo, UnitValidacion, UnitPosiciones, 
+  SysUtils, crt, UnitArchivo, UnitValidacion, UnitPosiciones,
   UnitManejoFecha, UnitInfracciones, UnitObtenerDatos, UnitTypes,
   UnitListados;
 
-procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);
-procedure ConsultaConductor(var ArchCon: TArchCon; Pos: Word; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure AltaConductor(DatoIngresado: string; var ArchCon: TArchCon;
+  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
+  Caso: shortstring);
+procedure ConsultaConductor(var ArchCon: TArchCon; Pos: word;
+  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 
 implementation
+
 procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
-procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
+procedure ModificarDatos(var DatosCon: TDatoConductores;
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
 procedure BajaConductor(var DatosCon: TDatoConductores) forward;
 procedure ConsultaBajaConductor(var DatosCon: TDatoConductores) forward;
-procedure GuardarPosApYNom(var ArbolApYNom: TPuntApYNom; ApYNom: String; Pos: Cardinal);
+
+procedure GuardarPosApYNom(var ArbolApYNom: TPuntApYNom; ApYNom: string; Pos: cardinal);
 var
   xAux: TDatoPosApYNom;
 begin
@@ -26,7 +30,8 @@ begin
   xAux.Pos := Pos;
   AgregarApYNom(ArbolApYNom, xAux);
 end;
-procedure GuardarPosDNI(var ArbolDNI: TPuntDNI; DNI: Cardinal; Pos: Cardinal);
+
+procedure GuardarPosDNI(var ArbolDNI: TPuntDNI; DNI: cardinal; Pos: cardinal);
 var
   xAux: TDatoPosDNI;
 begin
@@ -34,20 +39,24 @@ begin
   xAux.Pos := Pos;
   AgregarDNI(ArbolDNI, xAux);
 end;
-procedure ActualizarPosApYNom(var ArbolApYNom: TPuntApYNom; NuevoApYNom: String; AnteriorApYNom: String);
+
+procedure ActualizarPosApYNom(var ArbolApYNom: TPuntApYNom; NuevoApYNom: string;
+  AnteriorApYNom: string);
 var
-  Pos: Word;
+  Pos: word;
 begin
   Pos := PreordenApYNom(ArbolApYNom, AnteriorApYNom);
   SuprimirApYNom(ArbolApYNom, AnteriorApYNom);
   GuardarPosApYNom(ArbolApYNom, NuevoApYNom, Pos);
 end;
-procedure AltaConductor(DatoIngresado: String; var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);
+
+procedure AltaConductor(DatoIngresado: string; var ArchCon: TArchCon;
+  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
+  Caso: shortstring);
 var
   DatosCon: TDatoConductores;
-  PosArch: Word;
-  Op, Rta: String[2];
+  PosArch: word;
+  Op, Rta: string[2];
 begin
   WriteLn;
   WriteLn('¡No se encontró el conductor ingresado!');
@@ -111,7 +120,7 @@ begin
           ConsultaConductor(ArchCon, PosArch, ArchInf, ArbolApYNom, ArbolDNI);
         end;
         '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
-        '0': 
+        '0':
         begin
           TextColor(Red);
           WriteLn('¡Alta cancelada!');
@@ -123,18 +132,18 @@ begin
   end;
 end;
 
-procedure ConsultaConductor(var ArchCon: TArchCon; Pos: Word; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure ConsultaConductor(var ArchCon: TArchCon; Pos: word;
+  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 var
   DatosCon: TDatoConductores;
-  Op: String[2];
+  Op: string[2];
 begin
   ClrScr;
 
   // Lee los datos del conductor
   Seek(ArchCon, Pos);
   Read(ArchCon, DatosCon);
-  
+
   repeat
     ClrScr;
     if not (DatosCon.BajaLogica) then
@@ -160,7 +169,7 @@ begin
     else
       ConsultaBajaConductor(DatosCon);
   until (Op = '0') or (DatosCon.BajaLogica);
-  
+
   // Guarda los datos del conductor en el archivo
   Seek(ArchCon, Pos);
   Write(ArchCon, DatosCon);
@@ -172,7 +181,8 @@ begin
   begin
     WriteLn('DNI: ', DNI);
     WriteLn('Apellido y Nombres: ', ApYNom);
-    WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
+    WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia,
+      FechaNac.Mes, FechaNac.Anio));
     WriteLn('Teléfono: ', Tel);
     WriteLn('EMail: ', EMail);
     WriteLn('Scoring: ', Scoring);
@@ -188,7 +198,8 @@ begin
       WriteLn('No');
     end;
     TextColor(White);
-    WriteLn('Fecha de Habilitación: ', FormatoFecha(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio));
+    WriteLn('Fecha de Habilitación: ', FormatoFecha(FechaHab.Dia,
+      FechaHab.Mes, FechaHab.Anio));
     WriteLn('Cantidad de Reincidencias: ', CantRein);
   end;
 end;
@@ -197,21 +208,21 @@ procedure MostrarOpDatosCon(var DatosCon: TDatoConductores);
 const
   CantOp = 5;
 var
-  i, MaxOp: Word;
-  EsqX, EsqY: Word;
+  i, MaxOp: word;
+  EsqX, EsqY: word;
 begin
   EsqX := WindMinX;
   EsqY := WindMinY;
   // Deja un espacio de 4 caracteres para mostrar las opciones
   Window(EsqX + 4, EsqY, WindMaxX, WindMaxY);
   MostrarDatosCon(DatosCon);
-    
+
   // Cantidad de datos mostrados
   MaxOp := WhereY - 1;
 
   // Restablece el Window original
   Window(EsqX, EsqY, WindMaxX, WindMaxY);
-    
+
   // Muestra un índice en las opciones que se pueden modificar
   for i := 1 to CantOp do
     WriteLn('[', i, ']');
@@ -219,7 +230,7 @@ begin
   // Muestra '[-]' en las opciones que NO se pueden modificar
   for i := (i + 1) to MaxOp do
     WriteLn('[-]');
-  
+
   WriteLn;
   WriteLn('[0] Volver');
 end;
@@ -233,12 +244,13 @@ begin
   WriteLn;
   if DatosOriginales.ApYNom <> DatosModificados.ApYNom then
     WriteLn('Apellido y Nombres: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);
-  if (DatosOriginales.FechaNac.Dia <> DatosModificados.FechaNac.Dia) or 
+  if (DatosOriginales.FechaNac.Dia <> DatosModificados.FechaNac.Dia) or
     (DatosOriginales.FechaNac.Mes <> DatosModificados.FechaNac.Mes) or
     (DatosOriginales.FechaNac.Anio <> DatosModificados.FechaNac.Anio) then
   begin
     with DatosOriginales do
-      Write('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
+      Write('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia,
+        FechaNac.Mes, FechaNac.Anio));
     Write(f);
     with DatosModificados do
       WriteLn(FormatoFecha(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio));
@@ -249,11 +261,12 @@ begin
     WriteLn('EMail: ', DatosOriginales.EMail, f, DatosModificados.EMail);
 end;
 
-procedure ModificarDatos(var DatosCon: TDatoConductores; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure ModificarDatos(var DatosCon: TDatoConductores;
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 var
   DatosConAux: TDatoConductores;
-  EsAlta, ModificaDatos: Boolean;
-  Op, Rta: String[2];
+  EsAlta, ModificaDatos: boolean;
+  Op, Rta: string[2];
 begin
   DatosConAux := DatosCon;
   EsAlta := (PreordenDNI(ArbolDNI, DatosCon.DNI) = -1);
@@ -267,7 +280,7 @@ begin
       ModificaDatos := True;
     ClrScr;
     case Op of
-      '1': 
+      '1':
         if EsAlta then
           DatosConAux.DNI := ObtenerDNI
         else
@@ -285,7 +298,7 @@ begin
       '5': DatosConAux.EMail := ObtenerEMail;
     end;
   until Op = '0';
-    
+
   if EsAlta then
     DatosCon := DatosConAux
   else
@@ -325,7 +338,7 @@ begin
   WriteLn('           DNI: ', DatosCon.DNI);
   WriteLn('           Apellido y Nombres: ', DatosCon.ApYNom);
   WriteLn;
-  WriteLn('Esta acción NO eliminará los datos o las infracciones guardadas,'); 
+  WriteLn('Esta acción NO eliminará los datos o las infracciones guardadas,');
   WriteLn('pero lo excluirá de listados y promedios.');
   WriteLn;
   Write('¿Desea continuar con la baja? (S/N): ');
@@ -377,4 +390,5 @@ begin
   end;
   Delay(1500);
 end;
+
 end.

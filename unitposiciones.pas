@@ -1,29 +1,32 @@
 unit UnitPosiciones;
- 
+
 interface
+
 {
 const
   RutaPosicionesApYNom = 'archivo\posicionesapynom.dat';
   RutaPosicionesDNI = 'archivo\posicionesdni.dat';
- } 
+ }
 type
   TDatoPosApYNom = record
-    ApYNom: String[100];
-    Pos: Word;
+    ApYNom: string[100];
+    Pos: word;
   end;
 
   TDatoPosDNI = record
-    DNI: Cardinal;
-    Pos: Word;
+    DNI: cardinal;
+    Pos: word;
   end;
-  
+
   TPuntApYNom = ^TNodoApYNom;
+
   TNodoApYNom = record
     InfoApYNom: TDatoPosApYNom;
     SAI, SAD: TPuntApYNom;
   end;
 
   TPuntDNI = ^TNodoDNI;
+
   TNodoDNI = record
     InfoDNI: TDatoPosDNI;
     SAI, SAD: TPuntDNI;
@@ -35,11 +38,11 @@ type
 {-ÁRBOL DE POSICIONES POR APELLIDO Y NOMBRE-}
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
 procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
-procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: String);
+procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: string);
 procedure InordenApYNom(var Raiz: TPuntApYNom);
-function PreordenApYNom(Raiz: TPuntApYNom; Buscado: String): LongInt;
-function ArbolVacioApYNom(Raiz: TPuntApYNom): Boolean;
-function ArbolLlenoApYNom(Raiz: TPuntApYNom): Boolean;
+function PreordenApYNom(Raiz: TPuntApYNom; Buscado: string): longint;
+function ArbolVacioApYNom(Raiz: TPuntApYNom): boolean;
+function ArbolLlenoApYNom(Raiz: TPuntApYNom): boolean;
 {-------------------------------------------}
 
 {--------ÁRBOL DE POSICIONES POR DNI--------}
@@ -47,185 +50,187 @@ procedure CrearArbolDNI(var Raiz: TPuntDNI);
 procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
 procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
 procedure InordenDNI(var Raiz: TPuntDNI);
-function PreordenDNI(Raiz: TPuntDNI; Buscado: Cardinal): LongInt;
-function ArbolVacioDNI(Raiz: TPuntDNI): Boolean;
-function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
+function PreordenDNI(Raiz: TPuntDNI; Buscado: cardinal): longint;
+function ArbolVacioDNI(Raiz: TPuntDNI): boolean;
+function ArbolLlenoDNI(Raiz: TPuntDNI): boolean;
 {-------------------------------------------}
 
 implementation
+
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
-  begin
-    Raiz := NIL;
-  end;
+begin
+  Raiz := nil;
+end;
 
 procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
+begin
+  if Raiz = nil then
   begin
-    if Raiz = NIL then
-    begin
-      New(Raiz);
-      Raiz^.InfoApYNom := x;
-      Raiz^.SAI := NIL;
-      Raiz^.SAD := NIL;
-    end
-    else
-      if Raiz^.InfoApYNom.ApYNom > x.ApYNom then
-        AgregarApYNom(Raiz^.SAI, x)
-      else
-        AgregarApYNom(Raiz^.SAD, x);
-  end;
+    New(Raiz);
+    Raiz^.InfoApYNom := x;
+    Raiz^.SAI := nil;
+    Raiz^.SAD := nil;
+  end
+  else
+  if Raiz^.InfoApYNom.ApYNom > x.ApYNom then
+    AgregarApYNom(Raiz^.SAI, x)
+  else
+    AgregarApYNom(Raiz^.SAD, x);
+end;
 
 function SuprimirMin(var Raiz: TPuntApYNom): TDatoPosApYNom;
+begin
+  if Raiz^.SAI = nil then
   begin
-    if Raiz^.SAI = NIL then
-    begin
-      SuprimirMin := Raiz^.InfoApYNom;
-      Raiz := Raiz^.SAD;
-    end
-    else
-      SuprimirMin := SuprimirMin(Raiz^.SAI);
-  end;
+    SuprimirMin := Raiz^.InfoApYNom;
+    Raiz := Raiz^.SAD;
+  end
+  else
+    SuprimirMin := SuprimirMin(Raiz^.SAI);
+end;
 
-procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: String);
-  begin
-    if Raiz <> NIL then
-      if x < Raiz^.InfoApYNom.ApYNom then
-        SuprimirApYNom(Raiz^.SAI, x)
-      else
-        if x > Raiz^.InfoApYNom.ApYNom then
-          SuprimirApYNom(Raiz^.SAD, x)
-        else
-          if (Raiz^.SAI = NIL) and (Raiz^.SAD = NIL) then
-            Raiz := NIL
-          else
-            if Raiz^.SAI = NIL then
-              Raiz := Raiz^.SAD
-            else
-              if Raiz^.SAD = NIL then
-                Raiz := Raiz^.SAI
-              else
-                Raiz^.InfoApYNom := SuprimirMin(Raiz^.SAD);
-  end;
+procedure SuprimirApYNom(var Raiz: TPuntApYNom; x: string);
+begin
+  if Raiz <> nil then
+    if x < Raiz^.InfoApYNom.ApYNom then
+      SuprimirApYNom(Raiz^.SAI, x)
+    else
+    if x > Raiz^.InfoApYNom.ApYNom then
+      SuprimirApYNom(Raiz^.SAD, x)
+    else
+    if (Raiz^.SAI = nil) and (Raiz^.SAD = nil) then
+      Raiz := nil
+    else
+    if Raiz^.SAI = nil then
+      Raiz := Raiz^.SAD
+    else
+    if Raiz^.SAD = nil then
+      Raiz := Raiz^.SAI
+    else
+      Raiz^.InfoApYNom := SuprimirMin(Raiz^.SAD);
+end;
 
 procedure InordenApYNom(var Raiz: TPuntApYNom);
+begin
+  if Raiz <> nil then
   begin
-    if Raiz <> NIL then
-    begin
-      InordenApYNom(Raiz^.SAI);
-      WriteLn(Raiz^.InfoApYNom.ApYNom);
-      WriteLn(Raiz^.InfoApYNom.Pos);
-      InordenApYNom(Raiz^.Sad);
-    end;
+    InordenApYNom(Raiz^.SAI);
+    WriteLn(Raiz^.InfoApYNom.ApYNom);
+    WriteLn(Raiz^.InfoApYNom.Pos);
+    InordenApYNom(Raiz^.Sad);
   end;
+end;
 
-function PreordenApYNom(Raiz: TPuntApYNom; Buscado: String): LongInt;
-  begin
-    if Raiz = NIL then
-      PreordenApYNom := -1
-    else
-      if LowerCase(Raiz^.InfoApYNom.ApYNom) = LowerCase(Buscado) then
-        PreordenApYNom := Raiz^.InfoApYNom.Pos
-      else
-        if Raiz^.InfoApYNom.ApYNom > Buscado then
-          PreordenApYNom := PreordenApYNom(Raiz^.SAI, Buscado)
-        else
-          PreordenApYNom := PreordenApYNom(Raiz^.SAD, Buscado);
-  end;
+function PreordenApYNom(Raiz: TPuntApYNom; Buscado: string): longint;
+begin
+  if Raiz = nil then
+    PreordenApYNom := -1
+  else
+  if LowerCase(Raiz^.InfoApYNom.ApYNom) = LowerCase(Buscado) then
+    PreordenApYNom := Raiz^.InfoApYNom.Pos
+  else
+  if Raiz^.InfoApYNom.ApYNom > Buscado then
+    PreordenApYNom := PreordenApYNom(Raiz^.SAI, Buscado)
+  else
+    PreordenApYNom := PreordenApYNom(Raiz^.SAD, Buscado);
+end;
 
-function ArbolVacioApYNom(Raiz: TPuntApYNom): Boolean;
-  begin
-    ArbolVacioApYNom := (Raiz = NIL);
-  end;
+function ArbolVacioApYNom(Raiz: TPuntApYNom): boolean;
+begin
+  ArbolVacioApYNom := (Raiz = nil);
+end;
 
-function ArbolLlenoApYNom(Raiz: TPuntApYNom): Boolean;
-  begin
-    ArbolLlenoApYNom := (GetHeapStatus.TotalFree < SizeOf(TNodoApYNom));
-  end;
+function ArbolLlenoApYNom(Raiz: TPuntApYNom): boolean;
+begin
+  ArbolLlenoApYNom := (GetHeapStatus.TotalFree < SizeOf(TNodoApYNom));
+end;
 
 procedure CrearArbolDNI(var Raiz: TPuntDNI);
-  begin
-    Raiz := NIL;
-  end;
+begin
+  Raiz := nil;
+end;
 
 procedure AgregarDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
+begin
+  if Raiz = nil then
   begin
-    if Raiz = NIL then
-    begin
-      New(Raiz);
-      Raiz^.InfoDNI := x;
-      Raiz^.SAI := NIL;
-      Raiz^.SAD := NIL;
-    end
-    else
-      if Raiz^.InfoDNI.DNI > x.DNI then
-        AgregarDNI(Raiz^.SAI, x)
-      else
-        AgregarDNI(Raiz^.SAD, x);
-  end;
+    New(Raiz);
+    Raiz^.InfoDNI := x;
+    Raiz^.SAI := nil;
+    Raiz^.SAD := nil;
+  end
+  else
+  if Raiz^.InfoDNI.DNI > x.DNI then
+    AgregarDNI(Raiz^.SAI, x)
+  else
+    AgregarDNI(Raiz^.SAD, x);
+end;
 
 function SuprimirMin(var Raiz: TPuntDNI): TDatoPosDNI;
+begin
+  if Raiz^.SAI = nil then
   begin
-    if Raiz^.SAI = NIL then
-    begin
-      SuprimirMin := Raiz^.InfoDNI;
-      Raiz := Raiz^.SAD;
-    end
-    else
-      SuprimirMin := SuprimirMin(Raiz^.SAI);
-  end;
+    SuprimirMin := Raiz^.InfoDNI;
+    Raiz := Raiz^.SAD;
+  end
+  else
+    SuprimirMin := SuprimirMin(Raiz^.SAI);
+end;
 
 procedure SuprimirDNI(var Raiz: TPuntDNI; x: TDatoPosDNI);
-  begin
-    if Raiz <> NIL then
-      if x.DNI < Raiz^.InfoDNI.DNI then
-        SuprimirDNI(Raiz^.SAI, x)
-      else
-        if x.DNI < Raiz^.InfoDNI.DNI then
-          SuprimirDNI(Raiz^.SAD, x)
-        else
-          if (Raiz^.SAI = NIL) and (Raiz^.SAD = NIL) then
-            Raiz := NIL
-          else
-            if Raiz^.SAI = NIL then
-              Raiz := Raiz^.SAD
-            else
-              if Raiz^.SAD = NIL then
-                Raiz := Raiz^.SAI
-              else
-                Raiz^.InfoDNI := SuprimirMin(Raiz^.SAD);
-  end;
+begin
+  if Raiz <> nil then
+    if x.DNI < Raiz^.InfoDNI.DNI then
+      SuprimirDNI(Raiz^.SAI, x)
+    else
+    if x.DNI < Raiz^.InfoDNI.DNI then
+      SuprimirDNI(Raiz^.SAD, x)
+    else
+    if (Raiz^.SAI = nil) and (Raiz^.SAD = nil) then
+      Raiz := nil
+    else
+    if Raiz^.SAI = nil then
+      Raiz := Raiz^.SAD
+    else
+    if Raiz^.SAD = nil then
+      Raiz := Raiz^.SAI
+    else
+      Raiz^.InfoDNI := SuprimirMin(Raiz^.SAD);
+end;
 
 procedure InordenDNI(var Raiz: TPuntDNI);
+begin
+  if Raiz <> nil then
   begin
-    if Raiz <> NIL then
-    begin
-      InordenDNI(Raiz^.SAI);
-      WriteLn(Raiz^.InfoDNI.DNI);
-      WriteLn(Raiz^.InfoDNI.Pos);
-      InordenDNI(Raiz^.Sad);
-    end;
+    InordenDNI(Raiz^.SAI);
+    WriteLn(Raiz^.InfoDNI.DNI);
+    WriteLn(Raiz^.InfoDNI.Pos);
+    InordenDNI(Raiz^.Sad);
   end;
+end;
 
-function PreordenDNI(Raiz: TPuntDNI; Buscado: Cardinal): LongInt;
-  begin
-    if Raiz = NIL then
-      PreordenDNI := -1
-    else
-      if Raiz^.InfoDNI.DNI = Buscado then
-        PreordenDNI := Raiz^.InfoDNI.Pos
-      else
-        if Raiz^.InfoDNI.DNI > Buscado then
-          PreordenDNI := PreordenDNI(Raiz^.SAI, Buscado)
-        else
-          PreordenDNI := PreordenDNI(Raiz^.SAD, Buscado);
-  end;
+function PreordenDNI(Raiz: TPuntDNI; Buscado: cardinal): longint;
+begin
+  if Raiz = nil then
+    PreordenDNI := -1
+  else
+  if Raiz^.InfoDNI.DNI = Buscado then
+    PreordenDNI := Raiz^.InfoDNI.Pos
+  else
+  if Raiz^.InfoDNI.DNI > Buscado then
+    PreordenDNI := PreordenDNI(Raiz^.SAI, Buscado)
+  else
+    PreordenDNI := PreordenDNI(Raiz^.SAD, Buscado);
+end;
 
-function ArbolVacioDNI(Raiz: TPuntDNI): Boolean;
-  begin
-    ArbolVacioDNI := (Raiz = NIL);
-  end;
+function ArbolVacioDNI(Raiz: TPuntDNI): boolean;
+begin
+  ArbolVacioDNI := (Raiz = nil);
+end;
 
-function ArbolLlenoDNI(Raiz: TPuntDNI): Boolean;
-  begin
-    ArbolLlenoDNI := (GetHeapStatus.TotalFree < SizeOf(TNodoDNI));
-  end;
+function ArbolLlenoDNI(Raiz: TPuntDNI): boolean;
+begin
+  ArbolLlenoDNI := (GetHeapStatus.TotalFree < SizeOf(TNodoDNI));
+end;
+
 end.

@@ -3,21 +3,22 @@ unit UnitListados;
 interface
 
 uses
-  sysutils, crt, UnitLista , UnitTypes, UnitPilaDinamica;
+  SysUtils, crt, UnitLista, UnitTypes, UnitPilaDinamica;
 
 const
-  EncabTotalesCon = 5; 
+  EncabTotalesCon = 5;
 
 type
-  TVectorEncab = array[1..EncabTotalesCon] of ShortString;
-  TVectorInt = array[1..EncabTotalesCon] of Integer;
+  TVectorEncab = array[1..EncabTotalesCon] of shortstring;
+  TVectorInt = array[1..EncabTotalesCon] of integer;
 
 procedure ListadoConductores(Encabezados: TVectorEncab; var ListaCon: TListaDatosCon);
 
 implementation
-function EsCadMayorAlf(Cad1, Cad2: String): Boolean;
+
+function EsCadMayorAlf(Cad1, Cad2: string): boolean;
 var
-  i, Min: Word;
+  i, Min: word;
 begin
   Cad1 := LowerCase(Cad1);
   Cad2 := LowerCase(Cad2);
@@ -25,11 +26,11 @@ begin
     Min := Length(Cad1)
   else
     Min := Length(Cad2);
-  
+
   i := 1;
   EsCadMayorAlf := False;
 
-  while (i <= Min) and (not EsCadMayorAlf)  do
+  while (i <= Min) and (not EsCadMayorAlf) do
     if Cad1[i] > Cad2[i] then
       EsCadMayorAlf := True
     else
@@ -41,7 +42,7 @@ end;
 
 procedure Burbuja_ApYNom(var L: TListaDatosCon);
 var
-  i, j: Word;
+  i, j: word;
   Ant, Sig: TDatoConductores;
 begin
   for i := 1 to TamanioLista(L) - 1 do
@@ -49,7 +50,7 @@ begin
     begin
       Recuperar(L, j, Ant);
       Recuperar(L, j + 1, Sig);
-      if EsCadMayorAlf(AnsiString(Ant.ApYNom), AnsiString(Sig.ApYNom)) then
+      if EsCadMayorAlf(ansistring(Ant.ApYNom), ansistring(Sig.ApYNom)) then
       begin
         Modificar(L, j, Sig);
         Modificar(L, j + 1, Ant);
@@ -59,7 +60,7 @@ end;
 
 procedure SeparadorEncabezado(Encabezados: TVectorEncab);
 var
-  i, j: Word;
+  i, j: word;
 begin
   for i := 1 to EncabTotalesCon do
   begin
@@ -72,7 +73,7 @@ end;
 
 procedure MostrarEncabezado(Encabezados: TVectorEncab);
 var
-  i: Word;
+  i: word;
 begin
   SeparadorEncabezado(Encabezados);
 
@@ -88,7 +89,7 @@ end;
 
 procedure SeparadorLineas(PosSep: TVectorInt);
 var
-  i: Word;
+  i: word;
 begin
   Write('+');
 
@@ -103,10 +104,10 @@ begin
   WriteLn;
 end;
 
-procedure InicializarListadoCon(var Encabezados: TVectorEncab; var ListaCon: TListaDatosCon;
-  var LenEncab: TVectorInt; var PosSep: TVectorInt);
+procedure InicializarListadoCon(var Encabezados: TVectorEncab;
+  var ListaCon: TListaDatosCon; var LenEncab: TVectorInt; var PosSep: TVectorInt);
 var
-  i, j: Word;
+  i, j: word;
   DatosCon: TDatoConductores;
   LenAux: TVectorInt;
 begin
@@ -122,8 +123,8 @@ begin
     // Determinar la longitud de la string más larga
     Recuperar(ListaCon, i, DatosCon);
 
-    LenAux[1] := Length(AnsiString(DatosCon.ApYNom));
-    LenAux[5] := Length(AnsiString(DatosCon.EMail));
+    LenAux[1] := Length(ansistring(DatosCon.ApYNom));
+    LenAux[5] := Length(ansistring(DatosCon.EMail));
 
     for j := 1 to EncabTotalesCon do
       if LenEncab[i] < LenAux[i] then
@@ -143,7 +144,7 @@ begin
     if i = 1 then
       PosSep[i] := LenEncab[i] + 2
     else
-      PosSep[i] := PosSep[i-1] + LenEncab[i] + 1;
+      PosSep[i] := PosSep[i - 1] + LenEncab[i] + 1;
   end;
 end;
 
@@ -152,9 +153,9 @@ const
   LimiteInferior = 20;
 var
   PosAnterior: TPilaDin;
-  CantCon: String[7];
-  i, Anterior: Byte;
-  Tecl: String[2];
+  CantCon: string[7];
+  i, Anterior: byte;
+  Tecl: string[2];
   DatosCon: TDatoConductores;
   LenEncab, PosSep: TVectorInt;
 begin
@@ -165,7 +166,7 @@ begin
   Anterior := 1;
   Tecl := '';
   MostrarEncabezado(Encabezados);
-  
+
   while (LowerCase(Tecl) <> 'q') do
   begin
     // Si no se llegó al final de la lista, muestra secuencialmente las infracciones
@@ -174,19 +175,19 @@ begin
       Recuperar(ListaCon, i, DatosCon);
       with DatosCon do
       begin
-        Write('|', ApYNom:((LenEncab[1] + Length(AnsiString(ApyNom))) div 2));
+        Write('|', ApYNom: ((LenEncab[1] + Length(ansistring(ApyNom))) div 2));
         GotoXY(PosSep[1], WhereY);
-        Write('|', DNI:((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
+        Write('|', DNI: ((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
         GotoXY(PosSep[2], WhereY);
-        Write('|', Scoring:((LenEncab[3] + Length(IntToStr(Scoring))) div 2));
+        Write('|', Scoring: ((LenEncab[3] + Length(IntToStr(Scoring))) div 2));
         GotoXY(PosSep[3], WhereY);
         Write('|');
         if Habilitado then
-          Write('Si':((LenEncab[4] + 2)) div 2)
+          Write('Si': ((LenEncab[4] + 2)) div 2)
         else
-          Write('No':((LenEncab[4] + 2)) div 2);
+          Write('No': ((LenEncab[4] + 2)) div 2);
         GotoXY(PosSep[4], WhereY);
-        Write('|', EMail:((LenEncab[5] + Length(AnsiString(EMail))) div 2));
+        Write('|', EMail: ((LenEncab[5] + Length(ansistring(EMail))) div 2));
         GotoXY(PosSep[5], WhereY);
         WriteLn('|');
         SeparadorLineas(PosSep);
@@ -202,7 +203,7 @@ begin
       WriteLn;
       {WriteLn('[S] iguiente.', CantCon:(WindMaxX - WindMinX - 13));}
       Write('[S] iguiente.');
-      WriteLn(CantCon:PosSep[EncabTotalesCon] - WhereX + 1);
+      WriteLn(CantCon: PosSep[EncabTotalesCon] - WhereX + 1);
       WriteLn('[A] nterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
@@ -218,7 +219,7 @@ begin
             Apilar(PosAnterior, Anterior)
           else
             i := Anterior;
-        'a': 
+        'a':
           // Si la pila contiene algún índice, lo desapila y lo guarda en el índice de la lista 'i'
           // Si la pila NO contiene ningún índice, se encuentra en la primera "página", y establece el índice de la
           // lista nuevamente en la posición 0
@@ -226,9 +227,9 @@ begin
             Desapilar(PosAnterior, i)
           else
             i := 1;
-      else
-        // Si la tecla no es 's' ni 'a', muestra lo mismo
-        i := Anterior;
+        else
+          // Si la tecla no es 's' ni 'a', muestra lo mismo
+          i := Anterior;
       end;
       Anterior := i;
       ClrScr;
@@ -236,4 +237,5 @@ begin
     end;
   end;
 end;
+
 end.

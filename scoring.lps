@@ -9,78 +9,79 @@
         <Filename Value="scoring.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="Scoring"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitmenu.pas"/>
         <UnitName Value="UnitMenu"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="5" Y="6"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="13"/>
+        <CursorPos X="5" Y="7"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="actividades.pas"/>
         <UnitName Value="Actividades"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="34"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitarchivo.pas"/>
         <UnitName Value="UnitArchivo"/>
         <EditorIndex Value="9"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitconductores.pas"/>
         <UnitName Value="UnitConductores"/>
         <EditorIndex Value="3"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="75"/>
+        <CursorPos X="11" Y="92"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitinfracciones.pas"/>
         <UnitName Value="UnitInfracciones"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="162"/>
-        <CursorPos X="20" Y="172"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="166"/>
+        <CursorPos X="20" Y="176"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitlista.pas"/>
         <UnitName Value="UnitLista"/>
         <EditorIndex Value="10"/>
-        <TopLine Value="22"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitlistados.pas"/>
         <UnitName Value="UnitListados"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="11"/>
-        <TopLine Value="144"/>
-        <CursorPos X="24" Y="154"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="147"/>
+        <CursorPos X="32" Y="160"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitmanejofecha.pas"/>
         <UnitName Value="UnitManejoFecha"/>
         <EditorIndex Value="12"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitobtenerdatos.pas"/>
         <UnitName Value="UnitObtenerDatos"/>
         <EditorIndex Value="5"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -94,33 +95,33 @@
         <Filename Value="unitposiciones.pas"/>
         <UnitName Value="UnitPosiciones"/>
         <EditorIndex Value="6"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unittypes.pas"/>
         <UnitName Value="UnitTypes"/>
         <EditorIndex Value="7"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitvalidacion.pas"/>
         <UnitName Value="UnitValidacion"/>
         <EditorIndex Value="8"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitpiladinamica.pas"/>
         <UnitName Value="UnitPilaDinamica"/>
         <EditorIndex Value="13"/>
-        <CursorPos X="22" Y="6"/>
-        <UsageCount Value="10"/>
+        <CursorPos X="23" Y="6"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="10">
+    <JumpHistory HistoryIndex="12">
       <Position>
         <Filename Value="scoring.pas"/>
       </Position>
@@ -163,6 +164,14 @@
       <Position>
         <Filename Value="unitlistados.pas"/>
         <Caret Line="159" Column="32" TopLine="147"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="11" Column="17" TopLine="4"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="92" Column="11" TopLine="75"/>
       </Position>
     </JumpHistory>
     <RunParams>

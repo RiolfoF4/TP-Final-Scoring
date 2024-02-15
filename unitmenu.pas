@@ -2,21 +2,24 @@ unit UnitMenu;
 {$CODEPAGE UTF8}
 
 interface
+
 uses
   crt, UnitArchivo, UnitPosiciones, Actividades;
 
 procedure MostrarMenu;
 
 implementation
-procedure MostrarListados(var ArchCon: TArchCon; var ArchInf: TArchInf; 
+
+procedure MostrarListados(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
+
 procedure MostrarMenu;
 var
   ArchCon: TArchCon;
   ArchInf: TArchInf;
   ArbolApYNom: TPuntApYNom;
   ArbolDNI: TPuntDNI;
-  Op: String[2];
+  Op: string[2];
 begin
   Inicializar(ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
   repeat
@@ -43,7 +46,7 @@ end;
 procedure MostrarListados(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 var
-  Op: String[2];
+  Op: string[2];
 begin
   repeat
     ClrScr;
@@ -58,7 +61,7 @@ begin
     ReadLn(Op);
     ClrScr;
     case Op of
-      '1':;
+      '1': ;
     end;
   until Op = '0';
 end;

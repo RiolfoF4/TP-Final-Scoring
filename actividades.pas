@@ -4,7 +4,7 @@ unit Actividades;
 interface
 
 uses
-  sysutils, crt, UnitArchivo, UnitConductores, UnitValidacion, UnitPosiciones, 
+  SysUtils, crt, UnitArchivo, UnitConductores, UnitValidacion, UnitPosiciones,
   UnitManejoFecha, UnitInfracciones, UnitObtenerDatos, UnitTypes,
   UnitListados;
 
@@ -12,13 +12,18 @@ const
   EsqX = 15;
   EsqY = 5;
 
-procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
-procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf; // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);               
+procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
+  // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: shortstring);
+
 
 implementation
-procedure CargarArbolPos(var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; var ArchCon: TArchCon);
+
+procedure CargarArbolPos(var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
+  var ArchCon: TArchCon);
 var
   xPosApYNom: TDatoPosApYNom;
   xPosDNI: TDatoPosDNI;
@@ -56,18 +61,19 @@ begin
     if not (xAux.Habilitado) then
       with xAux do
         // Si la fecha de habilitación NO es posterior a la fecha actual (es anterior o igual)
-        if not (EsFechaPosterior(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio, 
+        if not (EsFechaPosterior(FechaHab.Dia, FechaHab.Mes, FechaHab.Anio,
           FechaActual.Dia, FechaActual.Mes, FechaActual.Anio)) then
         begin
           xAux.Habilitado := True;
           xAux.Scoring := 20;
           Seek(ArchCon, FilePos(ArchCon) - 1);
-          Write(ArchCon,xAux);
+          Write(ArchCon, xAux);
         end;
   end;
 end;
 
-procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 begin
   ClrScr;
   Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY);
@@ -87,12 +93,13 @@ begin
 end;
 
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: ShortString);               
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: shortstring);
+
 var
-  ApYNom: String[50];
-  DNI: Cardinal;
-  Pos: LongInt;
-  DatoIng: String[50];
+  ApYNom: string[50];
+  DNI: cardinal;
+  Pos: longint;
+  DatoIng: string[50];
 begin
   if LowerCase(Caso) = 'apynom' then
   begin
@@ -111,4 +118,5 @@ begin
   else
     ConsultaConductor(ArchCon, Pos, ArchInf, ArbolApYNom, ArbolDNI);
 end;
+
 end.

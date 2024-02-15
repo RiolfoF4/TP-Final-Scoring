@@ -1,6 +1,7 @@
 program Scoring;
 
-uses UnitMenu;
+uses
+  UnitMenu;
 
 begin
   MostrarMenu;
