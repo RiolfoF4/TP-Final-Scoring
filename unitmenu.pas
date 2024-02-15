@@ -4,7 +4,7 @@ unit UnitMenu;
 interface
 
 uses
-  crt, UnitArchivo, UnitPosiciones, Actividades;
+  crt, UnitArchivo, UnitPosiciones, Actividades, UnitListados;
 
 procedure MostrarMenu;
 
@@ -51,9 +51,10 @@ begin
   repeat
     ClrScr;
     WriteLn('[1] Listado de Conductores.');
-    WriteLn('[2] Listado de Infracciones en un Período Determinado.');
-    WriteLn('[3] Listado de Infracciones de un Conductor en un Período Determinado.');
-    WriteLn('[4] Listado de Infractores con Scoring 0.');
+    WriteLn('[2] Listado de Conductores con Scoring 0.');
+    WriteLn;
+    WriteLn('[3] Listado de Infracciones en un Período Determinado.');
+    WriteLn('[4] Listado de Infracciones de un Conductor en un Período Determinado.');
     WriteLn;
     WriteLn('[0] Volver.');
     WriteLn;
@@ -61,7 +62,8 @@ begin
     ReadLn(Op);
     ClrScr;
     case Op of
-      '1': ;
+      '1': ListadoCon(ArchCon, False);
+      '2': ListadoCon(ArchCon, True);
     end;
   until Op = '0';
 end;
