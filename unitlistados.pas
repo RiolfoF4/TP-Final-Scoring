@@ -1,18 +1,19 @@
 unit UnitListados;
+{$CODEPAGE UTF8}
 
 interface
 
 uses
-  SysUtils, crt, UnitLista, UnitTypes, UnitPilaDinamica;
+  SysUtils, crt, UnitLista, UnitTypes, UnitArchivo, UnitPilaDinamica;
 
 const
-  EncabTotalesCon = 5;
+  EncabTotalesCon = 4;
 
 type
   TVectorEncab = array[1..EncabTotalesCon] of shortstring;
   TVectorInt = array[1..EncabTotalesCon] of integer;
 
-procedure ListadoConductores(Encabezados: TVectorEncab; var ListaCon: TListaDatosCon);
+procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
 
 implementation
 
@@ -50,7 +51,7 @@ begin
     begin
       Recuperar(L, j, Ant);
       Recuperar(L, j + 1, Sig);
-      if EsCadMayorAlf(ansistring(Ant.ApYNom), ansistring(Sig.ApYNom)) then
+      if Ant.ApYNom > Sig.ApYNom then
       begin
         Modificar(L, j, Sig);
         Modificar(L, j + 1, Ant);
@@ -124,11 +125,10 @@ begin
     Recuperar(ListaCon, i, DatosCon);
 
     LenAux[1] := Length(ansistring(DatosCon.ApYNom));
-    LenAux[5] := Length(ansistring(DatosCon.EMail));
 
     for j := 1 to EncabTotalesCon do
-      if LenEncab[i] < LenAux[i] then
-        LenEncab[i] := LenAux[5];
+      if LenEncab[j] < LenAux[j] then
+        LenEncab[j] := LenAux[j];
   end;
 
   for i := 1 to EncabTotalesCon do
@@ -148,9 +148,9 @@ begin
   end;
 end;
 
-procedure ListadoConductores(Encabezados: TVectorEncab; var ListaCon: TListaDatosCon);
+procedure MostrarListadoCon(Encabezados: TVectorEncab; var ListaCon: TListaDatosCon);
 const
-  LimiteInferior = 20;
+  LimiteInferior = 14;
 var
   PosAnterior: TPilaDin;
   CantCon: string[7];
@@ -175,7 +175,12 @@ begin
       Recuperar(ListaCon, i, DatosCon);
       with DatosCon do
       begin
-        Write('|', ApYNom: ((LenEncab[1] + Length(ansistring(ApyNom))) div 2));
+        Write('|');
+        {GotoXY((LenEncab[1] div 2) - (Length(ansistring(ApyNom)) div 2), WhereY);
+        Mostrar(ApYNom);}
+        SetUseACP(False);
+        Write(ApYNom: ((LenEncab[1] + Length(ansistring(ApyNom))) div 2));
+        SetUseACP(True);
         GotoXY(PosSep[1], WhereY);
         Write('|', DNI: ((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
         GotoXY(PosSep[2], WhereY);
@@ -187,8 +192,6 @@ begin
         else
           Write('No': ((LenEncab[4] + 2)) div 2);
         GotoXY(PosSep[4], WhereY);
-        Write('|', EMail: ((LenEncab[5] + Length(ansistring(EMail))) div 2));
-        GotoXY(PosSep[5], WhereY);
         WriteLn('|');
         SeparadorLineas(PosSep);
       end;
@@ -201,10 +204,9 @@ begin
     begin
       CantCon := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaCon));
       WriteLn;
-      {WriteLn('[S] iguiente.', CantCon:(WindMaxX - WindMinX - 13));}
-      Write('[S] iguiente.');
+      Write('[S] Siguiente.');
       WriteLn(CantCon: PosSep[EncabTotalesCon] - WhereX + 1);
-      WriteLn('[A] nterior.');
+      WriteLn('[A] Anterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
       Write(UTF8Decode('Opción: '));
@@ -235,6 +237,48 @@ begin
       ClrScr;
       MostrarEncabezado(Encabezados);
     end;
+  end;
+end;
+
+procedure InicializarListaCon(var ArchCon: TArchCon; var ListaCon: TListaDatosCon;
+  SoloNoHabilidatos: Boolean);
+var
+  DatosCon: TDatoConductores;
+begin
+  Seek(ArchCon, 0);
+  while not (EOF(ArchCon)) do
+  begin
+    Read(ArchCon, DatosCon);
+    if not DatosCon.BajaLogica then
+      if not SoloNoHabilidatos then
+        Agregar(ListaCon, DatosCon)
+      else
+        if DatosCon.Scoring = 0 then
+          Agregar(ListaCon, DatosCon);
+  end;
+  if not ListaVacia(ListaCon) then
+    Burbuja_ApYNom(ListaCon);
+end;
+
+procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
+const
+  Encabezados: TVectorEncab = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
+var
+  Encab: TVectorEncab;
+  ListaCon: TListaDatosCon;
+begin
+  Encab := Encabezados;
+  CrearLista(ListaCon);
+  InicializarListaCon(ArchCon, ListaCon, SoloNoHabilidatos);
+
+  if not ListaVacia(ListaCon) then
+     MostrarListadoCon(Encab, ListaCon)
+  else
+  begin
+    TextColor(Red);
+    Write('¡No se encontraron conductores!');
+    TextColor(White);
+    Delay(1500);
   end;
 end;
 
