@@ -31,10 +31,7 @@ type
     InfoDNI: TDatoPosDNI;
     SAI, SAD: TPuntDNI;
   end;
-{
-  TArchPosApYNom = File of TDatoPosApYNom;
-  TArchPosDNI = File of TDatoPosDNI;
-}
+
 {-ÁRBOL DE POSICIONES POR APELLIDO Y NOMBRE-}
 procedure CrearArbolApYNom(var Raiz: TPuntApYNom);
 procedure AgregarApYNom(var Raiz: TPuntApYNom; x: TDatoPosApYNom);
