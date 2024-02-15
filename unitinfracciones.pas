@@ -152,8 +152,8 @@ begin
     if (WhereY > LimiteInferior) or (i > TamanioLista(ListaInf)) then
     begin
       CantInf := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaInf));
-      WriteLn('[S] iguiente.', CantInf: (WindMaxX - WindMinX - 13));
-      WriteLn('[A] nterior.');
+      WriteLn('[S] Siguiente.', CantInf: (WindMaxX - WindMinX - 13));
+      WriteLn('[A] Anterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
       Write(UTF8Decode('Opción: '));
@@ -459,7 +459,7 @@ begin
         repeat
           // Muestra los datos de la infracción
           WriteLn('DNI: ', DatosInf.DNI);
-          WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+          MostrarLn('Apellido y Nombres: ', DatosCon.ApYNom);
           WriteLn;
           MostrarDatosInf(DatosInfAux);
           WriteLn;
@@ -488,7 +488,7 @@ begin
           TextColor(White);
           WriteLn;
           WriteLn('DNI: ', DatosInf.DNI);
-          WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+          MostrarLn('Apellido y Nombres: ', DatosCon.ApYNom);
           WriteLn;
           WriteLn(UTF8Decode('Se modificarán los siguientes datos:'));
           WriteLn;
