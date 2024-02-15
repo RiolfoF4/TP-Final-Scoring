@@ -4,9 +4,9 @@ unit UnitConductores;
 interface
 
 uses
-  SysUtils, crt, UnitArchivo, UnitValidacion, UnitPosiciones,
+  SysUtils, crt, UnitArchivo, UnitPosiciones,
   UnitManejoFecha, UnitInfracciones, UnitObtenerDatos, UnitTypes,
-  UnitListados, UnitMostrarACP;
+  UnitMostrarACP;
 
 procedure AltaConductor(DatoIngresado: string; var ArchCon: TArchCon;
   var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
