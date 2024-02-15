@@ -4,9 +4,8 @@ unit Actividades;
 interface
 
 uses
-  SysUtils, crt, UnitArchivo, UnitConductores, UnitValidacion, UnitPosiciones,
-  UnitManejoFecha, UnitInfracciones, UnitObtenerDatos, UnitTypes,
-  UnitListados;
+  SysUtils, crt, UnitArchivo, UnitConductores, UnitPosiciones,
+  UnitManejoFecha, UnitObtenerDatos, UnitTypes;
 
 const
   EsqX = 15;
