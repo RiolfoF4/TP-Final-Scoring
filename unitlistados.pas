@@ -4,7 +4,7 @@ unit UnitListados;
 interface
 
 uses
-  SysUtils, crt, UnitLista, UnitTypes, UnitArchivo, UnitPilaDinamica;
+  SysUtils, crt, UnitLista, UnitTypes, UnitArchivo, UnitPila;
 
 const
   EncabTotalesCon = 4;
@@ -51,7 +51,7 @@ begin
     begin
       Recuperar(L, j, Ant);
       Recuperar(L, j + 1, Sig);
-      if Ant.ApYNom > Sig.ApYNom then
+      if LowerCase(Ant.ApYNom) > LowerCase(Sig.ApYNom) then
       begin
         Modificar(L, j, Sig);
         Modificar(L, j + 1, Ant);
@@ -152,7 +152,7 @@ procedure MostrarListadoCon(Encabezados: TVectorEncab; var ListaCon: TListaDatos
 const
   LimiteInferior = 14;
 var
-  PosAnterior: TPilaDin;
+  PosAnterior: TPila;
   CantCon: string[7];
   i, Anterior: word;
   Tecl: string[2];
