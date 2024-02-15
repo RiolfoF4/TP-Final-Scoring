@@ -3,7 +3,7 @@ unit UnitPilaDinamica;
 interface
 
 type
-  TDatoPilaDin = byte;
+  TDatoPilaDin = word;
   TPunt = ^TNodo;
 
   TNodo = record

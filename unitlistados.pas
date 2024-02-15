@@ -154,7 +154,7 @@ const
 var
   PosAnterior: TPilaDin;
   CantCon: string[7];
-  i, Anterior: byte;
+  i, Anterior: word;
   Tecl: string[2];
   DatosCon: TDatoConductores;
   LenEncab, PosSep: TVectorInt;

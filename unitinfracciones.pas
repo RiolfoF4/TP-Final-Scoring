@@ -126,7 +126,7 @@ const
 var
   PosAnterior: TPilaDin;
   CantInf: string[7];
-  i, Anterior: byte;
+  i, Anterior: word;
   Tecl: string[2];
   Infraccion: shortstring;
 begin
