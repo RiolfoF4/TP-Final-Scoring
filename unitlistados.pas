@@ -13,11 +13,11 @@ type
   TVectorEncab = array[1..EncabTotalesCon] of shortstring;
   TVectorInt = array[1..EncabTotalesCon] of integer;
 
-procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
+procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: boolean);
 
 implementation
 
-function EsCadMayorAlf(Cad1, Cad2: string): boolean;
+{function EsCadMayorAlf(Cad1, Cad2: string): boolean;
 var
   i, Min: word;
 begin
@@ -39,7 +39,7 @@ begin
       i := Min + 1
     else
       Inc(I);
-end;
+end;}
 
 procedure Burbuja_ApYNom(var L: TListaDatosCon);
 var
@@ -241,7 +241,7 @@ begin
 end;
 
 procedure InicializarListaCon(var ArchCon: TArchCon; var ListaCon: TListaDatosCon;
-  SoloNoHabilidatos: Boolean);
+  SoloNoHabilidatos: boolean);
 var
   DatosCon: TDatoConductores;
 begin
@@ -253,14 +253,14 @@ begin
       if not SoloNoHabilidatos then
         Agregar(ListaCon, DatosCon)
       else
-        if DatosCon.Scoring = 0 then
-          Agregar(ListaCon, DatosCon);
+      if DatosCon.Scoring = 0 then
+        Agregar(ListaCon, DatosCon);
   end;
   if not ListaVacia(ListaCon) then
     Burbuja_ApYNom(ListaCon);
 end;
 
-procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
+procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: boolean);
 const
   Encabezados: TVectorEncab = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
 var
@@ -272,7 +272,7 @@ begin
   InicializarListaCon(ArchCon, ListaCon, SoloNoHabilidatos);
 
   if not ListaVacia(ListaCon) then
-     MostrarListadoCon(Encab, ListaCon)
+    MostrarListadoCon(Encab, ListaCon)
   else
   begin
     TextColor(Red);

@@ -16,7 +16,7 @@ procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: shortstring);
-  // Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
+// Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
 
 
 implementation
@@ -94,7 +94,6 @@ end;
 
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: shortstring);
-
 var
   ApYNom: string[50];
   DNI: cardinal;

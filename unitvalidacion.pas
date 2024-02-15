@@ -108,8 +108,9 @@ begin
   begin
     Dom := LowerCase(Copy(Cad, PosCad + 1, Length(Cad) - PosCad));
     if not ((Dom = 'gmail.com') or (Dom = 'yahoo.com') or
-      (Dom = 'yahoo.com.ar') or (Dom = 'hotmail.com') or (Dom = 'hotmail.com.ar') or
-      (Dom = 'live.com') or (Dom = 'live.com.ar')) then EsEMail := False;
+      (Dom = 'yahoo.com.ar') or (Dom = 'hotmail.com') or
+      (Dom = 'hotmail.com.ar') or (Dom = 'live.com') or (Dom = 'live.com.ar')) then
+      EsEMail := False;
   end;
 end;
 
