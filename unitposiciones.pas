@@ -129,7 +129,7 @@ begin
   if LowerCase(Raiz^.InfoApYNom.ApYNom) = LowerCase(Buscado) then
     PreordenApYNom := Raiz^.InfoApYNom.Pos
   else
-  if Raiz^.InfoApYNom.ApYNom > Buscado then
+  if LowerCase(Raiz^.InfoApYNom.ApYNom) > LowerCase(Buscado) then
     PreordenApYNom := PreordenApYNom(Raiz^.SAI, Buscado)
   else
     PreordenApYNom := PreordenApYNom(Raiz^.SAD, Buscado);
