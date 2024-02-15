@@ -163,8 +163,6 @@ begin
 end;
 
 
-
-
 procedure CrearLista(var L: TListaDatosCon);
 begin
   L.Tam := 0;
