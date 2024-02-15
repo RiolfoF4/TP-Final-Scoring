@@ -13,9 +13,9 @@ begin
   SetUseACP(False);
   ReadLn(s);
   WriteLn('s: ', s);
-  //SetUseACP(True);
+  SetUseACP(True);
   ReadLn;
-  WriteLn('áéóíú ññ ', Utf8ToAnsi('áéóíú ññ'), ' ', UTF8Decode('áéóíú ññ'));
+  WriteLn('áéóíú ññ ');
   ReadLn;
 end.
 

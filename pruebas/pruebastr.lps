@@ -9,8 +9,8 @@
         <Filename Value="pruebastr.lpr"/>
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="8"/>
-        <CursorPos X="21" Y="19"/>
+        <TopLine Value="2"/>
+        <CursorPos X="5" Y="5"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
       </Unit>
@@ -30,10 +30,9 @@
       <Unit>
         <Filename Value="C:\lazarus\components\lazutils\lazutf8.pas"/>
         <UnitName Value="LazUTF8"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="192"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\inc\ustringh.inc"/>
