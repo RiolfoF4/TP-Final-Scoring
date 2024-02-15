@@ -4,7 +4,7 @@ interface
 
 uses
   crt, SysUtils, Math, UnitValidacion, UnitArchivo, UnitPilaDinamica,
-  UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes;
+  UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes, UnitMostrarACP;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
@@ -333,7 +333,7 @@ begin
     repeat
       ClrScr;
       WriteLn('DNI: ', Infraccion.DNI);
-      WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+      MostrarLn('Apellido y Nombres: ', DatosCon.ApYNom);
       WriteLn;
       MostrarDatosInf(Infraccion);
       Write('Scoring: ', DatosCon.Scoring, ' --> ');

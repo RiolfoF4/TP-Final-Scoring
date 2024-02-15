@@ -6,7 +6,7 @@ interface
 uses
   SysUtils, crt, UnitArchivo, UnitValidacion, UnitPosiciones,
   UnitManejoFecha, UnitInfracciones, UnitObtenerDatos, UnitTypes,
-  UnitListados;
+  UnitListados, UnitMostrarACP;
 
 procedure AltaConductor(DatoIngresado: string; var ArchCon: TArchCon;
   var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
@@ -71,7 +71,7 @@ begin
     // Guardar automáticamente el dato que se ingresa al consultar conductor
     if Caso = 'apynom' then
     begin
-      WriteLn('Apellido y Nombres: ', DatoIngresado);
+      MostrarLn('Apellido y Nombres: ' + DatoIngresado);
       DatosCon.ApYNom := DatoIngresado;
       DatosCon.DNI := ObtenerDNI;
     end
@@ -127,6 +127,7 @@ begin
         '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
         '0':
         begin
+          WriteLn;
           TextColor(Red);
           WriteLn('¡Alta cancelada!');
           TextColor(White);
@@ -185,7 +186,7 @@ begin
   with DatosCon do
   begin
     WriteLn('DNI: ', DNI);
-    WriteLn('Apellido y Nombres: ', ApYNom);
+    MostrarLn('Apellido y Nombres: ', ApYNom);
     WriteLn('Fecha de Nacimiento: ', FormatoFecha(FechaNac.Dia,
       FechaNac.Mes, FechaNac.Anio));
     WriteLn('Teléfono: ', Tel);
@@ -248,7 +249,10 @@ begin
   WriteLn('DNI: ', DatosOriginales.DNI);
   WriteLn;
   if DatosOriginales.ApYNom <> DatosModificados.ApYNom then
-    WriteLn('Apellido y Nombres: ', DatosOriginales.ApYNom, f, DatosModificados.ApYNom);
+  begin
+    Mostrar('Apellido y Nombres: ', DatosOriginales.ApYNom);
+    MostrarLn(f, DatosModificados.ApYNom);
+  end;
   if (DatosOriginales.FechaNac.Dia <> DatosModificados.FechaNac.Dia) or
     (DatosOriginales.FechaNac.Mes <> DatosModificados.FechaNac.Mes) or
     (DatosOriginales.FechaNac.Anio <> DatosModificados.FechaNac.Anio) then
@@ -341,7 +345,7 @@ begin
   TextColor(White);
   WriteLn('Se dará de baja al siguiente conductor:');
   WriteLn('           DNI: ', DatosCon.DNI);
-  WriteLn('           Apellido y Nombres: ', DatosCon.ApYNom);
+  MostrarLn('           Apellido y Nombres: ', DatosCon.ApYNom);
   WriteLn;
   WriteLn('Esta acción NO eliminará los datos o las infracciones guardadas,');
   WriteLn('pero lo excluirá de listados y promedios.');
@@ -373,7 +377,7 @@ begin
   TextColor(White);
   WriteLn('El conductor ingresado se encuentra dado de baja:');
   WriteLn('           DNI: ', DatosCon.DNI);
-  WriteLn('           Apellido y Nombres: ', DatosCon.ApYNom);
+  MostrarLn('           Apellido y Nombres: ', DatosCon.ApYNom);
   WriteLn;
   WriteLn('Para poder acceder a los datos debe darlo de alta.');
   WriteLn;

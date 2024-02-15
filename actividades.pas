@@ -75,6 +75,7 @@ end;
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 begin
+  SetSafeCPSwitching(False);
   ClrScr;
   Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY);
   TextColor(White);

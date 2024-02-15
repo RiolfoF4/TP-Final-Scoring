@@ -21,6 +21,7 @@ implementation
 
 function ObtenerApYNom: string;
 begin
+  SetUseACP(False);
   ObtenerApYNom := '';
   while ObtenerApYNom = '' do
   begin
@@ -29,6 +30,7 @@ begin
     if ObtenerApYNom = '' then
       GotoXY(1, WhereY - 1);
   end;
+  SetUseACP(True);
 end;
 
 function ObtenerDNI: cardinal;
