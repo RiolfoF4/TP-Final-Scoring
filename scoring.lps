@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Scoring"/>
         <CursorPos X="11" Y="4"/>
-        <UsageCount Value="26"/>
+        <UsageCount Value="29"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -25,8 +25,8 @@
         <UnitName Value="UnitMenu"/>
         <EditorIndex Value="1"/>
         <TopLine Value="30"/>
-        <CursorPos X="5" Y="37"/>
-        <UsageCount Value="13"/>
+        <CursorPos X="54" Y="46"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -34,8 +34,9 @@
         <UnitName Value="Actividades"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="4" Y="97"/>
-        <UsageCount Value="13"/>
+        <TopLine Value="90"/>
+        <CursorPos X="13" Y="99"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -44,16 +45,15 @@
         <EditorIndex Value="10"/>
         <TopLine Value="6"/>
         <CursorPos X="39" Y="16"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitconductores.pas"/>
         <UnitName Value="UnitConductores"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="310"/>
-        <CursorPos X="10" Y="327"/>
-        <UsageCount Value="13"/>
+        <CursorPos X="22" Y="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -61,33 +61,33 @@
         <UnitName Value="UnitInfracciones"/>
         <EditorIndex Value="4"/>
         <TopLine Value="146"/>
-        <CursorPos X="21" Y="156"/>
-        <UsageCount Value="13"/>
+        <CursorPos X="47" Y="156"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitlista.pas"/>
         <UnitName Value="UnitLista"/>
         <EditorIndex Value="11"/>
-        <TopLine Value="196"/>
+        <TopLine Value="178"/>
         <CursorPos Y="200"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitlistados.pas"/>
         <UnitName Value="UnitListados"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="25"/>
-        <CursorPos X="6" Y="42"/>
-        <UsageCount Value="13"/>
+        <TopLine Value="263"/>
+        <CursorPos X="8" Y="248"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitmanejofecha.pas"/>
         <UnitName Value="UnitManejoFecha"/>
         <EditorIndex Value="12"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -96,7 +96,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="19"/>
         <CursorPos X="6" Y="23"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -111,8 +111,8 @@
         <UnitName Value="UnitPosiciones"/>
         <EditorIndex Value="7"/>
         <TopLine Value="192"/>
-        <CursorPos X="32" Y="204"/>
-        <UsageCount Value="13"/>
+        <CursorPos X="32" Y="203"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -120,15 +120,15 @@
         <UnitName Value="UnitTypes"/>
         <EditorIndex Value="8"/>
         <TopLine Value="12"/>
-        <CursorPos X="22" Y="28"/>
-        <UsageCount Value="13"/>
+        <CursorPos X="25" Y="20"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitvalidacion.pas"/>
         <UnitName Value="UnitValidacion"/>
         <EditorIndex Value="9"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -136,7 +136,7 @@
         <UnitName Value="UnitPilaDinamica"/>
         <EditorIndex Value="13"/>
         <CursorPos X="23" Y="6"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -151,7 +151,7 @@
         <UnitName Value="UnitMostrarACP"/>
         <EditorIndex Value="14"/>
         <CursorPos X="30" Y="9"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -165,124 +165,123 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="253" Column="14" TopLine="237"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="16" Column="73" TopLine="7"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="483" Column="16" TopLine="481"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="493" Column="60" TopLine="481"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="156" Column="21" TopLine="146"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="280" Column="17" TopLine="265"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="271" Column="24" TopLine="265"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="7" Column="69"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="273" Column="16" TopLine="265"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="57" Column="10" TopLine="47"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="47" Column="10" TopLine="47"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="162" Column="3" TopLine="160"/>
-      </Position>
-      <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="47" Column="10" TopLine="37"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="19" Column="11" TopLine="9"/>
       </Position>
       <Position>
         <Filename Value="unitconductores.pas"/>
-        <Caret Line="7" Column="30"/>
+        <Caret Line="186" Column="3" TopLine="186"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="215" TopLine="206"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="19" Column="11" TopLine="8"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="216" TopLine="206"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="186" Column="3" TopLine="186"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="218" Column="25" TopLine="206"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="19" Column="26" TopLine="14"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="282" Column="5" TopLine="273"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="99" Column="22" TopLine="83"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="215" Column="10" TopLine="201"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="157" Column="22" TopLine="141"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="273" Column="23" TopLine="261"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="184" Column="26" TopLine="168"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="57" Column="19" TopLine="44"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="157" Column="7" TopLine="149"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="215" Column="3" TopLine="201"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="26" Column="32" TopLine="13"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="276" Column="10" TopLine="256"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="176" Column="28" TopLine="160"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="278" Column="11" TopLine="262"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="372" Column="32" TopLine="356"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="272" Column="17" TopLine="262"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="372" Column="32" TopLine="356"/>
       </Position>
       <Position>
-        <Filename Value="unitlista.pas"/>
-        <Caret Line="215" Column="28" TopLine="198"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="176" Column="7" TopLine="125"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="274" Column="10" TopLine="263"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="372" Column="32" TopLine="356"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="124" Column="30" TopLine="115"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="18" TopLine="13"/>
       </Position>
       <Position>
-        <Filename Value="unitlistados.pas"/>
-        <Caret Line="42" Column="6" TopLine="25"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="74" Column="5" TopLine="39"/>
       </Position>
       <Position>
-        <Filename Value="unitmenu.pas"/>
-        <Caret Line="37" Column="5" TopLine="30"/>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="141" Column="5" TopLine="122"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="105" Column="5" TopLine="76"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="134" Column="5" TopLine="115"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="349" Column="5" TopLine="330"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="378" Column="7" TopLine="368"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="136" Column="16" TopLine="16"/>
+      </Position>
+      <Position>
+        <Filename Value="unitconductores.pas"/>
+        <Caret Line="11" Column="17" TopLine="3"/>
+      </Position>
+      <Position>
+        <Filename Value="actividades.pas"/>
+        <Caret Line="95" TopLine="87"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="187" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="156" Column="45" TopLine="140"/>
+      </Position>
+      <Position>
+        <Filename Value="actividades.pas"/>
+        <Caret Line="78" Column="28" TopLine="71"/>
+      </Position>
+      <Position>
+        <Filename Value="actividades.pas"/>
+        <Caret Line="76" Column="10" TopLine="74"/>
       </Position>
     </JumpHistory>
     <RunParams>
