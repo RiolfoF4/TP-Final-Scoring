@@ -16,7 +16,7 @@ procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: shortstring);
-// Caso 1: Ingresa ApYNom  Caso 2: Ingresa DNI
+// Caso 'apynom': Ingresa Apellido y Nombres;  Caso 'dni': Ingresa DNI
 
 
 implementation
@@ -71,12 +71,46 @@ begin
   end;
 end;
 
+procedure MostrarMarco;
+const
+  EspX = 4;
+  EspY = 2;
+var
+  MinX, MaxX: word;
+  MinY, MaxY: word;
+  i: word;
+begin
+  MinX := EsqX - EspX;
+  MaxX := WindMaxX - EsqX + EspX;
+  MinY := EsqY - EspY;
+  MaxY := WindMaxY - EsqY + EspY;
+  GotoXY(MinX, MinY);
+  Write('+');
+  for i := MinX + 1 to MaxX - 1  do
+    Write('-');
+  WriteLn('+');
+  for i := MinY + 1 to MaxY - 1 do
+  begin
+    GotoXY(MinX, WhereY);
+    Write('|');
+    GotoXY(MaxX, WhereY);
+    WriteLn('|');
+  end;
+  GotoXY(MinX, MaxY);
+  Write('+');
+  for i := MinX + 1 to MaxX - 1  do
+    Write('-');
+  WriteLn('+');
+
+end;
+
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 begin
   SetSafeCPSwitching(False);
   ClrScr;
-  Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY);
+  MostrarMarco;
+  Window(EsqX, EsqY, WindMaxX - EsqX, WindMaxY - EsqY);
   TextColor(White);
   CrearAbrirArchivoCon(ArchCon);
   CrearAbrirArchivoInf(ArchInf);
