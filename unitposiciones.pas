@@ -201,7 +201,6 @@ begin
   begin
     InordenDNI(Raiz^.SAI);
     WriteLn(Raiz^.InfoDNI.DNI);
-    WriteLn(Raiz^.InfoDNI.Pos);
     InordenDNI(Raiz^.Sad);
   end;
 end;
