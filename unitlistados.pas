@@ -169,15 +169,13 @@ begin
 
   while (LowerCase(Tecl) <> 'q') do
   begin
-    // Si no se llegó al final de la lista, muestra secuencialmente las infracciones
+    // Si no se llegó al final de la lista, muestra secuencialmente los datos
     if i <= TamanioLista(ListaCon) then
     begin
       Recuperar(ListaCon, i, DatosCon);
       with DatosCon do
       begin
         Write('|');
-        {GotoXY((LenEncab[1] div 2) - (Length(ansistring(ApyNom)) div 2), WhereY);
-        Mostrar(ApYNom);}
         SetUseACP(False);
         Write(ApYNom: ((LenEncab[1] + Length(ansistring(ApyNom))) div 2));
         SetUseACP(True);
@@ -215,7 +213,7 @@ begin
       // a: Anterior
       case LowerCase(Tecl) of
         's':
-          // Si NO se llegó al final de la lista, apila el índice de la infracción que se muestra actualmente
+          // Si NO se llegó al final de la lista, apila el índice del dato que se muestra actualmente
           // Si se llegó el final de la lista, muestra lo mismo
           if not (i > TamanioLista(ListaCon)) then
             Apilar(PosAnterior, Anterior)
