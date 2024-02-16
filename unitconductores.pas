@@ -16,15 +16,6 @@ procedure ConsultaConductor(var ArchCon: TArchCon; Pos: word;
 
 implementation
 
-procedure MostrarDatosCon(var DatosCon: TDatoConductores) forward;
-
-procedure ModificarDatos(var DatosCon: TDatoConductores;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI) forward;
-
-procedure BajaConductor(var DatosCon: TDatoConductores) forward;
-
-procedure ConsultaBajaConductor(var DatosCon: TDatoConductores) forward;
-
 procedure GuardarPosApYNom(var ArbolApYNom: TPuntApYNom; ApYNom: string; Pos: cardinal);
 var
   xAux: TDatoPosApYNom;
@@ -51,134 +42,6 @@ begin
   Pos := PreordenApYNom(ArbolApYNom, AnteriorApYNom);
   SuprimirApYNom(ArbolApYNom, AnteriorApYNom);
   GuardarPosApYNom(ArbolApYNom, NuevoApYNom, Pos);
-end;
-
-procedure AltaConductor(DatoIngresado: string; var ArchCon: TArchCon;
-  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
-  Caso: shortstring);
-var
-  DatosCon: TDatoConductores;
-  PosArch: word;
-  Op, Rta: string[2];
-begin
-  WriteLn;
-  WriteLn('¡No se encontró el conductor ingresado!');
-  Write('¿Desea darlo de Alta? (s/N): ');
-  ReadLn(Rta);
-  ClrScr;
-  if LowerCase(Rta) = 's' then
-  begin
-    // Guardar automáticamente el dato que se ingresa al consultar conductor
-    if Caso = 'apynom' then
-    begin
-      MostrarLn('Apellido y Nombres: ' + DatoIngresado);
-      DatosCon.ApYNom := DatoIngresado;
-      DatosCon.DNI := ObtenerDNI;
-    end
-    else
-    begin
-      WriteLn('DNI: ', DatoIngresado);
-      DatosCon.ApYNom := ObtenerApYNom;
-      Val(DatoIngresado, DatosCon.DNI);
-    end;
-
-    // Obtener el resto de los datos del conductor
-    ObtenerFechaNac(DatosCon.FechaNac);
-    DatosCon.Tel := ObtenerTel;
-    DatosCon.EMail := ObtenerEMail;
-
-    // Inicializar los demás datos
-    DatosCon.Scoring := 20;
-    DatosCon.Habilitado := True;
-    ObtenerFechaActual(DatosCon.FechaHab);
-    DatosCon.CantRein := 0;
-    DatosCon.BajaLogica := False;
-
-    repeat
-      ClrScr;
-      MostrarDatosCon(DatosCon);
-      WriteLn;
-      WriteLn('¿Son correctos los datos ingresados?');
-      WriteLn('[1] Sí.');
-      WriteLn('[2] No (Modificar).');
-      WriteLn('[0] CANCELAR ALTA.');
-      WriteLn;
-      Op := ObtenerOpcion('Opción: ', 0, 2);
-      case Op of
-        '1':
-        begin
-          // Guardar datos en el archivo de conductores
-          PosArch := FileSize(ArchCon);
-          Seek(ArchCon, PosArch);
-          Write(ArchCon, DatosCon);
-
-          // Guardar posición de los datos del conductor
-          GuardarPosApYNom(ArbolApYNom, DatosCon.ApYNom, PosArch);
-          GuardarPosDNI(ArbolDNI, DatosCon.DNI, PosArch);
-
-          WriteLn;
-          TextColor(Green);
-          WriteLn('¡Alta exitosa!');
-          TextColor(White);
-          Delay(1000);
-          ClrScr;
-          ConsultaConductor(ArchCon, PosArch, ArchInf, ArbolApYNom, ArbolDNI);
-        end;
-        '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
-        '0':
-        begin
-          WriteLn;
-          TextColor(Red);
-          WriteLn('¡Alta cancelada!');
-          TextColor(White);
-          Delay(1000);
-        end;
-      end;
-    until (Op = '1') or (Op = '0');
-  end;
-end;
-
-procedure ConsultaConductor(var ArchCon: TArchCon; Pos: word;
-  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
-var
-  DatosCon: TDatoConductores;
-  Op: string[2];
-begin
-  ClrScr;
-
-  // Lee los datos del conductor
-  Seek(ArchCon, Pos);
-  Read(ArchCon, DatosCon);
-
-  repeat
-    ClrScr;
-    if not (DatosCon.BajaLogica) then
-    begin
-      MostrarDatosCon(DatosCon);
-      WriteLn;
-      WriteLn('[1] Alta de Infracción.');
-      WriteLn('[2] Consulta de Infracciones.');
-      WriteLn('[3] Modificar Datos.');
-      WriteLn('[4] Dar de Baja.');
-      WriteLn('[0] Volver.');
-      WriteLn;
-      Op := ObtenerOpcion('Opción: ', 0, 4);
-      if Op <> '0' then
-        ClrScr;
-      case Op of
-        '1': AltaInfraccion(DatosCon, ArchInf);
-        '2': ConsultaInfraccion(DatosCon, ArchInf);
-        '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
-        '4': BajaConductor(DatosCon);
-      end;
-    end
-    else
-      ConsultaBajaConductor(DatosCon);
-  until (Op = '0') or (DatosCon.BajaLogica);
-
-  // Guarda los datos del conductor en el archivo
-  Seek(ArchCon, Pos);
-  Write(ArchCon, DatosCon);
 end;
 
 procedure MostrarDatosCon(var DatosCon: TDatoConductores);
@@ -337,6 +200,91 @@ begin
   end;
 end;
 
+procedure AltaConductor(DatoIngresado: string; var ArchCon: TArchCon;
+  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
+  Caso: shortstring);
+var
+  DatosCon: TDatoConductores;
+  PosArch: word;
+  Op, Rta: string[2];
+begin
+  WriteLn;
+  WriteLn('¡No se encontró el conductor ingresado!');
+  Write('¿Desea darlo de Alta? (s/N): ');
+  ReadLn(Rta);
+  ClrScr;
+  if LowerCase(Rta) = 's' then
+  begin
+    // Guardar automáticamente el dato que se ingresa al consultar conductor
+    if Caso = 'apynom' then
+    begin
+      MostrarLn('Apellido y Nombres: ' + DatoIngresado);
+      DatosCon.ApYNom := DatoIngresado;
+      DatosCon.DNI := ObtenerDNI;
+    end
+    else
+    begin
+      WriteLn('DNI: ', DatoIngresado);
+      DatosCon.ApYNom := ObtenerApYNom;
+      Val(DatoIngresado, DatosCon.DNI);
+    end;
+
+    // Obtener el resto de los datos del conductor
+    ObtenerFechaNac(DatosCon.FechaNac);
+    DatosCon.Tel := ObtenerTel;
+    DatosCon.EMail := ObtenerEMail;
+
+    // Inicializar los demás datos
+    DatosCon.Scoring := 20;
+    DatosCon.Habilitado := True;
+    ObtenerFechaActual(DatosCon.FechaHab);
+    DatosCon.CantRein := 0;
+    DatosCon.BajaLogica := False;
+
+    repeat
+      ClrScr;
+      MostrarDatosCon(DatosCon);
+      WriteLn;
+      WriteLn('¿Son correctos los datos ingresados?');
+      WriteLn('[1] Sí.');
+      WriteLn('[2] No (Modificar).');
+      WriteLn('[0] CANCELAR ALTA.');
+      WriteLn;
+      Op := ObtenerOpcion('Opción: ', 0, 2);
+      case Op of
+        '1':
+        begin
+          // Guardar datos en el archivo de conductores
+          PosArch := FileSize(ArchCon);
+          Seek(ArchCon, PosArch);
+          Write(ArchCon, DatosCon);
+
+          // Guardar posición de los datos del conductor
+          GuardarPosApYNom(ArbolApYNom, DatosCon.ApYNom, PosArch);
+          GuardarPosDNI(ArbolDNI, DatosCon.DNI, PosArch);
+
+          WriteLn;
+          TextColor(Green);
+          WriteLn('¡Alta exitosa!');
+          TextColor(White);
+          Delay(1000);
+          ClrScr;
+          ConsultaConductor(ArchCon, PosArch, ArchInf, ArbolApYNom, ArbolDNI);
+        end;
+        '2': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
+        '0':
+        begin
+          WriteLn;
+          TextColor(Red);
+          WriteLn('¡Alta cancelada!');
+          TextColor(White);
+          Delay(1000);
+        end;
+      end;
+    until (Op = '1') or (Op = '0');
+  end;
+end;
+
 procedure BajaConductor(var DatosCon: TDatoConductores);
 begin
   TextColor(Red);
@@ -398,6 +346,49 @@ begin
     TextColor(White);
   end;
   Delay(1500);
+end;
+
+procedure ConsultaConductor(var ArchCon: TArchCon; Pos: word;
+  var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+var
+  DatosCon: TDatoConductores;
+  Op: string[2];
+begin
+  ClrScr;
+
+  // Lee los datos del conductor
+  Seek(ArchCon, Pos);
+  Read(ArchCon, DatosCon);
+
+  repeat
+    ClrScr;
+    if not (DatosCon.BajaLogica) then
+    begin
+      MostrarDatosCon(DatosCon);
+      WriteLn;
+      WriteLn('[1] Alta de Infracción.');
+      WriteLn('[2] Consulta de Infracciones.');
+      WriteLn('[3] Modificar Datos.');
+      WriteLn('[4] Dar de Baja.');
+      WriteLn('[0] Volver.');
+      WriteLn;
+      Op := ObtenerOpcion('Opción: ', 0, 4);
+      if Op <> '0' then
+        ClrScr;
+      case Op of
+        '1': AltaInfraccion(DatosCon, ArchInf);
+        '2': ConsultaInfraccion(DatosCon, ArchInf);
+        '3': ModificarDatos(DatosCon, ArbolApYNom, ArbolDNI);
+        '4': BajaConductor(DatosCon);
+      end;
+    end
+    else
+      ConsultaBajaConductor(DatosCon);
+  until (Op = '0') or (DatosCon.BajaLogica);
+
+  // Guarda los datos del conductor en el archivo
+  Seek(ArchCon, Pos);
+  Write(ArchCon, DatosCon);
 end;
 
 end.
