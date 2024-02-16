@@ -122,7 +122,7 @@ end;
 
 function MostrarListaInfracciones(var ListaInf: TListaInf): integer;
 const
-  LimiteInferior = 16;
+  LimiteInferior = 14;
 var
   PosAnterior: TPila;
   CantInf: string[7];
@@ -152,7 +152,8 @@ begin
     if (WhereY > LimiteInferior) or (i > TamanioLista(ListaInf)) then
     begin
       CantInf := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaInf));
-      WriteLn('[S] Siguiente.', CantInf: (WindMaxX - WindMinX - 13));
+      Write('[S] Siguiente.');
+      WriteLn(CantInf: (WindMaxX - WindMinX - WhereX));
       WriteLn('[A] Anterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
