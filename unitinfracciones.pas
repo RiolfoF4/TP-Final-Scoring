@@ -231,12 +231,33 @@ var
   i: word;
   xAux: TDatoInfracciones;
 begin
+  // Deja 'vacio' el lugar de Pos
   for i := FileSize(ArchInf) - 1 downto Pos do
   begin
     Seek(ArchInf, i);
     Read(ArchInf, xAux);
     Write(ArchInf, xAux);
   end;
+end;
+
+procedure DesplazarIzquierda(var ArchInf: TArchInf; Pos: word);
+var
+  i: word;
+  xAux: TDatoInfracciones;
+begin
+  // Pisa el lugar de Pos
+  if Pos < FileSize(ArchInf) - 1 then
+  begin
+    for i := Pos to FileSize(ArchInf) - 1 do
+    begin
+      Seek(ArchInf, Pos + 1);
+      Read(ArchInf, xAux);
+      Seek(ArchInf, Pos);
+      Write(ArchInf, xAux);
+    end
+  end;
+  Seek((ArchInf), FileSize(ArchInf) - 1);
+  Truncate(ArchInf);
 end;
 
 procedure AgregarInfraccion(Infraccion: TDatoInfracciones; var ArchInf: TArchInf);
@@ -393,15 +414,14 @@ begin
   end;
 end;
 
-procedure MostrarModifInf(DatosCon: TDatoConductores;
-  InfraccionOrig, InfraccionMod: TDatoInfracciones);
+procedure MostrarModifInf(InfraccionOrig, InfraccionMod: TDatoInfracciones);
 const
-  f: string[5] = ' --> ';
+  f = ' --> ';
 var
   FechaOrigAux, FechaModAux: string[10];
-  ScoringAux: integer;
+  {ScoringAux: integer;}
 begin
-  if InfraccionOrig.Tipo <> InfraccionMod.Tipo then
+  {if InfraccionOrig.Tipo <> InfraccionMod.Tipo then
   begin
     MostrarInfraccion('Infracción Anterior: ' + InfraccionOrig.Tipo);
     WriteLn;
@@ -416,13 +436,36 @@ begin
       WriteLn(0)
     else
       WriteLn(ScoringAux);
-  end;
+  end;}
   with InfraccionOrig.Fecha do
     FechaOrigAux := FormatoFecha(Dia, Mes, Anio);
   with InfraccionMod.Fecha do
     FechaModAux := FormatoFecha(Dia, Mes, Anio);
   if FechaOrigAux <> FechaModAux then
     WriteLn(UTF8Decode('Fecha de Infracción: '), FechaOrigAux, f, FechaModAux);
+end;
+
+procedure ActualizarInfraccion(var ArchInf: TArchInf; NuevaInf: TDatoInfracciones;
+  PosLista: Word);
+var
+  InfAux: TDatoInfracciones;
+  PosAux: Word;
+begin
+  Seek(ArchInf, 0);
+  PosAux := 0;
+  while (PosAux <> PosLista) and not (EOF(ArchInf)) do
+  begin
+    Read(ArchInf, InfAux);
+    if InfAux.DNI = NuevaInf.DNI then
+    begin
+      Inc(PosAux);
+      if PosAux = PosLista then
+      begin
+        DesplazarIzquierda(ArchInf, FilePos(ArchInf) - 1);
+        AgregarInfraccion(NuevaInf, ArchInf);
+      end;
+    end;
+  end;
 end;
 
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
@@ -432,9 +475,10 @@ var
   ModificaDatos: boolean;
   DatosInf, DatosInfAux: TDatoInfracciones;
 
-  ListaInfCon: TListaDatosInf;      // Lista de las infracciones del conductor
-  ListaTiposInfCon: TListaInf;
+  // Lista de las infracciones del conductor
+  ListaInfCon: TListaDatosInf;
   // Lista de los tipos de infracciones del conductor, junto con la fecha
+  ListaTiposInfCon: TListaInf;
 begin
   // Guardar las infracciones del conductor en una lista
   CrearLista(ListaInfCon);
@@ -464,20 +508,26 @@ begin
           WriteLn;
           MostrarDatosInf(DatosInfAux);
           WriteLn;
-          WriteLn(UTF8Decode('[1] Modificar Infracción.'));
-          WriteLn(UTF8Decode('[2] Modificar Fecha de Infracción.'));
+          //WriteLn(UTF8Decode('[1] Modificar Infracción.'));
+          WriteLn(UTF8Decode('[1] Modificar Fecha de Infracción.'));
           WriteLn('[0] Volver.');
           WriteLn;
-          Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
+          Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 1);
           ClrScr;
 
-          if Op <> '0' then
-            ModificaDatos := True;
+          if Op = '1' then
+          begin
+            ObtenerFechaInf(DatosInfAux.Fecha);
+            if (DatosInfAux.Fecha.Anio <> DatosInf.Fecha.Anio) or
+                (DatosInfAux.Fecha.Mes <> DatosInf.Fecha.Mes) or
+                (DatosInfAux.Fecha.Dia <> DatosInf.Fecha.Dia) then
+              ModificaDatos := True;
+          end;
 
-          case Op of
+          {case Op of
             '1': ModificarTipoInfraccion(DatosInfAux);
             '2': ObtenerFechaInf(DatosInfAux.Fecha);
-          end;
+          end;}
           ClrScr;
         until Op = '0';
 
@@ -488,17 +538,20 @@ begin
           WriteLn(UTF8Decode('¡Atención!'));
           TextColor(White);
           WriteLn;
-          WriteLn('DNI: ', DatosInf.DNI);
-          MostrarLn('Apellido y Nombres: ', DatosCon.ApYNom);
+          WriteLn('Conductor:');
+          WriteLn('       DNI: ', DatosInf.DNI);
+          MostrarLn('       Apellido y Nombres: ', DatosCon.ApYNom);
           WriteLn;
           WriteLn(UTF8Decode('Se modificarán los siguientes datos:'));
           WriteLn;
-          MostrarModifInf(DatosCon, DatosInf, DatosInfAux);
+          MostrarInfraccion('Infracción: ' + DatosInfAux.Tipo);
+          WriteLn;
+          MostrarModifInf(DatosInf, DatosInfAux);
           WriteLn;
           Write(UTF8Decode('¿Desea guardar los cambios? (S/N): '));
           if ObtenerRtaSN = 's' then
           begin
-            // TODO: Guardar las infracciones en el archivo.
+            ActualizarInfraccion(ArchInf, DatosInfAux, PosInf);
             Modificar(ListaInfCon, PosInf, DatosInfAux);
             Modificar(ListaTiposInfCon, PosInf, '*' +
               FormatoTipoInfYFecha(DatosInfAux, PosInf));

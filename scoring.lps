@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Scoring"/>
         <CursorPos X="11" Y="4"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="32"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -24,19 +24,19 @@
         <Filename Value="unitmenu.pas"/>
         <UnitName Value="UnitMenu"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="30"/>
-        <CursorPos X="54" Y="46"/>
-        <UsageCount Value="14"/>
+        <CursorPos Y="38"/>
+        <FoldState Value=" T3C0N1 PSP04"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="actividades.pas"/>
         <UnitName Value="Actividades"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="84"/>
-        <CursorPos X="11" Y="100"/>
-        <UsageCount Value="14"/>
+        <TopLine Value="20"/>
+        <CursorPos X="16" Y="48"/>
+        <FoldState Value=" T3N0M5 piYjP041 PO60!"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -45,7 +45,7 @@
         <EditorIndex Value="10"/>
         <TopLine Value="6"/>
         <CursorPos X="39" Y="16"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -53,16 +53,18 @@
         <UnitName Value="UnitConductores"/>
         <EditorIndex Value="3"/>
         <CursorPos X="22" Y="13"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitinfracciones.pas"/>
         <UnitName Value="UnitInfracciones"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="146"/>
-        <CursorPos X="47" Y="156"/>
-        <UsageCount Value="14"/>
+        <TopLine Value="450"/>
+        <CursorPos X="19" Y="456"/>
+        <FoldState Value=" T3E0D7 piajM0/315 pkgnM0C1 PTE0 TMkK4132131l"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -71,7 +73,7 @@
         <EditorIndex Value="11"/>
         <TopLine Value="178"/>
         <CursorPos Y="200"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -80,14 +82,14 @@
         <EditorIndex Value="5"/>
         <TopLine Value="263"/>
         <CursorPos X="8" Y="248"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitmanejofecha.pas"/>
         <UnitName Value="UnitManejoFecha"/>
         <EditorIndex Value="12"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -96,7 +98,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="19"/>
         <CursorPos X="6" Y="23"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -112,7 +114,7 @@
         <EditorIndex Value="7"/>
         <TopLine Value="192"/>
         <CursorPos X="32" Y="203"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -121,14 +123,14 @@
         <EditorIndex Value="8"/>
         <TopLine Value="12"/>
         <CursorPos X="25" Y="20"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unitvalidacion.pas"/>
         <UnitName Value="UnitValidacion"/>
         <EditorIndex Value="9"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -136,7 +138,7 @@
         <UnitName Value="UnitPilaDinamica"/>
         <EditorIndex Value="13"/>
         <CursorPos X="23" Y="6"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -151,7 +153,7 @@
         <UnitName Value="UnitMostrarACP"/>
         <EditorIndex Value="14"/>
         <CursorPos X="30" Y="9"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -165,123 +167,124 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="186" Column="3" TopLine="186"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="19" Column="11" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="186" Column="3" TopLine="186"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="19" Column="26" TopLine="14"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="99" Column="22" TopLine="83"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="157" Column="22" TopLine="141"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="184" Column="26" TopLine="168"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="157" Column="7" TopLine="149"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="26" Column="32" TopLine="13"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="176" Column="28" TopLine="160"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="372" Column="32" TopLine="356"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="372" Column="32" TopLine="356"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="176" Column="7" TopLine="125"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="372" Column="32" TopLine="356"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="18" TopLine="13"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="74" Column="5" TopLine="39"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="141" Column="5" TopLine="122"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="105" Column="5" TopLine="76"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="134" Column="5" TopLine="115"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="349" Column="5" TopLine="330"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="378" Column="7" TopLine="368"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="136" Column="16" TopLine="16"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
-        <Caret Line="11" Column="17" TopLine="3"/>
-      </Position>
-      <Position>
-        <Filename Value="actividades.pas"/>
-        <Caret Line="95" TopLine="87"/>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="457" TopLine="452"/>
       </Position>
       <Position>
         <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="187" TopLine="34"/>
+        <Caret Line="458" TopLine="452"/>
       </Position>
       <Position>
         <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="156" Column="45" TopLine="140"/>
+        <Caret Line="459" TopLine="452"/>
       </Position>
       <Position>
-        <Filename Value="actividades.pas"/>
-        <Caret Line="78" Column="28" TopLine="71"/>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="465" TopLine="452"/>
       </Position>
       <Position>
-        <Filename Value="actividades.pas"/>
-        <Caret Line="76" Column="10" TopLine="74"/>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="466" TopLine="452"/>
       </Position>
       <Position>
-        <Filename Value="actividades.pas"/>
-        <Caret Line="114" TopLine="104"/>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="457" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="458" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="459" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="465" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="466" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="457" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="458" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="459" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="465" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="466" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="457" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="458" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="459" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="465" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="466" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="467" TopLine="453"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="462" Column="66" TopLine="452"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="260" Column="21" TopLine="243"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="456" TopLine="453"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="457" TopLine="453"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="458" TopLine="453"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="454" TopLine="450"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="455" TopLine="450"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="457" TopLine="450"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="459" Column="16" TopLine="417"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -289,11 +292,4 @@
       <Modes ActiveMode=""/>
     </RunParams>
   </ProjectSession>
-  <Debugging>
-    <Watches>
-      <Item>
-        <Expression Value="ListaVacia"/>
-      </Item>
-    </Watches>
-  </Debugging>
 </CONFIG>
