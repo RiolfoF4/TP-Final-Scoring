@@ -71,6 +71,30 @@ begin
   end;
 end;
 
+procedure MostrarLineaHorizontal(X1, Y1, X2: Word);
+var
+  X: word;
+begin
+  // Muestra una línea horizontal '+----...----+' desde (X1, Y1) hasta (X2, Y1)
+  GotoXY(X1, Y1);
+  Write('+');
+  for X := X1 + 1 to X2 - 1  do
+    Write('-');
+  WriteLn('+');
+end;
+
+procedure MostrarLineaVertical(X1, Y1, Y2: Word);
+var
+  Y: word;
+begin
+  // Muesta una línea vertical '|' desde (X1, Y1) hasta (X1, Y2)
+  for Y := Y1 to Y2 do
+  begin
+    GotoXY(X1, Y);
+    Write('|');
+  end;
+end;
+
 procedure MostrarMarco;
 const
   EspX = 4;
@@ -78,30 +102,18 @@ const
 var
   MinX, MaxX: word;
   MinY, MaxY: word;
-  i: word;
 begin
   MinX := EsqX - EspX;
   MaxX := WindMaxX - EsqX + EspX;
   MinY := EsqY - EspY;
   MaxY := WindMaxY - EsqY + EspY;
-  GotoXY(MinX, MinY);
-  Write('+');
-  for i := MinX + 1 to MaxX - 1  do
-    Write('-');
-  WriteLn('+');
-  for i := MinY + 1 to MaxY - 1 do
-  begin
-    GotoXY(MinX, WhereY);
-    Write('|');
-    GotoXY(MaxX, WhereY);
-    WriteLn('|');
-  end;
-  GotoXY(MinX, MaxY);
-  Write('+');
-  for i := MinX + 1 to MaxX - 1  do
-    Write('-');
-  WriteLn('+');
 
+  MostrarLineaHorizontal(MinX, MinY, MaxX);
+
+  MostrarLineaVertical(MinX, MinY + 1, MaxY - 1);
+  MostrarLineaVertical(MaxX, MinY + 1, MaxY - 1);
+
+  MostrarLineaHorizontal(MinX, MaxY, MaxX);
 end;
 
 procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;

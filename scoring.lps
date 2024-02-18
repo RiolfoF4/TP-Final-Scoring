@@ -34,8 +34,8 @@
         <UnitName Value="Actividades"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="90"/>
-        <CursorPos X="13" Y="99"/>
+        <TopLine Value="84"/>
+        <CursorPos X="11" Y="100"/>
         <UsageCount Value="14"/>
         <Loaded Value="True"/>
       </Unit>
@@ -166,10 +166,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="unitconductores.pas"/>
-        <Caret Line="19" Column="11" TopLine="9"/>
-      </Position>
-      <Position>
-        <Filename Value="unitconductores.pas"/>
         <Caret Line="186" Column="3" TopLine="186"/>
       </Position>
       <Position>
@@ -282,6 +278,10 @@
       <Position>
         <Filename Value="actividades.pas"/>
         <Caret Line="76" Column="10" TopLine="74"/>
+      </Position>
+      <Position>
+        <Filename Value="actividades.pas"/>
+        <Caret Line="114" TopLine="104"/>
       </Position>
     </JumpHistory>
     <RunParams>
