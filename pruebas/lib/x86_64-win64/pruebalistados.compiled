@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="D:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1469148810"/>
-  <Params Value=" -MObjFPC -Scghi -O1 -g -gl -l -vewnhibq &quot;-FuC:\Users\Franco\Documents\Cosa\2do Cuatrimestre\Algoritmos y Estructuras de Datos\GitHub\TP-Final-Scoring\pruebas\&quot; &quot;-FUC:\Users\Franco\Documents\Cosa\2do Cuatrimestre\Algoritmos y Estructuras de Datos\GitHub\TP-Final-Scoring\pruebas\lib\x86_64-win64\&quot; &quot;-FEC:\Users\Franco\Documents\Cosa\2do Cuatrimestre\Algoritmos y Estructuras de Datos\GitHub\TP-Final-Scoring\pruebas\&quot; &quot;-oC:\Users\Franco\Documents\Cosa\2do Cuatrimestre\Algoritmos y Estructuras de Datos\GitHub\TP-Final-Scoring\pruebas\pruebalistados.exe&quot; pruebalistados.pas"/>
-</CONFIG>
