@@ -445,6 +445,7 @@ begin
     WriteLn(UTF8Decode('Fecha de Infracción: '), FechaOrigAux, f, FechaModAux);
 end;
 
+{ SIN USO
 procedure ActualizarInfraccion(var ArchInf: TArchInf; NuevaInf: TDatoInfracciones;
   PosLista: word);
 var
@@ -467,6 +468,7 @@ begin
     end;
   end;
 end;
+}
 
 procedure ActualizarInfracciones(var ArchInf: TArchInf; DNICon: Cardinal; ListaInf: TListaDatosInf);
 var
