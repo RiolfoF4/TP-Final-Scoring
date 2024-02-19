@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Scoring"/>
         <CursorPos X="11" Y="4"/>
-        <UsageCount Value="32"/>
+        <UsageCount Value="33"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -25,7 +25,6 @@
         <UnitName Value="UnitMenu"/>
         <EditorIndex Value="1"/>
         <CursorPos Y="38"/>
-        <FoldState Value=" T3C0N1 PSP04"/>
         <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
@@ -61,9 +60,9 @@
         <UnitName Value="UnitInfracciones"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="450"/>
-        <CursorPos X="19" Y="456"/>
-        <FoldState Value=" T3E0D7 piajM0/315 pkgnM0C1 PTE0 TMkK4132131l"/>
+        <TopLine Value="332"/>
+        <CursorPos X="5" Y="469"/>
+        <FoldState Value=" T3E0D7 piajM0/315 pkgnM0C1 PTE0 TMkK4132131 TLqa2F@"/>
         <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
@@ -71,8 +70,7 @@
         <Filename Value="unitlista.pas"/>
         <UnitName Value="UnitLista"/>
         <EditorIndex Value="11"/>
-        <TopLine Value="178"/>
-        <CursorPos Y="200"/>
+        <CursorPos X="3" Y="14"/>
         <UsageCount Value="16"/>
         <Loaded Value="True"/>
       </Unit>
@@ -168,74 +166,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="457" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="458" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="459" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="465" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="466" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="457" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="458" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="459" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="465" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="466" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="457" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="458" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="459" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="465" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="466" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="457" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="458" TopLine="452"/>
-      </Position>
-      <Position>
-        <Filename Value="unitinfracciones.pas"/>
         <Caret Line="459" TopLine="452"/>
       </Position>
       <Position>
@@ -284,7 +214,75 @@
       </Position>
       <Position>
         <Filename Value="unitinfracciones.pas"/>
-        <Caret Line="459" Column="16" TopLine="417"/>
+        <Caret Line="459" Column="16" TopLine="331"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="464" Column="17" TopLine="447"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="554" Column="33" TopLine="547"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="556" Column="46" TopLine="544"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="448" Column="11" TopLine="448"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="249" Column="11" TopLine="245"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="471" Column="11" TopLine="460"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="512" Column="19" TopLine="555"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="569" Column="28" TopLine="559"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="483" Column="31" TopLine="473"/>
+      </Position>
+      <Position>
+        <Filename Value="unitlista.pas"/>
+        <Caret Line="14" Column="3"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="504" Column="20" TopLine="495"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="567" Column="5" TopLine="474"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="449" Column="19" TopLine="416"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="471" Column="11" TopLine="512"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="448" Column="11" TopLine="417"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="565" TopLine="554"/>
+      </Position>
+      <Position>
+        <Filename Value="unitinfracciones.pas"/>
+        <Caret Line="480" Column="12" TopLine="416"/>
       </Position>
     </JumpHistory>
     <RunParams>

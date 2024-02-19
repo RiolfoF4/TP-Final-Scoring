@@ -240,7 +240,7 @@ begin
   end;
 end;
 
-procedure DesplazarIzquierda(var ArchInf: TArchInf; Pos: word);
+procedure Eliminar(var ArchInf: TArchInf; Pos: word);
 var
   i: word;
   xAux: TDatoInfracciones;
@@ -248,11 +248,11 @@ begin
   // Pisa el lugar de Pos
   if Pos < FileSize(ArchInf) - 1 then
   begin
-    for i := Pos to FileSize(ArchInf) - 1 do
+    for i := Pos + 1 to FileSize(ArchInf) - 1 do
     begin
-      Seek(ArchInf, Pos + 1);
+      Seek(ArchInf, i);
       Read(ArchInf, xAux);
-      Seek(ArchInf, Pos);
+      Seek(ArchInf, i - 1);
       Write(ArchInf, xAux);
     end
   end;
@@ -446,7 +446,7 @@ begin
 end;
 
 procedure ActualizarInfraccion(var ArchInf: TArchInf; NuevaInf: TDatoInfracciones;
-  PosLista: Word);
+  PosLista: word);
 var
   InfAux: TDatoInfracciones;
   PosAux: Word;
@@ -461,10 +461,33 @@ begin
       Inc(PosAux);
       if PosAux = PosLista then
       begin
-        DesplazarIzquierda(ArchInf, FilePos(ArchInf) - 1);
+        Eliminar(ArchInf, FilePos(ArchInf) - 1);
         AgregarInfraccion(NuevaInf, ArchInf);
       end;
     end;
+  end;
+end;
+
+procedure ActualizarInfracciones(var ArchInf: TArchInf; DNICon: Cardinal; ListaInf: TListaDatosInf);
+var
+  InfAux: TDatoInfracciones;
+  Pos, i: Word;
+begin
+  Seek(ArchInf, 0);
+  while not (EOF(ArchInf)) do
+  begin
+    Pos := FilePos(ArchInf);
+    Read(ArchInf, InfAux);
+    if InfAux.DNI = DNICon then
+    begin
+      Eliminar(ArchInf, Pos);
+      Seek(ArchInf, Pos);
+    end;
+  end;
+  for i := 1 to TamanioLista(ListaInf) do
+  begin
+    Recuperar(ListaInf, i, InfAux);
+    AgregarInfraccion(InfAux, ArchInf);
   end;
 end;
 
@@ -508,7 +531,6 @@ begin
           WriteLn;
           MostrarDatosInf(DatosInfAux);
           WriteLn;
-          //WriteLn(UTF8Decode('[1] Modificar Infracción.'));
           WriteLn(UTF8Decode('[1] Modificar Fecha de Infracción.'));
           WriteLn('[0] Volver.');
           WriteLn;
@@ -523,11 +545,6 @@ begin
                 (DatosInfAux.Fecha.Dia <> DatosInf.Fecha.Dia) then
               ModificaDatos := True;
           end;
-
-          {case Op of
-            '1': ModificarTipoInfraccion(DatosInfAux);
-            '2': ObtenerFechaInf(DatosInfAux.Fecha);
-          end;}
           ClrScr;
         until Op = '0';
 
@@ -551,7 +568,6 @@ begin
           Write(UTF8Decode('¿Desea guardar los cambios? (S/N): '));
           if ObtenerRtaSN = 's' then
           begin
-            ActualizarInfraccion(ArchInf, DatosInfAux, PosInf);
             Modificar(ListaInfCon, PosInf, DatosInfAux);
             Modificar(ListaTiposInfCon, PosInf, '*' +
               FormatoTipoInfYFecha(DatosInfAux, PosInf));
@@ -562,13 +578,14 @@ begin
           else
           begin
             WriteLn;
-            TextColor(LightRed);
+            TextColor(Red);
             Write('Se han descartado los cambios.');
           end;
           Delay(1500);
         end;
       end;
     until PosInf = -1;
+    ActualizarInfracciones(ArchInf, DatosCon.DNI, ListaInfCon);
   end
   else
   begin
