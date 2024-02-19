@@ -1,6 +1,7 @@
 unit UnitArchivo;
 
 interface
+
 uses
   UnitTypes;
 
@@ -14,7 +15,7 @@ type
   TArchCon = file of TDatoConductores;
   TArchInf = file of TDatoInfracciones;
   TArchListInf = Text;
-  
+
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
 procedure CrearAbrirArchivoInf(var Arch: TArchInf);
@@ -23,12 +24,13 @@ procedure CrearAbrirArchivoListInf(var Arch: TArchListInf);
 procedure CerrarArchivoListInf(var Arch: TArchListInf);
 
 implementation
-procedure CrearAbrirArchivoCon(var Arch: TArchCon);  
+
+procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 begin
   Assign(Arch, RutaConductores);
-    {$I-}
+  {$I-}
   Reset(Arch);
-    {$I+}
+  {$I+}
   if IOResult <> 0 then
     Rewrite(Arch);
 end;
@@ -41,9 +43,9 @@ end;
 procedure CrearAbrirArchivoInf(var Arch: TArchInf);
 begin
   Assign(Arch, RutaInfracciones);
-    {$I-}
+  {$I-}
   Reset(Arch);
-    {$I+}
+  {$I+}
   if IOResult <> 0 then
     Rewrite(Arch);
 end;
@@ -63,4 +65,5 @@ procedure CerrarArchivoListInf(var Arch: TArchListInf);
 begin
   Close(Arch);
 end;
+
 end.

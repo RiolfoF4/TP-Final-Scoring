@@ -3,17 +3,19 @@ unit UnitInfracciones;
 interface
 
 uses
-  crt, sysutils, Math, UnitValidacion, UnitArchivo, UnitPila, UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes;
+  crt, SysUtils, Math, UnitValidacion, UnitArchivo, UnitPila,
+  UnitObtenerDatos, UnitManejoFecha, UnitLista, UnitTypes, UnitMostrarACP;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 
 
 implementation
+
 procedure InicializarListaInf(var Lista: TListaInf);
 var
   ArchListaInf: TArchListInf;
-  x: String;
+  x: string;
 begin
   CrearAbrirArchivoListInf(ArchListaInf);
   while not (EOF(ArchListaInf)) do
@@ -25,9 +27,9 @@ begin
   CerrarArchivoListInf(ArchListaInf);
 end;
 
-function FormatoTipoInfYFecha(Infraccion: TDatoInfracciones; PosInf: Word): String;
+function FormatoTipoInfYFecha(Infraccion: TDatoInfracciones; PosInf: word): string;
 var
-  Sep: String;
+  Sep: string;
 begin
   Sep := ' ' + #13#10 + '    ';
   if PosInf >= 10 then
@@ -36,9 +38,10 @@ begin
     FormatoTipoInfYFecha := Tipo + Sep + FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio);
 end;
 
-procedure InicializarListaTiposInf(var ListaDatosInf: TListaDatosInf; var ListaTiposInfCon: TListaInf);
+procedure InicializarListaTiposInf(var ListaDatosInf: TListaDatosInf;
+  var ListaTiposInfCon: TListaInf);
 var
-  i: Word;
+  i: word;
   DatosInf: TDatoInfracciones;
 begin
   for i := 1 to TamanioLista(ListaDatosInf) do
@@ -49,26 +52,27 @@ begin
     end;
 end;
 
-function PuntosInfraccion(Infraccion: String): Integer;
+function PuntosInfraccion(Infraccion: string): integer;
 var
-  SeparadorPuntos: Word;
+  SeparadorPuntos: word;
 begin
   // Los puntos están separados por '{Infraccion}.|Puntos', sin comillas ni espacios
   SeparadorPuntos := Pos('|', Infraccion);
   if SeparadorPuntos > 0 then
-    Val(Copy(Infraccion, SeparadorPuntos+1), PuntosInfraccion)
+    Val(Copy(Infraccion, SeparadorPuntos + 1), PuntosInfraccion)
   else
     PuntosInfraccion := -1;
 end;
 
-procedure QuitarSeparadorPuntos(var Infraccion: ShortString);
+procedure QuitarSeparadorPuntos(var Infraccion: shortstring);
 begin
   Infraccion := Copy(Infraccion, 1, Pos('|', Infraccion) - 1);
 end;
 
-function InfraccionValida(NumeroInfrac: String; var ListaInfracciones: TListaInf): Boolean;
+function InfraccionValida(NumeroInfrac: string;
+  var ListaInfracciones: TListaInf): boolean;
 var
-  Num: Integer;
+  Num: integer;
 begin
   InfraccionValida := False;
   if EsNum(NumeroInfrac) then
@@ -79,9 +83,9 @@ begin
   end;
 end;
 
-function UltimoEspacioEnLinea(Texto: String): Integer;
+function UltimoEspacioEnLinea(Texto: string): integer;
 var
-  i: Word;
+  i: word;
 begin
   // WindMaxX representa el margen derecho y WindMinX el margen izquierdo
   i := WindMaxX - WindMinX;
@@ -93,13 +97,13 @@ begin
     UltimoEspacioEnLinea := -1;
 end;
 
-procedure MostrarInfraccion(Infraccion: String);
+procedure MostrarInfraccion(Infraccion: string);
 var
-  UltimoEspacio: Integer;
+  UltimoEspacio: integer;
 begin
   // Remueve los puntos de la infracción, si los hay
   if Pos('|', Infraccion) > 0 then
-    Infraccion := Copy(Infraccion, 1, Pos('|', Infraccion)-1);
+    Infraccion := Copy(Infraccion, 1, Pos('|', Infraccion) - 1);
 
   // Si el texto excede el largo de un línea
   if Length(Utf8ToAnsi(Infraccion)) > (WindMaxX - WindMinX) then
@@ -116,15 +120,15 @@ begin
     WriteLn(UTF8Decode(Infraccion));
 end;
 
-function MostrarListaInfracciones(var ListaInf: TListaInf): Integer;
+function MostrarListaInfracciones(var ListaInf: TListaInf): integer;
 const
-  LimiteInferior = 16;
+  LimiteInferior = 14;
 var
   PosAnterior: TPila;
-  CantInf: String[7];
-  i, Anterior: Byte;
-  Tecl: String[2];
-  Infraccion: ShortString;
+  CantInf: string[7];
+  i, Anterior: word;
+  Tecl: string[2];
+  Infraccion: shortstring;
 begin
   // Inicialización
   CrearPila(PosAnterior);
@@ -148,8 +152,9 @@ begin
     if (WhereY > LimiteInferior) or (i > TamanioLista(ListaInf)) then
     begin
       CantInf := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaInf));
-      WriteLn('[S] iguiente.', CantInf:(WindMaxX - WindMinX - 13));
-      WriteLn('[A] nterior.');
+      Write('[S] Siguiente.');
+      WriteLn(CantInf: (WindMaxX - WindMinX - WhereX));
+      WriteLn('[A] Anterior.');
       WriteLn('[Q] Salir.');
       WriteLn;
       Write(UTF8Decode('Opción: '));
@@ -164,7 +169,7 @@ begin
             Apilar(PosAnterior, Anterior)
           else
             i := Anterior;
-        'a': 
+        'a':
           // Si la pila contiene algún índice, lo desapila y lo guarda en el índice de la lista 'i'
           // Si la pila NO contiene ningún índice, se encuentra en la primera "página", y establece el índice de la
           // lista nuevamente en la posición 0
@@ -172,9 +177,9 @@ begin
             Desapilar(PosAnterior, i)
           else
             i := 1;
-      else
-        // Si la tecla no es 's' ni 'a', muestra lo mismo
-        i := Anterior;
+        else
+          // Si la tecla no es 's' ni 'a', muestra lo mismo
+          i := Anterior;
       end;
       Anterior := i;
       ClrScr;
@@ -191,7 +196,7 @@ end;
 procedure MostrarInfraccionesDisponibles(var Infraccion: TDatoInfracciones);
 var
   ListaInf: TListaInf;
-  PosInf: Integer;
+  PosInf: integer;
 begin
   // Muestra todas las infracciones cargadas en 'listado_infracciones.txt'
   // y devuelve la infracción selecciona junto con los puntos, ó una string vacía
@@ -217,15 +222,16 @@ begin
   if InfAux.Tipo <> '' then
   begin
     Infraccion.Tipo := InfAux.Tipo;
-    Infraccion.Puntos := InfAux.Puntos;   
+    Infraccion.Puntos := InfAux.Puntos;
   end;
 end;
 
-procedure DesplazarDerecha(var ArchInf: TArchInf; Pos: Word);
+procedure DesplazarDerecha(var ArchInf: TArchInf; Pos: word);
 var
-  i: Word;  
+  i: word;
   xAux: TDatoInfracciones;
 begin
+  // Deja 'vacio' el lugar de Pos
   for i := FileSize(ArchInf) - 1 downto Pos do
   begin
     Seek(ArchInf, i);
@@ -234,9 +240,29 @@ begin
   end;
 end;
 
+procedure Eliminar(var ArchInf: TArchInf; Pos: word);
+var
+  i: word;
+  xAux: TDatoInfracciones;
+begin
+  // Pisa el lugar de Pos
+  if Pos < FileSize(ArchInf) - 1 then
+  begin
+    for i := Pos + 1 to FileSize(ArchInf) - 1 do
+    begin
+      Seek(ArchInf, i);
+      Read(ArchInf, xAux);
+      Seek(ArchInf, i - 1);
+      Write(ArchInf, xAux);
+    end
+  end;
+  Seek((ArchInf), FileSize(ArchInf) - 1);
+  Truncate(ArchInf);
+end;
+
 procedure AgregarInfraccion(Infraccion: TDatoInfracciones; var ArchInf: TArchInf);
 var
-  Pos: Word;
+  Pos: word;
   xAux: TDatoInfracciones;
 begin
   Seek(ArchInf, 0);
@@ -252,11 +278,9 @@ begin
       Pos := FilePos(ArchInf);
       if not (EOF(ArchInf)) then
         Read(ArchInf, xAux);
-    until (
-        EsFechaPosterior(xAux.Fecha.Dia, xAux.Fecha.Mes, xAux.Fecha.Anio, 
-        Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio) 
-        or (Pos = FileSize(ArchInf))
-      );
+    until (EsFechaPosterior(xAux.Fecha.Dia, xAux.Fecha.Mes,
+        xAux.Fecha.Anio, Infraccion.Fecha.Dia, Infraccion.Fecha.Mes,
+        Infraccion.Fecha.Anio) or (Pos = FileSize(ArchInf)));
 
     // Si se llegó al final del archivo, agregar la infraccion
     if Pos = FileSize(ArchInf) then
@@ -276,7 +300,7 @@ end;
 
 procedure CalcularPlazoInhab(var DatosCon: TDatoConductores);
 var
-  Dias: Word;
+  Dias: word;
   FechaActual: TRegFecha;
 begin
   Inc(DatosCon.CantRein);
@@ -289,12 +313,12 @@ begin
   // Establece la fecha de habilitación a X Dias de la fecha actual
   ObtenerFechaActual(FechaActual);
   NuevaFechaAXDias(
-    FechaActual.Dia, FechaActual.Mes, FechaActual.Anio, Dias, 
+    FechaActual.Dia, FechaActual.Mes, FechaActual.Anio, Dias,
     DatosCon.FechaHab.Dia, DatosCon.FechaHab.Mes, DatosCon.FechaHab.Anio
     );
 end;
 
-procedure DescontarPuntos(var DatosCon: TDatoConductores; Puntos: ShortInt);
+procedure DescontarPuntos(var DatosCon: TDatoConductores; Puntos: shortint);
 begin
   DatosCon.Scoring := DatosCon.Scoring - Puntos;
   if DatosCon.Scoring <= 0 then
@@ -309,14 +333,15 @@ procedure MostrarDatosInf(Infraccion: TDatoInfracciones);
 begin
   MostrarInfraccion('Infracción: ' + Infraccion.Tipo);
   WriteLn;
-  WriteLn(UTF8Decode('Fecha de infracción: '), FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
+  WriteLn(UTF8Decode('Fecha de infracción: '),
+    FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
   WriteLn('Puntos: ', Infraccion.Puntos);
 end;
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
   Infraccion: TDatoInfracciones;
-  Op: String[2];
+  Op: string[2];
 begin
   MostrarInfraccionesDisponibles(Infraccion);
 
@@ -330,7 +355,7 @@ begin
     repeat
       ClrScr;
       WriteLn('DNI: ', Infraccion.DNI);
-      WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+      MostrarLn('Apellido y Nombres: ', DatosCon.ApYNom);
       WriteLn;
       MostrarDatosInf(Infraccion);
       Write('Scoring: ', DatosCon.Scoring, ' --> ');
@@ -375,7 +400,8 @@ begin
   end;
 end;
 
-procedure ObtenerInfraccionesCon(var ArchInf: TArchInf; DNICon: Cardinal; var ListaDatosInf: TListaDatosInf);
+procedure ObtenerInfraccionesCon(var ArchInf: TArchInf; DNICon: cardinal;
+  var ListaDatosInf: TListaDatosInf);
 var
   InfAux: TDatoInfracciones;
 begin
@@ -388,14 +414,14 @@ begin
   end;
 end;
 
-procedure MostrarModifInf(DatosCon: TDatoConductores; InfraccionOrig, InfraccionMod: TDatoInfracciones);
+procedure MostrarModifInf(InfraccionOrig, InfraccionMod: TDatoInfracciones);
 const
-  f: String[5] = ' --> ';
+  f = ' --> ';
 var
-  FechaOrigAux, FechaModAux: String[10];
-  ScoringAux: Integer;
+  FechaOrigAux, FechaModAux: string[10];
+  {ScoringAux: integer;}
 begin
-  if InfraccionOrig.Tipo <> InfraccionMod.Tipo then
+  {if InfraccionOrig.Tipo <> InfraccionMod.Tipo then
   begin
     MostrarInfraccion('Infracción Anterior: ' + InfraccionOrig.Tipo);
     WriteLn;
@@ -410,7 +436,7 @@ begin
       WriteLn(0)
     else
       WriteLn(ScoringAux);
-  end;
+  end;}
   with InfraccionOrig.Fecha do
     FechaOrigAux := FormatoFecha(Dia, Mes, Anio);
   with InfraccionMod.Fecha do
@@ -419,15 +445,63 @@ begin
     WriteLn(UTF8Decode('Fecha de Infracción: '), FechaOrigAux, f, FechaModAux);
 end;
 
+procedure ActualizarInfraccion(var ArchInf: TArchInf; NuevaInf: TDatoInfracciones;
+  PosLista: word);
+var
+  InfAux: TDatoInfracciones;
+  PosAux: Word;
+begin
+  Seek(ArchInf, 0);
+  PosAux := 0;
+  while (PosAux <> PosLista) and not (EOF(ArchInf)) do
+  begin
+    Read(ArchInf, InfAux);
+    if InfAux.DNI = NuevaInf.DNI then
+    begin
+      Inc(PosAux);
+      if PosAux = PosLista then
+      begin
+        Eliminar(ArchInf, FilePos(ArchInf) - 1);
+        AgregarInfraccion(NuevaInf, ArchInf);
+      end;
+    end;
+  end;
+end;
+
+procedure ActualizarInfracciones(var ArchInf: TArchInf; DNICon: Cardinal; ListaInf: TListaDatosInf);
+var
+  InfAux: TDatoInfracciones;
+  Pos, i: Word;
+begin
+  Seek(ArchInf, 0);
+  while not (EOF(ArchInf)) do
+  begin
+    Pos := FilePos(ArchInf);
+    Read(ArchInf, InfAux);
+    if InfAux.DNI = DNICon then
+    begin
+      Eliminar(ArchInf, Pos);
+      Seek(ArchInf, Pos);
+    end;
+  end;
+  for i := 1 to TamanioLista(ListaInf) do
+  begin
+    Recuperar(ListaInf, i, InfAux);
+    AgregarInfraccion(InfAux, ArchInf);
+  end;
+end;
+
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 var
-  Op: String[2];
-  PosInf: Integer;
-  ModificaDatos: Boolean;
+  Op: string[2];
+  PosInf: integer;
+  ModificaDatos: boolean;
   DatosInf, DatosInfAux: TDatoInfracciones;
 
-  ListaInfCon: TListaDatosInf;      // Lista de las infracciones del conductor
-  ListaTiposInfCon: TListaInf;      // Lista de los tipos de infracciones del conductor, junto con la fecha
+  // Lista de las infracciones del conductor
+  ListaInfCon: TListaDatosInf;
+  // Lista de los tipos de infracciones del conductor, junto con la fecha
+  ListaTiposInfCon: TListaInf;
 begin
   // Guardar las infracciones del conductor en una lista
   CrearLista(ListaInfCon);
@@ -453,23 +527,23 @@ begin
         repeat
           // Muestra los datos de la infracción
           WriteLn('DNI: ', DatosInf.DNI);
-          WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+          MostrarLn('Apellido y Nombres: ', DatosCon.ApYNom);
           WriteLn;
           MostrarDatosInf(DatosInfAux);
           WriteLn;
-          WriteLn(UTF8Decode('[1] Modificar Infracción.'));
-          WriteLn(UTF8Decode('[2] Modificar Fecha de Infracción.'));
+          WriteLn(UTF8Decode('[1] Modificar Fecha de Infracción.'));
           WriteLn('[0] Volver.');
           WriteLn;
-          Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 2);
+          Op := ObtenerOpcion(Utf8ToAnsi('Opción: '), 0, 1);
           ClrScr;
 
-          if Op <> '0' then
-            ModificaDatos := True;
-          
-          case Op of
-            '1': ModificarTipoInfraccion(DatosInfAux);
-            '2': ObtenerFechaInf(DatosInfAux.Fecha);
+          if Op = '1' then
+          begin
+            ObtenerFechaInf(DatosInfAux.Fecha);
+            if (DatosInfAux.Fecha.Anio <> DatosInf.Fecha.Anio) or
+                (DatosInfAux.Fecha.Mes <> DatosInf.Fecha.Mes) or
+                (DatosInfAux.Fecha.Dia <> DatosInf.Fecha.Dia) then
+              ModificaDatos := True;
           end;
           ClrScr;
         until Op = '0';
@@ -481,19 +555,22 @@ begin
           WriteLn(UTF8Decode('¡Atención!'));
           TextColor(White);
           WriteLn;
-          WriteLn('DNI: ', DatosInf.DNI);
-          WriteLn('Apellido y Nombres: ', DatosCon.ApYNom);
+          WriteLn('Conductor:');
+          WriteLn('       DNI: ', DatosInf.DNI);
+          MostrarLn('       Apellido y Nombres: ', DatosCon.ApYNom);
           WriteLn;
           WriteLn(UTF8Decode('Se modificarán los siguientes datos:'));
           WriteLn;
-          MostrarModifInf(DatosCon, DatosInf, DatosInfAux);
+          MostrarInfraccion('Infracción: ' + DatosInfAux.Tipo);
+          WriteLn;
+          MostrarModifInf(DatosInf, DatosInfAux);
           WriteLn;
           Write(UTF8Decode('¿Desea guardar los cambios? (S/N): '));
           if ObtenerRtaSN = 's' then
           begin
-            // TODO: Guardar las infracciones en el archivo.
             Modificar(ListaInfCon, PosInf, DatosInfAux);
-            Modificar(ListaTiposInfCon, PosInf, '*' + FormatoTipoInfYFecha(DatosInfAux, PosInf));
+            Modificar(ListaTiposInfCon, PosInf, '*' +
+              FormatoTipoInfYFecha(DatosInfAux, PosInf));
             WriteLn;
             TextColor(Green);
             Write('Cambios guardados correctamente.');
@@ -501,13 +578,14 @@ begin
           else
           begin
             WriteLn;
-            TextColor(LightRed);
+            TextColor(Red);
             Write('Se han descartado los cambios.');
           end;
           Delay(1500);
         end;
       end;
     until PosInf = -1;
+    ActualizarInfracciones(ArchInf, DatosCon.DNI, ListaInfCon);
   end
   else
   begin
@@ -517,4 +595,5 @@ begin
   end;
   TextColor(White);
 end;
+
 end.

@@ -1,33 +1,35 @@
 unit UnitTypes;
 
 interface
+
 type
   TRegFecha = record
-    Dia: Word;
-    Mes: Word;
-    Anio: Word;
+    Dia: word;
+    Mes: word;
+    Anio: word;
   end;
 
   TDatoConductores = record
-    DNI: Cardinal;
-    ApYNom: String[50];
+    DNI: cardinal;
+    ApYNom: string[50];
     FechaNac: TRegFecha;
-    Tel: String[20];
-    EMail: String[50];
-    Scoring: ShortInt;
-    Habilitado: Boolean;
+    Tel: string[20];
+    EMail: string[50];
+    Scoring: shortint;
+    Habilitado: boolean;
     FechaHab: TRegFecha;
-    CantRein: Byte;
-    BajaLogica: Boolean;
+    CantRein: byte;
+    BajaLogica: boolean;
   end;
 
   TDatoInfracciones = record
-    DNI: Cardinal;
+    DNI: cardinal;
     Fecha: TRegFecha;
-    Tipo: ShortString;
-    Puntos: ShortInt;
+    Tipo: shortstring;
+    Puntos: shortint;
   end;
 
 
 implementation
+
 end.

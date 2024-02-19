@@ -3,29 +3,31 @@ unit UnitManejoFecha;
 interface
 
 uses
-  crt, sysutils, UnitValidacion;
+  crt, SysUtils, UnitValidacion;
 
-function ObtenerFechaStr: String;
-procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
-function FormatoFecha(Dia, Mes, Anio: Word): String;
-procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
-function EsFechaPosterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
-function EsFechaAnterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
+function ObtenerFechaStr: string;
+procedure CadARegFecha(Fecha: string; var Dia: word; var Mes: word; var Anio: word);
+function FormatoFecha(Dia, Mes, Anio: word): string;
+procedure NuevaFechaAXDias(Dia, Mes, Anio: word; CantDias: word;
+  var XDia: word; var XMes: word; var XAnio: word);
+function EsFechaPosterior(Dia0, Mes0, Anio0: word; Dia1, Mes1, Anio1: word): boolean;
+function EsFechaAnterior(Dia0, Mes0, Anio0: word; Dia1, Mes1, Anio1: word): boolean;
 
 implementation
-function ObtenerFechaStr: String;
+
+function ObtenerFechaStr: string;
 var
-  Fecha: String[10];  // Formato DD/MM/AAAA
-  Car: Char;
-  PosX: Word;
+  Fecha: string[10];  // Formato DD/MM/AAAA
+  Car: char;
+  PosX: word;
 begin
   PosX := WhereX;
   TextColor(DarkGray);
   Write('DD/MM/AAAA');
   TextColor(White);
-  GotoXY(PosX,WhereY);
+  GotoXY(PosX, WhereY);
   Fecha := '';
-  
+
   while not (EsCadenaFecha(Fecha)) do
   begin
     // Inicializa Car en NULL
@@ -57,7 +59,7 @@ begin
           if (Length(Fecha) = 2) or (Length(Fecha) = 5) then
             Fecha := Fecha + '/';
         end;
-  
+
       // Muestra lo que se está escribiendo
       GotoXY(PosX, WhereY);
       ClrEol;
@@ -69,14 +71,14 @@ begin
         TextColor(DarkGray);
         Write('DD/MM/AAAA');
         TextColor(White);
-        GotoXY(PosX,WhereY);
+        GotoXY(PosX, WhereY);
       end;
     end;
 
     // Muestra si la fecha ingresada no es válida
     if not (EsCadenaFecha(Fecha)) then
     begin
-      GotoXY(PosX,WhereY);
+      GotoXY(PosX, WhereY);
       ClrEol;
       TextColor(Red);
       Write(Fecha);
@@ -87,7 +89,7 @@ begin
   ObtenerFechaStr := Fecha;
 end;
 
-procedure CadARegFecha(Fecha: String; var Dia: Word; var Mes: Word; var Anio: Word);
+procedure CadARegFecha(Fecha: string; var Dia: word; var Mes: word; var Anio: word);
 begin
   // Formato de fecha: DD/MM/AAAA
   Val(Copy(Fecha, 1, 2), Dia);
@@ -95,18 +97,19 @@ begin
   Val(Copy(Fecha, 7), Anio);
 end;
 
-function FormatoFecha(Dia, Mes, Anio: Word): String;
+function FormatoFecha(Dia, Mes, Anio: word): string;
 begin
-  FormatoFecha := Format('%0.2d', [Dia]) + '/' + Format('%0.2d', [Mes]) + '/' + IntToStr(Anio);
+  FormatoFecha := Format('%0.2d', [Dia]) + '/' + Format('%0.2d', [Mes]) +
+    '/' + IntToStr(Anio);
 end;
 
-function MaxDiasMes(Mes, Anio: Word): Word;
+function MaxDiasMes(Mes, Anio: word): word;
 begin
   case Mes of
     {Meses con 31 días}
-    1,3,5,7,8,10,12: MaxDiasMes := 31;
+    1, 3, 5, 7, 8, 10, 12: MaxDiasMes := 31;
     {Meses con 30 días}
-    4,6,9,11: MaxDiasMes := 30;
+    4, 6, 9, 11: MaxDiasMes := 30;
     {Mes con 29 días si el año es bisiesto y 28 si no}
     2:
       if EsAnioBisiesto(Anio) then
@@ -116,7 +119,8 @@ begin
   end;
 end;
 
-procedure NuevaFechaAXDias(Dia, Mes, Anio: Word; CantDias: Word; var XDia: Word; var XMes: Word; var XAnio: Word);
+procedure NuevaFechaAXDias(Dia, Mes, Anio: word; CantDias: word;
+  var XDia: word; var XMes: word; var XAnio: word);
 begin
   XDia := Dia + CantDias;
   XMes := Mes;
@@ -134,7 +138,7 @@ begin
   end;
 end;
 
-function EsFechaPosterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
+function EsFechaPosterior(Dia0, Mes0, Anio0: word; Dia1, Mes1, Anio1: word): boolean;
 begin
   EsFechaPosterior := False;
   if Anio0 > Anio1 then
@@ -147,7 +151,7 @@ begin
     EsFechaPosterior := True;
 end;
 
-function EsFechaAnterior(Dia0, Mes0, Anio0: Word; Dia1, Mes1, Anio1: Word): Boolean;
+function EsFechaAnterior(Dia0, Mes0, Anio0: word; Dia1, Mes1, Anio1: word): boolean;
 begin
   EsFechaAnterior := False;
   if Anio0 < Anio1 then
