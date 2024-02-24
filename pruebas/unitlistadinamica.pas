@@ -117,8 +117,8 @@ begin
     L.Cab := L.Cab^.Sig;
     Dispose(L.Act);
     L.Act := L.Cab;
-    Dec(L.Tam);
   end;
+  L.Tam := 0;
 end;
 
 procedure Primero(var L: TListaDin);
