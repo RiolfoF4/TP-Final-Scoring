@@ -8,10 +8,11 @@ uses
 
 const
   EncabTotalesCon = 4;
+  EncabezadosCon: array[1..EncabTotalesCon] of ShortString = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
 
 type
-  TVectorEncab = array[1..EncabTotalesCon] of shortstring;
-  TVectorInt = array[1..EncabTotalesCon] of integer;
+  TVectorEncab = array[1..10] of shortstring;
+  TVectorInt = array[1..10] of integer;
 
 procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: boolean);
 
@@ -259,13 +260,13 @@ begin
 end;
 
 procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: boolean);
-const
-  Encabezados: TVectorEncab = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
 var
+  i: Word;
   Encab: TVectorEncab;
   ListaCon: TListaDatosCon;
 begin
-  Encab := Encabezados;
+  for i := 1 to EncabTotalesCon do
+    Encab[i] := EncabezadosCon[i];
   CrearLista(ListaCon);
   InicializarListaCon(ArchCon, ListaCon, SoloNoHabilidatos);
 
