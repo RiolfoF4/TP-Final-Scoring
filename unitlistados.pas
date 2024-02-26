@@ -151,6 +151,123 @@ end;
 
 procedure MostrarListadoCon(Encabezados: TVectorEncab; var ListaCon: TListaDatosCon);
 const
+  LimiteInferior = 12;
+var
+  PilaPosiciones: TPila;
+  CantCon: string[7];
+  i, PosAnt: word;
+  OrdenAscendiente: Boolean;
+  Tecl: string[2];
+  DatosCon: TDatoConductores;
+  LenEncab, PosSep: TVectorInt;
+begin
+  // Inicialización
+  InicializarListadoCon(Encabezados, ListaCon, LenEncab, PosSep);
+  CrearPila(PilaPosiciones);
+  OrdenAscendiente := True;
+  i := 1;
+  PosAnt := 1;
+  Tecl := '';
+
+  MostrarEncabezado(Encabezados);
+
+  while (LowerCase(Tecl) <> 'q') do
+  begin
+    // Si no se llegó al final de la lista, muestra secuencialmente los datos
+    if (i > 0) and (i <= TamanioLista(ListaCon)) then
+    begin
+      Recuperar(ListaCon, i,  DatosCon);
+      with DatosCon do
+      begin
+        Write('|');
+        SetUseACP(False);
+        Write(ApYNom: ((LenEncab[1] + Length(ansistring(ApyNom))) div 2));
+        SetUseACP(True);
+        GotoXY(PosSep[1], WhereY);
+        Write('|', DNI: ((LenEncab[2] + Length(UIntToStr(DNI))) div 2));
+        GotoXY(PosSep[2], WhereY);
+        Write('|', Scoring: ((LenEncab[3] + Length(IntToStr(Scoring))) div 2));
+        GotoXY(PosSep[3], WhereY);
+        Write('|');
+        if Habilitado then
+          Write('Si': ((LenEncab[4] + 2)) div 2)
+        else
+          Write('No': ((LenEncab[4] + 2)) div 2);
+        GotoXY(PosSep[4], WhereY);
+        WriteLn('|');
+        SeparadorLineas(PosSep);
+      end;
+      if OrdenAscendiente then
+        Inc(i)
+      else
+        Dec(i);
+    end;
+
+    // Recibe una entrada del usuario si el texto supera un límite inferior
+    // o supera el final de la lista
+    if (WhereY > LimiteInferior) or (i > TamanioLista(ListaCon)) or (i = 0) then
+    begin
+      if OrdenAscendiente then
+        CantCon := IntToStr(i - 1) + '/' + IntToStr(TamanioLista(ListaCon))
+      else
+        CantCon := IntToStr(TamanioLista(ListaCon) - i) + '/' + IntToStr(TamanioLista(ListaCon));
+      WriteLn;
+      Write('[S] Siguiente.');
+      WriteLn(CantCon: PosSep[EncabTotalesCon] - WhereX + 1);
+      WriteLn('[A] Anterior.');
+      Write('[O] Orden ');
+      if OrdenAscendiente then
+        WriteLn('Descendiente.')
+      else
+        WriteLn('Ascendiente.');
+      WriteLn('[Q] Salir.');
+      WriteLn;
+      Write(UTF8Decode('Opción: '));
+      ReadLn(Tecl);
+      // s: Siguiente
+      // a: Anterior
+      case LowerCase(Tecl) of
+        's':
+          // Si NO se llegó al final de la lista, apila el índice del dato que se muestra actualmente
+          // Si se llegó el final de la lista, muestra lo mismo
+          if not ((i > TamanioLista(ListaCon)) or (i = 0)) then
+            Apilar(PilaPosiciones, PosAnt)
+          else
+            i := PosAnt;
+        'a':
+          // Si la pila contiene algún índice, lo desapila y lo guarda en el índice de la lista 'i'
+          // Si la pila NO contiene ningún índice, se encuentra en la primera "página", y establece el índice de la
+          // lista nuevamente en la posición 0
+          if not (PilaVacia(PilaPosiciones)) then
+            Desapilar(PilaPosiciones, i)
+          else
+          if OrdenAscendiente then
+            i := 1
+          else
+            i := TamanioLista(ListaCon);
+        'o':
+        begin
+          OrdenAscendiente := not OrdenAscendiente;
+          CrearPila(PilaPosiciones);
+          if not OrdenAscendiente then
+            i := TamanioLista(ListaCon)
+          else
+            i := 1;
+        end;
+      else
+        // Si la tecla no es 's' ni 'a', muestra lo mismo
+        i := PosAnt;
+      end;
+      PosAnt := i;
+      ClrScr;
+      MostrarEncabezado(Encabezados);
+    end;
+  end;
+end;
+
+{
+procedure MostrarListadoCon(Encabezados: TVectorEncab; var ListaCon: TListaDatosCon);
+const
   LimiteInferior = 14;
 var
   PosAnterior: TPila;
@@ -238,7 +355,7 @@ begin
     end;
   end;
 end;
-
+}
 procedure InicializarListaCon(var ArchCon: TArchCon; var ListaCon: TListaDatosCon;
   SoloNoHabilidatos: boolean);
 var
