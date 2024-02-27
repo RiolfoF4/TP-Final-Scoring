@@ -150,18 +150,9 @@ procedure BuscarPos(var L: TListaDin; Pos: Word);
 var
   i: Word;
 begin
-  if Pos < (TamanioLista(L) div 2) then
-  begin
-    Primero(L);
-    for i := 1 to Pos - 1 do
-      Siguiente(L);
-  end
-  else
-  begin
-    Ultimo(L);
-    for i := TamanioLista(L) downto Pos + 1 do
-      Anterior(L);
-  end;
+  Primero(L);
+  for i := 1 to Pos - 1 do
+    Siguiente(L);
 end;
 
 function TamanioLista(L: TListaDin): Word;
