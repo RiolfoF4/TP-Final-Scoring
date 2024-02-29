@@ -7,40 +7,36 @@ uses
   SysUtils, crt, UnitLista, UnitTypes, UnitArchivo, UnitPila;
 
 const
-  EncabTotalesCon = 4;
-  EncabezadosCon: array[1..EncabTotalesCon] of ShortString = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
+  CantEncabezadosCon = 4;
+  EncabezadosCon: array[1..CantEncabezadosCon] of ShortString = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
 
 type
-  TVectorEncab = array[1..10] of shortstring;
-  TVectorInt = array[1..10] of integer;
+  TVectorEncab = array[1..10] of ShortString;
+  TVectorInt = array[1..10] of Integer;
 
-procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: boolean);
+procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
+procedure ListadoInf(var ArchInf: TArchInf; ConductorEspecifico: Boolean);
 
 implementation
-
-{function EsCadMayorAlf(Cad1, Cad2: string): boolean;
+procedure InicializarListaCon(var ArchCon: TArchCon; var ListaCon: TListaDatosCon;
+  SoloNoHabilidatos: boolean);
 var
-  i, Min: word;
+  DatosCon: TDatoConductores;
 begin
-  Cad1 := LowerCase(Cad1);
-  Cad2 := LowerCase(Cad2);
-  if Length(Cad1) < Length(Cad2) then
-    Min := Length(Cad1)
-  else
-    Min := Length(Cad2);
-
-  i := 1;
-  EsCadMayorAlf := False;
-
-  while (i <= Min) and (not EsCadMayorAlf) do
-    if Cad1[i] > Cad2[i] then
-      EsCadMayorAlf := True
-    else
-    if Cad1[i] < Cad2[i] then
-      i := Min + 1
-    else
-      Inc(I);
-end;}
+  Seek(ArchCon, 0);
+  while not (EOF(ArchCon)) do
+  begin
+    Read(ArchCon, DatosCon);
+    if not DatosCon.BajaLogica then
+      if not SoloNoHabilidatos then
+        Agregar(ListaCon, DatosCon)
+      else
+      if DatosCon.Scoring = 0 then
+        Agregar(ListaCon, DatosCon);
+  end;
+  if not ListaVacia(ListaCon) then
+    Burbuja_ApYNom(ListaCon);
+end;
 
 procedure Burbuja_ApYNom(var L: TListaDatosCon);
 var
@@ -60,11 +56,11 @@ begin
     end;
 end;
 
-procedure SeparadorEncabezado(Encabezados: TVectorEncab);
+procedure SeparadorEncabezado(Encabezados: TVectorEncab; CantEncabezados: Word);
 var
   i, j: word;
 begin
-  for i := 1 to EncabTotalesCon do
+  for i := 1 to CantEncabezados do
   begin
     Write('+');
     for j := 1 to Length(Encabezados[i]) do
@@ -73,32 +69,32 @@ begin
   WriteLn('+');
 end;
 
-procedure MostrarEncabezado(Encabezados: TVectorEncab);
+procedure MostrarEncabezado(Encabezados: TVectorEncab; CantEncabezados: Word);
 var
   i: word;
 begin
-  SeparadorEncabezado(Encabezados);
+  SeparadorEncabezado(Encabezados, CantEncabezados);
 
-  for i := 1 to EncabTotalesCon do
+  for i := 1 to CantEncabezados do
   begin
     Write('|');
     Write(Encabezados[i]);
   end;
   WriteLn('|');
 
-  SeparadorEncabezado(Encabezados);
+  SeparadorEncabezado(Encabezados, CantEncabezados);
 end;
 
-procedure SeparadorLineas(PosSep: TVectorInt);
+procedure SeparadorLineas(PosSep: TVectorInt; CantEncabezados: Word);
 var
   i: word;
 begin
   Write('+');
 
-  while WhereX < PosSep[EncabTotalesCon] do
+  while WhereX < PosSep[CantEncabezados] do
   begin
     Write('-');
-    for i := 1 to EncabTotalesCon do
+    for i := 1 to CantEncabezados do
       if WhereX = PosSep[i] then
         Write('+');
   end;
@@ -117,7 +113,7 @@ begin
   LenAux[3] := 2;   // Scoring <= 20
   LenAux[4] := 2;   // Habilitado Si / No
 
-  for i := 1 to EncabTotalesCon do
+  for i := 1 to CantEncabezadosCon do
     LenEncab[i] := Length(Encabezados[i]);
 
   for i := 1 to TamanioLista(ListaCon) do
@@ -127,12 +123,12 @@ begin
 
     LenAux[1] := Length(ansistring(DatosCon.ApYNom));
 
-    for j := 1 to EncabTotalesCon do
+    for j := 1 to CantEncabezadosCon do
       if LenEncab[j] < LenAux[j] then
         LenEncab[j] := LenAux[j];
   end;
 
-  for i := 1 to EncabTotalesCon do
+  for i := 1 to CantEncabezadosCon do
   begin
     // Agregar espacios a cada lado del encabezado hasta que su longitud sea mayor
     // que la string más larga
@@ -169,7 +165,7 @@ begin
   PosAnt := 1;
   Tecl := '';
 
-  MostrarEncabezado(Encabezados);
+  MostrarEncabezado(Encabezados, CantEncabezadosCon);
 
   while (LowerCase(Tecl) <> 'q') do
   begin
@@ -195,7 +191,7 @@ begin
           Write('No': ((LenEncab[4] + 2)) div 2);
         GotoXY(PosSep[4], WhereY);
         WriteLn('|');
-        SeparadorLineas(PosSep);
+        SeparadorLineas(PosSep, CantEncabezadosCon);
       end;
       if OrdenAscendiente then
         Inc(i)
@@ -213,7 +209,7 @@ begin
         CantCon := IntToStr(TamanioLista(ListaCon) - i) + '/' + IntToStr(TamanioLista(ListaCon));
       WriteLn;
       Write('[S] Siguiente.');
-      WriteLn(CantCon: PosSep[EncabTotalesCon] - WhereX + 1);
+      WriteLn(CantCon: PosSep[CantEncabezadosCon] - WhereX + 1);
       WriteLn('[A] Anterior.');
       Write('[O] Orden ');
       if OrdenAscendiente then
@@ -260,29 +256,9 @@ begin
       end;
       PosAnt := i;
       ClrScr;
-      MostrarEncabezado(Encabezados);
+      MostrarEncabezado(Encabezados, CantEncabezadosCon);
     end;
   end;
-end;
-
-procedure InicializarListaCon(var ArchCon: TArchCon; var ListaCon: TListaDatosCon;
-  SoloNoHabilidatos: boolean);
-var
-  DatosCon: TDatoConductores;
-begin
-  Seek(ArchCon, 0);
-  while not (EOF(ArchCon)) do
-  begin
-    Read(ArchCon, DatosCon);
-    if not DatosCon.BajaLogica then
-      if not SoloNoHabilidatos then
-        Agregar(ListaCon, DatosCon)
-      else
-      if DatosCon.Scoring = 0 then
-        Agregar(ListaCon, DatosCon);
-  end;
-  if not ListaVacia(ListaCon) then
-    Burbuja_ApYNom(ListaCon);
 end;
 
 procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: boolean);
@@ -291,7 +267,7 @@ var
   Encab: TVectorEncab;
   ListaCon: TListaDatosCon;
 begin
-  for i := 1 to EncabTotalesCon do
+  for i := 1 to CantEncabezadosCon do
     Encab[i] := EncabezadosCon[i];
   CrearLista(ListaCon);
   InicializarListaCon(ArchCon, ListaCon, SoloNoHabilidatos);
@@ -307,4 +283,9 @@ begin
   end;
 end;
 
+
+procedure ListadoInf(var ArchInf: TArchInf; ConductorEspecifico: Boolean);
+begin
+  
+end;
 end.
