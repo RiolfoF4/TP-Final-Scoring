@@ -8,10 +8,9 @@ uses
 
 procedure AltaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
 procedure ConsultaInfraccion(var DatosCon: TDatoConductores; var ArchInf: TArchInf);
-
+procedure MostrarInfraccion(Infraccion: string; MinX, MaxX: Word);
 
 implementation
-
 procedure InicializarListaInf(var Lista: TListaInf);
 var
   ArchListaInf: TArchListInf;
@@ -83,12 +82,11 @@ begin
   end;
 end;
 
-function UltimoEspacioEnLinea(Texto: string): integer;
+function UltimoEspacioEnLinea(Texto: string; MinX, MaxX: Word): integer;
 var
   i: word;
 begin
-  // WindMaxX representa el margen derecho y WindMinX el margen izquierdo
-  i := WindMaxX - WindMinX;
+  i := MaxX - MinX;
   while (Texto[i] <> ' ') and (i > 0) do
     Dec(i);
   if i <> 0 then
@@ -97,7 +95,7 @@ begin
     UltimoEspacioEnLinea := -1;
 end;
 
-procedure MostrarInfraccion(Infraccion: string);
+procedure MostrarInfraccion(Infraccion: string; MinX, MaxX: Word);
 var
   UltimoEspacio: integer;
 begin
@@ -105,18 +103,22 @@ begin
   if Pos('|', Infraccion) > 0 then
     Infraccion := Copy(Infraccion, 1, Pos('|', Infraccion) - 1);
 
+  GotoXY(MinX, WhereY);
   // Si el texto excede el largo de un línea
-  if Length(Utf8ToAnsi(Infraccion)) > (WindMaxX - WindMinX) then
+  if Length(Utf8ToAnsi(Infraccion)) > (MaxX - MinX) then
   begin
     // Muestra el texto hasta el último espacio de la línea
-    UltimoEspacio := UltimoEspacioEnLinea(Infraccion);
+    UltimoEspacio := UltimoEspacioEnLinea(Infraccion, MinX, MaxX);
 
+    // Mostrar aunque no quepa en la línea
+    {if UltimoEspacio = -1 then
+      UltimoEspacio := MaxX - MinX;}
+    
     WriteLn(UTF8Decode(Copy(Infraccion, 1, UltimoEspacio)));
 
     // Llama recursivamente al procedimiento con el resto del texto
-    MostrarInfraccion(Copy(Infraccion, UltimoEspacio + 1));
-  end
-  else
+    MostrarInfraccion(Copy(Infraccion, UltimoEspacio + 1), MinX, MaxX);
+  end else
     WriteLn(UTF8Decode(Infraccion));
 end;
 
@@ -142,7 +144,7 @@ begin
     if i <= TamanioLista(ListaInf) then
     begin
       Recuperar(ListaInf, i, Infraccion);
-      MostrarInfraccion('[' + IntToStr(i) + '] ' + Infraccion);
+      MostrarInfraccion('[' + IntToStr(i) + '] ' + Infraccion, 1, WindMaxX - WindMinX);
       WriteLn;
       Inc(i);
     end;
@@ -331,7 +333,7 @@ end;
 
 procedure MostrarDatosInf(Infraccion: TDatoInfracciones);
 begin
-  MostrarInfraccion('Infracción: ' + Infraccion.Tipo);
+  MostrarInfraccion('Infracción: ' + Infraccion.Tipo, 1, WindMaxX - WindMinX);
   WriteLn;
   WriteLn(UTF8Decode('Fecha de infracción: '),
     FormatoFecha(Infraccion.Fecha.Dia, Infraccion.Fecha.Mes, Infraccion.Fecha.Anio));
@@ -563,7 +565,7 @@ begin
           WriteLn;
           WriteLn(UTF8Decode('Se modificarán los siguientes datos:'));
           WriteLn;
-          MostrarInfraccion('Infracción: ' + DatosInfAux.Tipo);
+          MostrarInfraccion('Infracción: ' + DatosInfAux.Tipo, 1, WindMaxX - WindMinX);
           WriteLn;
           MostrarModifInf(DatosInf, DatosInfAux);
           WriteLn;
