@@ -33,17 +33,7 @@ begin
 
   for i := 1 to EncabTotalesInf do
     LenEncab[i] := LenAux[i];
-  {
-    for i := 1 to TamanioLista(ListaCon) do
-    begin
-      // Determinar la longitud de la string más larga
-      Recuperar(ListaCon, i, DatosCon);
 
-      for j := 1 to EncabTotalesCon do
-        if LenEncab[j] < LenAux[j] then
-          LenEncab[j] := LenAux[j];
-    end;
-  }
   for i := 1 to EncabTotalesInf do
   begin
     // Agregar espacios a cada lado del encabezado hasta que su longitud sea mayor
@@ -207,7 +197,6 @@ begin
       SeparadorLineas(PosSep);
     end;
   end;
-
 end;
 
 procedure InicializarListaInf(var ArchInf: TArchInf; var ListaInf: TListaDatosInf; Inicio, Fin: TRegFecha);
