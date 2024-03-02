@@ -10,8 +10,9 @@ const
   EncabTotalesCon = 4;
   EncabezadosCon: array[1..EncabTotalesCon] of AnsiString = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
   
-  EncabTotalesInf = 4;
-  EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('DNI', 'INFRACCIÓN', 'FECHA', 'PUNTOS');
+  EncabTotalesInf = 3;
+  //EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('DNI', 'INFRACCIÓN', 'FECHA', 'PUNTOS');
+  EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('INFRACCIÓN', 'FECHA', 'PUNTOS');
 
 type
   TVectorEncab = array[1..10] of AnsiString;
@@ -70,10 +71,10 @@ var
   i: word;
   LenAux: TVectorInt;
 begin
-  LenAux[1] := 8;   // DNI 12.345.678
-  LenAux[2] := 50;  // Tipo de Infracción
-  LenAux[3] := 10;  // DD/MM/AAAA
-  LenAux[4] := 2;   // Puntos
+  {LenAux[1] := 8;   // DNI 12.345.678}
+  LenAux[1] := 62;  // Tipo de Infracción
+  LenAux[2] := 10;  // DD/MM/AAAA
+  LenAux[3] := 2;   // Puntos
 
   for i := 1 to EncabTotalesInf do
     LenEncab[i] := LenAux[i];
@@ -341,7 +342,7 @@ end;
 
 procedure MostrarListadoInf(Encabezados: TVectorEncab; var ListaInf: TListaDatosInf);
 const
-  LimiteInferior = 10;
+  LimiteInferior = 13;
 var
   PilaPosiciones: TPila;
   CantInf: string[7];
@@ -372,6 +373,8 @@ begin
       PosY := WhereY;
       with DatosInf do
       begin
+        // Mostrar infracciones con DNI
+        {
         GotoXY(2, PosY);
         Write(DNI: ((LenEncab[1] + Length(UIntToStr(DNI))) div 2));
         
@@ -381,16 +384,29 @@ begin
         
         GotoXY(PosSep[3] + 1, PosY);
         Write(Puntos: (LenEncab[4] + Length(IntToStr(Puntos))) div 2);
-        
-        GotoXY(PosSep[4] + 1, PosY);
 
-        GotoXY(PosSep[3] + 1, PosY);
         MostrarInfraccion(Tipo, PosSep[1] + 2, PosSep[2] - 2);
         for Aux := PosY to WhereY - 1 do
         begin
           GotoXY(1, Aux);
           SeparadorColumnas(PosSep, EncabTotalesInf);
         end;
+        }
+        // Mostrar infracciones sin DNI
+        
+        GotoXY(PosSep[1] + 1, PosY);
+        Write(FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio): ((LenEncab[2] + 10)) div 2);
+        
+        GotoXY(PosSep[2] + 1, PosY);
+        Write(Puntos: (LenEncab[3] + Length(IntToStr(Puntos))) div 2);
+
+        MostrarInfraccion(Tipo, 4, PosSep[1] - 2);
+        for Aux := PosY to WhereY - 1 do
+        begin
+          GotoXY(1, Aux);
+          SeparadorColumnas(PosSep, EncabTotalesInf);
+        end;
+        
         SeparadorLineas(PosSep, EncabTotalesInf);
       end;
       if OrdenAscendiente then
@@ -510,18 +526,14 @@ begin
     Encab[i] := EncabezadosInf[i];
 
   if ConductorEspecifico then
-    DNICon := ObtenerDNI
+  begin
+    DNICon := ObtenerDNI;
+    WriteLn;
+  end
   else
     DNICon := 0;
 
-  WriteLn;
-  // TODO: Verificar que la fecha de inicio sea posterior a la fecha de fin
-  Write('Fecha de Inicio: ');
-  with FechaInicio do
-    CadARegFecha(ObtenerFechaStr, Dia, Mes, Anio);
-  Write('Fecha de Fin: ');
-  with FechaFin do
-    CadARegFecha(ObtenerFechaStr, Dia, Mes, Anio);
+  ObtenerFechaInicioFin(FechaInicio, FechaFin);
 
   CrearLista(ListaInf);
   InicializarListaInf(ArchInf, ListaInf, DNICon, FechaInicio, FechaFin);
