@@ -11,8 +11,7 @@ const
   EsqX = 15;
   EsqY = 5;
 
-procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 procedure Cerrar(var ArchCon: TArchCon; var ArchInf: TArchInf);
 procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; Caso: shortstring);
@@ -20,9 +19,7 @@ procedure DeterminarCasoCon(var ArchCon: TArchCon; var ArchInf: TArchInf;
 
 
 implementation
-
-procedure CargarArbolPos(var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI;
-  var ArchCon: TArchCon);
+procedure CargarArbolPos(var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI; var ArchCon: TArchCon);
 var
   xPosApYNom: TDatoPosApYNom;
   xPosDNI: TDatoPosDNI;
@@ -30,9 +27,10 @@ var
 begin
   Seek(ArchCon, 0);
   // Recorrer el archivo de conductores hasta el final, o hasta que el árbol este lleno
-  while not (EOF(ArchCon)) and not (ArbolLlenoApYNom(ArbolApYNom)) do
+  while not (EOF(ArchCon)) and not ((ArbolLlenoApYNom(ArbolApYNom)) or ArbolLlenoDNI(ArbolDNI)) do
   begin
     Read(ArchCon, xAuxCon);
+    
     // Guardar la clave y la posición
     xPosApYNom.ApYNom := xAuxCon.ApYNom;
     xPosApYNom.Pos := FilePos(ArchCon) - 1;
@@ -87,7 +85,7 @@ procedure MostrarLineaVertical(X1, Y1, Y2: Word);
 var
   Y: word;
 begin
-  // Muesta una línea vertical '|' desde (X1, Y1) hasta (X1, Y2)
+  // Muesta una línea vertical '| ... |' desde (X1, Y1) hasta (X1, Y2)
   for Y := Y1 to Y2 do
   begin
     GotoXY(X1, Y);
@@ -96,6 +94,7 @@ begin
 end;
 
 procedure MostrarMarco;
+{ Crea un marco alrededor de Window, dejando EspX y EspY de margen}
 const
   EspX = 4;
   EspY = 2;
@@ -116,8 +115,7 @@ begin
   MostrarLineaHorizontal(MinX, MaxY, MaxX);
 end;
 
-procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf;
-  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+procedure Inicializar(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 begin
   SetSafeCPSwitching(False);
   ClrScr;

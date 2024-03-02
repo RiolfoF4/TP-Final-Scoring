@@ -127,7 +127,7 @@ begin
     CadARegFecha(ObtenerFechaStr, Dia, Mes, Anio);
   
   // Repetir hasta que la fecha de Fin sea posterior o igual (NO anterior) a la fecha de Inicio
-    Write('Fecha de Fin: ');
+  Write('Fecha de Fin: ');
   PosX := WhereX;
   PosY := WhereY;
   repeat

@@ -9,7 +9,6 @@ const
   RutaConductores = 'archivo\conductores.dat';
   RutaInfracciones = 'archivo\infracciones.dat';
   RutaListadoInfracciones = 'archivo\listado_infracciones.txt';
-  RutaListadoInfraccionesBin = 'archivo\listado_infracciones.dat';
 
 type
   TArchCon = file of TDatoConductores;
@@ -18,8 +17,10 @@ type
 
 procedure CrearAbrirArchivoCon(var Arch: TArchCon);
 procedure CerrarArchivoCon(var Arch: TArchCon);
+
 procedure CrearAbrirArchivoInf(var Arch: TArchInf);
 procedure CerrarArchivoInf(var Arch: TArchInf);
+
 procedure CrearAbrirArchivoListInf(var Arch: TArchListInf);
 procedure CerrarArchivoListInf(var Arch: TArchListInf);
 

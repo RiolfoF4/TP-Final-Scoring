@@ -2,14 +2,9 @@ unit UnitPosiciones;
 
 interface
 
-{
-const
-  RutaPosicionesApYNom = 'archivo\posicionesapynom.dat';
-  RutaPosicionesDNI = 'archivo\posicionesdni.dat';
- }
 type
   TDatoPosApYNom = record
-    ApYNom: string[100];
+    ApYNom: string[50];
     Pos: word;
   end;
 

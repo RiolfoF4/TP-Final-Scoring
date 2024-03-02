@@ -9,11 +9,10 @@ uses
 procedure MostrarMenu;
 
 implementation
-
 procedure MostrarListados(var ArchCon: TArchCon; var ArchInf: TArchInf;
   var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
 var
-  Op: string[2];
+  Op: String[2];
 begin
   repeat
     ClrScr;
@@ -43,7 +42,7 @@ var
   ArchInf: TArchInf;
   ArbolApYNom: TPuntApYNom;
   ArbolDNI: TPuntDNI;
-  Op: string[2];
+  Op: String[2];
 begin
   Inicializar(ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
   repeat
