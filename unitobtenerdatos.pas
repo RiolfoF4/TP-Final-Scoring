@@ -14,6 +14,7 @@ function ObtenerEMail: string;
 procedure ObtenerFechaActual(var Fecha: TRegFecha);
 procedure ObtenerFechaNac(var Fecha: TRegFecha);
 procedure ObtenerFechaInf(var Fecha: TRegFecha);
+procedure ObtenerFechaInicioFin(var FechaInicio: TRegFecha; var FechaFin: TRegFecha);
 function ObtenerOpcion(Texto: string; CotaInf, CotaSup: byte): string;
 function ObtenerRtaSN: string;
 
@@ -114,6 +115,32 @@ begin
 
   with Fecha do
     CadARegFecha(FechaAux, Dia, Mes, Anio);
+end;
+
+procedure ObtenerFechaInicioFin(var FechaInicio: TRegFecha; var FechaFin: TRegFecha);
+var
+  PosX: Word;
+  PosY: Word;
+begin
+  Write('Fecha de Inicio: ');
+  with FechaInicio do
+    CadARegFecha(ObtenerFechaStr, Dia, Mes, Anio);
+  
+  // Repetir hasta que la fecha de Fin sea posterior o igual (NO anterior) a la fecha de Inicio
+    Write('Fecha de Fin: ');
+  PosX := WhereX;
+  PosY := WhereY;
+  repeat
+    GotoXY(PosX, PosY);
+    with FechaFin do
+      CadARegFecha(ObtenerFechaStr, Dia, Mes, Anio);
+    if EsFechaAnterior(FechaFin.Dia, FechaFin.Mes, FechaFin.Anio, FechaInicio.Dia, FechaInicio.Mes, FechaInicio.Anio) then
+    begin
+      TextColor(Red);
+      WriteLn(UTF8Decode('¡La fecha de Fin no puede ser posterior a la fecha de Inicio!'));
+      TextColor(White);
+    end;
+  until not (EsFechaAnterior(FechaFin.Dia, FechaFin.Mes, FechaFin.Anio, FechaInicio.Dia, FechaInicio.Mes, FechaInicio.Anio));
 end;
 
 function ObtenerRtaSN: string;
