@@ -1,0 +1,1 @@
+fpc .\scoring.pas -FUcomp -O2 -vwn
