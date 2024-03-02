@@ -8,8 +8,7 @@ uses
 function ObtenerFechaStr: string;
 procedure CadARegFecha(Fecha: string; var Dia: word; var Mes: word; var Anio: word);
 function FormatoFecha(Dia, Mes, Anio: word): string;
-procedure NuevaFechaAXDias(Dia, Mes, Anio: word; CantDias: word;
-  var XDia: word; var XMes: word; var XAnio: word);
+procedure NuevaFechaAXDias(Dia, Mes, Anio: word; CantDias: word; var XDia: word; var XMes: word; var XAnio: word);
 function EsFechaPosterior(Dia0, Mes0, Anio0: word; Dia1, Mes1, Anio1: word): boolean;
 function EsFechaAnterior(Dia0, Mes0, Anio0: word; Dia1, Mes1, Anio1: word): boolean;
 
@@ -42,8 +41,8 @@ begin
       if Car = #08 then
       begin
         Delete(Fecha, Length(Fecha), 1);
-        // Elimina la '/', si es necesario
-        if (Length(Fecha) = 3) or (Length(Fecha) = 6) then
+        // Elimina la '/', o el número escrito anteriormente, si es necesario
+        if (Length(Fecha) = 3) or (Length(Fecha) = 6) or (Length(Fecha) = 2) or (Length(Fecha) = 5) then
           Delete(Fecha, Length(Fecha), 1);
       end
       else
@@ -82,6 +81,7 @@ begin
       ClrEol;
       TextColor(Red);
       Write(Fecha);
+      Write(UTF8Decode('    ¡La fecha ingresada no es válida!'));
       TextColor(White);
     end;
   end;
@@ -98,13 +98,24 @@ begin
 end;
 
 function FormatoFecha(Dia, Mes, Anio: word): string;
+var
+  DiaAux, MesAux: String[2];
 begin
-  FormatoFecha := Format('%0.2d', [Dia]) + '/' + Format('%0.2d', [Mes]) +
-    '/' + IntToStr(Anio);
+  DiaAux := IntToStr(Dia);
+  if Length(DiaAux) < 2 then
+    DiaAux := '0' + DiaAux;
+  
+  MesAux := IntToStr(Mes);
+  if Length(MesAux) < 2 then
+    MesAux := '0' + MesAux; 
+  
+  FormatoFecha := DiaAux + '/' + MesAux + '/' + IntToStr(Anio);
+  //FormatoFecha := Format('%0.2d', [Dia]) + '/' + Format('%0.2d', [Mes]) + '/' + IntToStr(Anio);
 end;
 
 function MaxDiasMes(Mes, Anio: word): word;
 begin
+  MaxDiasMes := 0;
   case Mes of
     {Meses con 31 días}
     1, 3, 5, 7, 8, 10, 12: MaxDiasMes := 31;
@@ -119,8 +130,7 @@ begin
   end;
 end;
 
-procedure NuevaFechaAXDias(Dia, Mes, Anio: word; CantDias: word;
-  var XDia: word; var XMes: word; var XAnio: word);
+procedure NuevaFechaAXDias(Dia, Mes, Anio: word; CantDias: word; var XDia: word; var XMes: word; var XAnio: word);
 begin
   XDia := Dia + CantDias;
   XMes := Mes;
