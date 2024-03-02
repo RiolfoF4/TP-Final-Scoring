@@ -124,7 +124,7 @@ end;
 
 function MostrarListaInfracciones(var ListaInf: TListaInf): integer;
 const
-  LimiteInferior = 14;
+  LimiteInferior = 12;
 var
   PosAnterior: TPila;
   CantInf: string[7];
