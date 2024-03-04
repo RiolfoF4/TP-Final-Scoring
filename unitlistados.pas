@@ -481,7 +481,7 @@ begin
   end;
 end;
 
-function BajaLogicaCon(var ArchCon: TArchCon; DNICon: Cardinal; var ArbolDNI: TPuntDNI): Boolean;
+function EsBajaLogicaCon(var ArchCon: TArchCon; DNICon: Cardinal; var ArbolDNI: TPuntDNI): Boolean;
 var
   Pos: longint;
   DatosCon: TDatoConductores;
@@ -491,7 +491,7 @@ begin
   begin
     Seek(ArchCon, Pos);
     Read(ArchCon, DatosCon);
-    BajaLogicaCon := DatosCon.BajaLogica
+    EsBajaLogicaCon := DatosCon.BajaLogica
   end;
 end;
 
@@ -522,7 +522,7 @@ begin
         Read(ArchInf, Inf);
         if not (EsFechaPosterior(Inf.Fecha.Dia, Inf.Fecha.Mes, Inf.Fecha.Anio, Fin.Dia, Fin.Mes, Fin.Anio) or
           ListaLlena(ListaInf)) then
-          if not BajaLogicaCon(ArchCon, Inf.DNI, ArbolDNI) then
+          if not EsBajaLogicaCon(ArchCon, Inf.DNI, ArbolDNI) then
             if DNICon = 0 then
               Agregar(ListaInf, Inf)
             else
