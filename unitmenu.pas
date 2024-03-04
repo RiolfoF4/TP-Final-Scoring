@@ -30,8 +30,8 @@ begin
     case Op of
       '1': ListadoCon(ArchCon, False);
       '2': ListadoCon(ArchCon, True);
-      '3': ListadoInf(ArchInf, False);
-      '4': ListadoInf(ArchInf, True);
+      '3': ListadoInf(ArchCon, ArchInf, ArbolDNI, False);
+      '4': ListadoInf(ArchCon, ArchInf, ArbolDNI, True);
     end;
   until Op = '0';
 end;
