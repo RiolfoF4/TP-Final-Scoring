@@ -4,22 +4,23 @@ unit UnitListados;
 interface
 
 uses
-  SysUtils, crt, UnitLista, UnitTypes, UnitArchivo, UnitPila, UnitManejoFecha, UnitObtenerDatos, UnitInfracciones;
+  SysUtils, crt, UnitLista, UnitTypes, UnitArchivo, UnitPila, UnitManejoFecha, UnitObtenerDatos, UnitInfracciones,
+  UnitPosiciones;
 
 const
   EncabTotalesCon = 4;
   EncabezadosCon: array[1..EncabTotalesCon] of AnsiString = ('NOMBRE Y APELLIDOS', 'DNI', 'SCORING', 'HABILITADO');
   
-  EncabTotalesInf = 3;
-  //EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('DNI', 'INFRACCIÓN', 'FECHA', 'PUNTOS');
-  EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('INFRACCIÓN', 'FECHA', 'PUNTOS');
+  EncabTotalesInf = 4;
+  EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('DNI', 'INFRACCIÓN', 'FECHA', 'PUNTOS');
+  //EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('INFRACCIÓN', 'FECHA', 'PUNTOS');
 
 type
   TVectorEncab = array[1..10] of AnsiString;
   TVectorInt = array[1..10] of Integer;
 
 procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
-procedure ListadoInf(var ArchInf: TArchInf; ConductorEspecifico: Boolean);
+procedure ListadoInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI; ConductorEspecifico: Boolean);
 
 implementation
 procedure InicializarListadoCon(var Encabezados: TVectorEncab;
@@ -71,10 +72,10 @@ var
   i: word;
   LenAux: TVectorInt;
 begin
-  {LenAux[1] := 8;   // DNI 12.345.678}
-  LenAux[1] := 62;  // Tipo de Infracción
-  LenAux[2] := 10;  // DD/MM/AAAA
-  LenAux[3] := 2;   // Puntos
+  LenAux[1] := 8;   // DNI 12.345.678
+  LenAux[2] := 50;  // Tipo de Infracción
+  LenAux[3] := 10;  // DD/MM/AAAA
+  LenAux[4] := 2;   // Puntos
 
   for i := 1 to EncabTotalesInf do
     LenEncab[i] := LenAux[i];
@@ -374,7 +375,7 @@ begin
       with DatosInf do
       begin
         // Mostrar infracciones con DNI
-        {
+        
         GotoXY(2, PosY);
         Write(DNI: ((LenEncab[1] + Length(UIntToStr(DNI))) div 2));
         
@@ -391,9 +392,10 @@ begin
           GotoXY(1, Aux);
           SeparadorColumnas(PosSep, EncabTotalesInf);
         end;
-        }
-        // Mostrar infracciones sin DNI
         
+
+        // Mostrar infracciones sin DNI
+        {
         GotoXY(PosSep[1] + 1, PosY);
         Write(FormatoFecha(Fecha.Dia, Fecha.Mes, Fecha.Anio): ((LenEncab[2] + 10)) div 2);
         
@@ -406,7 +408,8 @@ begin
           GotoXY(1, Aux);
           SeparadorColumnas(PosSep, EncabTotalesInf);
         end;
-        
+        }
+
         SeparadorLineas(PosSep, EncabTotalesInf);
       end;
       if OrdenAscendiente then
@@ -478,7 +481,22 @@ begin
   end;
 end;
 
-procedure InicializarListaInf(var ArchInf: TArchInf; var ListaInf: TListaDatosInf; DNICon: Cardinal; Inicio, Fin: TRegFecha);
+function BajaLogicaCon(var ArchCon: TArchCon; DNICon: Cardinal; var ArbolDNI: TPuntDNI): Boolean;
+var
+  Pos: longint;
+  DatosCon: TDatoConductores;
+begin
+  Pos := PreordenDNI(ArbolDNI, DNICon);
+  if Pos >= 0 then
+  begin
+    Seek(ArchCon, Pos);
+    Read(ArchCon, DatosCon);
+    BajaLogicaCon := DatosCon.BajaLogica
+  end;
+end;
+
+procedure InicializarListaInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ListaInf: TListaDatosInf; ArbolDNI: TPuntDNI;
+  DNICon: Cardinal; Inicio, Fin: TRegFecha);
 { Recorre el archivo de infracciones y guarda las infracciones de un conductor, según DNICon, en una lista 
   desde la fecha Inicio hasta Fin (inclusive)
   Si DNICon es igual a 0 guarda todas las infracciones sin importar el conductor}
@@ -504,17 +522,18 @@ begin
         Read(ArchInf, Inf);
         if not (EsFechaPosterior(Inf.Fecha.Dia, Inf.Fecha.Mes, Inf.Fecha.Anio, Fin.Dia, Fin.Mes, Fin.Anio) or
           ListaLlena(ListaInf)) then
-          if DNICon = 0 then
-            Agregar(ListaInf, Inf)
-          else
-          if DNICon = Inf.DNI then
-            Agregar(ListaInf, Inf);
+          if not BajaLogicaCon(ArchCon, Inf.DNI, ArbolDNI) then
+            if DNICon = 0 then
+              Agregar(ListaInf, Inf)
+            else
+            if DNICon = Inf.DNI then
+              Agregar(ListaInf, Inf);
       until EsFechaPosterior(Inf.Fecha.Dia, Inf.Fecha.Mes, Inf.Fecha.Anio, Fin.Dia, Fin.Mes, Fin.Anio) or EOF(ArchInf);
     end;
   end;
 end;
 
-procedure ListadoInf(var ArchInf: TArchInf; ConductorEspecifico: Boolean);
+procedure ListadoInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI; ConductorEspecifico: Boolean);
 var
   ListaInf: TListaDatosInf;
   Encab: TVectorEncab;
@@ -536,7 +555,7 @@ begin
   ObtenerFechaInicioFin(FechaInicio, FechaFin);
 
   CrearLista(ListaInf);
-  InicializarListaInf(ArchInf, ListaInf, DNICon, FechaInicio, FechaFin);
+  InicializarListaInf(ArchCon, ArchInf, ListaInf, ArbolDNI, DNICon, FechaInicio, FechaFin);
   ClrScr;
   if not ListaVacia(ListaInf) then
     MostrarListadoInf(Encab, ListaInf)
