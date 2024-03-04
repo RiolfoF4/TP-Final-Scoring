@@ -37,7 +37,7 @@ end;
 procedure ActualizarPosApYNom(var ArbolApYNom: TPuntApYNom; NuevoApYNom: string;
   AnteriorApYNom: string);
 var
-  Pos: word;
+  Pos: longint;
 begin
   Pos := PreordenApYNom(ArbolApYNom, AnteriorApYNom);
   SuprimirApYNom(ArbolApYNom, AnteriorApYNom);
