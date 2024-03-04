@@ -36,6 +36,30 @@ begin
   until Op = '0';
 end;
 
+procedure MostrarEstadisticas(var ArchCon: TArchCon; var ArchInf: TArchInf;
+  var ArbolApYNom: TPuntApYNom; var ArbolDNI: TPuntDNI);
+var
+  Op: String[2];
+begin
+  repeat
+    ClrScr;
+    WriteLn('[1] Cantidad de Infracciones en un Período Determinado.');
+    WriteLn('[2] Porcentaje de Conductores con Reincidencia.');
+    WriteLn('[3] Porcentaje de Conductores con Scoring 0.');
+    WriteLn('[4] Total xd.');
+    WriteLn('[5] Rango Etario con más Infracciones.');
+    WriteLn;
+    WriteLn('[0] Volver.');
+    WriteLn;
+    Write('Opción: ');
+    ReadLn(Op);
+    ClrScr;
+    case Op of
+      '1':;
+    end;
+  until Op = '0'; 
+end;
+
 procedure MostrarMenu;
 var
   ArchCon: TArchCon;
@@ -51,6 +75,7 @@ begin
     WriteLn('[2] Ingresar DNI.');
     WriteLn;
     WriteLn('[3] Listados.');
+    WriteLn(UTF8Decode('[4] Estadísticas.'));
     WriteLn;
     WriteLn('[0] Salir.');
     WriteLn;
@@ -61,6 +86,7 @@ begin
       '1': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 'apynom');
       '2': DeterminarCasoCon(ArchCon, ArchInf, ArbolApYNom, ArbolDNI, 'dni');
       '3': MostrarListados(ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
+      '4': MostrarEstadisticas(ArchCon, ArchInf, ArbolApYNom, ArbolDNI);
     end;
   until Op = '0';
   Cerrar(ArchCon, ArchInf);
