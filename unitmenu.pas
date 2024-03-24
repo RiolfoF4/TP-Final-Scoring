@@ -4,7 +4,7 @@ unit UnitMenu;
 interface
 
 uses
-  crt, UnitArchivo, UnitPosiciones, Actividades, UnitListados;
+  crt, UnitArchivo, UnitPosiciones, Actividades, UnitListadosYEstadisticas;
 
 procedure MostrarMenu;
 
@@ -55,7 +55,9 @@ begin
     ReadLn(Op);
     ClrScr;
     case Op of
-      '1':;
+      '1': EstCantInf(ArchCon, ArchInf, ArbolDNI);
+      '2': EstPorcenRein(ArchCon);
+      '3': EstPorcenNoHab(ArchCon);
     end;
   until Op = '0'; 
 end;

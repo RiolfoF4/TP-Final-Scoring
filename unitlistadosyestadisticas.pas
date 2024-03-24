@@ -1,4 +1,4 @@
-unit UnitListados;
+unit UnitListadosYEstadisticas;
 {$CODEPAGE UTF8}
 
 interface
@@ -21,6 +21,10 @@ type
 
 procedure ListadoCon(var ArchCon: TArchCon; SoloNoHabilidatos: Boolean);
 procedure ListadoInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI; ConductorEspecifico: Boolean);
+
+procedure EstCantInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
+procedure EstPorcenRein(var ArchCon: TArchCon);
+procedure EstPorcenNoHab(var ArchCon: TArchCon);
 
 implementation
 procedure InicializarListadoCon(var Encabezados: TVectorEncab;
@@ -497,9 +501,9 @@ end;
 
 procedure InicializarListaInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ListaInf: TListaDatosInf; ArbolDNI: TPuntDNI;
   DNICon: Cardinal; Inicio, Fin: TRegFecha);
-{ Recorre el archivo de infracciones y guarda las infracciones de un conductor, según DNICon, en una lista 
-  desde la fecha Inicio hasta Fin (inclusive)
-  Si DNICon es igual a 0 guarda todas las infracciones sin importar el conductor}
+{Recorre el archivo de infracciones y guarda las infracciones de un conductor, según DNICon, en una lista 
+ desde la fecha Inicio hasta Fin (inclusive)
+ Si DNICon es igual a 0 guarda todas las infracciones sin importar el conductor}
 var
   Inf: TDatoInfracciones;
 begin
@@ -557,6 +561,7 @@ begin
   CrearLista(ListaInf);
   InicializarListaInf(ArchCon, ArchInf, ListaInf, ArbolDNI, DNICon, FechaInicio, FechaFin);
   ClrScr;
+
   if not ListaVacia(ListaInf) then
     MostrarListadoInf(Encab, ListaInf)
   else
@@ -566,5 +571,93 @@ begin
     TextColor(White);
     Delay(1500);
   end;
+end;
+
+procedure EstCantInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
+{Muestra la cantidad de infracciones cometidas entre dos fechas}
+var
+  ListaInf: TListaDatosInf;
+  FechaInicio, FechaFin: TRegFecha;
+begin
+  ObtenerFechaInicioFin(FechaInicio, FechaFin);
+
+  CrearLista(ListaInf);
+  InicializarListaInf(ArchCon, ArchInf, ListaInf, ArbolDNI, 0, FechaInicio, FechaFin);
+  
+  ClrScr;
+  Write('Entre el ', FormatoFecha(FechaInicio.Dia, FechaInicio.Mes, FechaInicio.Anio), ' y el ',
+    FormatoFecha(FechaFin.Dia, FechaFin.Mes, FechaFin.Anio));
+  if TamanioLista(ListaInf) > 0 then
+    if TamanioLista(ListaInf) = 1 then
+      Write(' se cometió ', TamanioLista(ListaInf), ' infracción.')
+    else
+      Write(' se cometieron ', TamanioLista(ListaInf), ' infracciones.')
+  else
+    Write(' no se cometieron infracciones.');
+  ReadLn;
+end;
+
+function CantConRein(var ArchCon: TArchCon): Word;
+{Devuelve la cantidad de conductores que poseen al menos una reincidencia y no están dados de baja}
+var
+  DatosConAux: TDatoConductores;
+begin
+  CantConRein := 0;
+  Seek(ArchCon, 0);
+  while not (EOF(ArchCon)) do
+  begin
+    Read(ArchCon, DatosConAux);
+    if (not DatosConAux.BajaLogica) and (DatosConAux.CantRein > 0) then
+      Inc(CantConRein);
+  end;
+end;
+
+function CantCon(var ArchCon: TArchCon): Word;
+{Devuelve la cantidad de conductores que NO están dados de baja}
+var
+  DatosConAux: TDatoConductores;
+begin
+  CantCon := 0;
+  Seek(ArchCon, 0);
+  while not (EOF(ArchCon)) do
+  begin
+    Read(ArchCon, DatosConAux);
+    if (not DatosConAux.BajaLogica) then
+      Inc(CantCon);
+  end;
+end;
+
+function Porcentaje(Parte, Total: Word): Real;
+{Devuelve el porcentaje entre Parte y Total}
+begin
+  Porcentaje := (Parte / Total) * 100;
+end;
+
+procedure EstPorcenRein(var ArchCon: TArchCon);
+{Muestra el porcentaje de conductores que poseen al menos una reincidencia}
+var
+  TotalCon, TotalConRein: Word;
+begin
+  TotalCon := CantCon(ArchCon);
+  TotalConRein := CantConRein(ArchCon);
+
+  Write('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConRein, TotalCon):0:2, '% es reincidente.');
+  ReadLn;
+end;
+
+procedure EstPorcenNoHab(var ArchCon: TArchCon);
+{Muestra el porcentajes de conductores con scoring 0 (NO habilitados)}
+var
+  ListaCon: TListaDatosCon;
+  TotalCon, TotalConNoHab: Word;
+begin
+  CrearLista(ListaCon);
+  InicializarListaCon(ArchCon, ListaCon, True);
+
+  TotalCon := CantCon(ArchCon);
+  TotalConNoHab := TamanioLista(ListaCon);
+
+  Write('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConNoHab, TotalCon):0:2, '% posee scoring 0.');
+  ReadLn;  
 end;
 end.
