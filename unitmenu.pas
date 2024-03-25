@@ -58,6 +58,7 @@ begin
       '1': EstCantInf(ArchCon, ArchInf, ArbolDNI);
       '2': EstPorcenRein(ArchCon);
       '3': EstPorcenNoHab(ArchCon);
+      '5': EstRangoEtario(ArchCon, ArchInf, ArbolDNI);
     end;
   until Op = '0'; 
 end;

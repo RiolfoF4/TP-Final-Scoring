@@ -15,6 +15,11 @@ const
   EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('DNI', 'INFRACCIÓN', 'FECHA', 'PUNTOS');
   //EncabezadosInf: array[1..EncabTotalesInf] of AnsiString = ('INFRACCIÓN', 'FECHA', 'PUNTOS');
 
+  RangosEtariosTotales = 3;
+  RangosEtarios: array[1..RangosEtariosTotales] of Integer = (51, 31, 0);
+  {Establece la cota inferior de los rangos etarios, en años. En este caso: +51, 50-31, 31-0.
+  El primer rango etario siempre es "mayor a"}
+
 type
   TVectorEncab = array[1..10] of AnsiString;
   TVectorInt = array[1..10] of Integer;
@@ -25,6 +30,8 @@ procedure ListadoInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI:
 procedure EstCantInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
 procedure EstPorcenRein(var ArchCon: TArchCon);
 procedure EstPorcenNoHab(var ArchCon: TArchCon);
+//procedure EstTotal();
+procedure EstRangoEtario(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
 
 implementation
 procedure InicializarListadoCon(var Encabezados: TVectorEncab;
@@ -658,6 +665,64 @@ begin
   TotalConNoHab := TamanioLista(ListaCon);
 
   Write('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConNoHab, TotalCon):0:2, '% posee scoring 0.');
-  ReadLn;  
+  ReadLn;
+end;
+
+procedure CantInfRangoEtario(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI; var CantInf: TVectorInt);
+{Devuelve un array con la cantidad de infracciones cometidas por rango etario, según esten definidos en RangoEtarios}
+var
+  i: Word;
+  InfAux: TDatoInfracciones;
+  ConAux: TDatoConductores;
+  FechaActual: TRegFecha;
+begin
+  for i := 1 to RangosEtariosTotales do
+    CantInf[i] := 0;
+  ObtenerFechaActual(FechaActual);
+  ConAux.DNI := 0;
+  Seek(ArchInf, 0);
+  while not EOF(ArchInf) do
+  begin
+    Read(ArchInf, InfAux);
+    if InfAux.DNI <> ConAux.DNI then
+    begin
+      Seek(ArchCon, PreordenDNI(ArbolDNI, InfAux.DNI));
+      Read(ArchCon, ConAux);  
+    end;
+
+    if not ConAux.BajaLogica then
+      with ConAux do
+      begin
+        i := 1;
+        {Mientras la edad del conductor sea menor a la edad mínima del rango etario i,
+         y haya más rangos etarios, incrementar i}
+        while  (EsFechaPosterior(FechaNac.Dia, FechaNac.Mes, FechaNac.Anio, 
+                FechaActual.Dia, FechaActual.Mes, FechaActual.Anio - RangosEtarios[i])) and (i <= RangosEtariosTotales) do
+          Inc(i);
+        
+        if i <= RangosEtariosTotales then
+          Inc(CantInf[i]);
+      end;
+  end;
+end;
+
+procedure EstRangoEtario(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
+var
+  CantInf: TVectorInt;
+begin
+  CantInfRangoEtario(ArchCon, ArchInf, ArbolDNI, CantInf);
+
+  Write('El rango etario con más infracciones es: ');
+  if (CantInf[1] >= CantInf[2]) and (CantInf[1] >= CantInf[3]) then
+    Write('Mayores de ', RangosEtarios[1], ' años, con ', CantInf[1], ' infracciones.')
+  else
+  if (CantInf[2] >= CantInf[1]) and (CantInf[2] >= CantInf[3]) then
+    Write('Entre ', RangosEtarios[2], ' y ', RangosEtarios[1], ' años, con ', CantInf[2], ' infracciones.')
+  else
+    Write('Menores de ', RangosEtarios[2], ' años, con ', CantInf[3], ' infracciones.');
+
+{  WriteLn;
+  Write('VECTOR: ', CantInf[1], '; ', CantInf[2], '; ', CantInf[3]);}
+  ReadLn;
 end;
 end.
