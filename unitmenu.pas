@@ -46,7 +46,7 @@ begin
     WriteLn('[1] Cantidad de Infracciones en un Período Determinado.');
     WriteLn('[2] Porcentaje de Conductores con Reincidencia.');
     WriteLn('[3] Porcentaje de Conductores con Scoring 0.');
-    WriteLn('[4] Total xd.');
+    WriteLn('[4] Porcentaje de Conductores Sin Infracciones.');
     WriteLn('[5] Rango Etario con más Infracciones.');
     WriteLn;
     WriteLn('[0] Volver.');
@@ -58,6 +58,7 @@ begin
       '1': EstCantInf(ArchCon, ArchInf, ArbolDNI);
       '2': EstPorcenRein(ArchCon);
       '3': EstPorcenNoHab(ArchCon);
+      '4': EstTotalSinInf(ArchCon);
       '5': EstRangoEtario(ArchCon, ArchInf, ArbolDNI);
     end;
   until Op = '0'; 

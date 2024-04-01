@@ -17,7 +17,7 @@ const
 
   RangosEtariosTotales = 3;
   RangosEtarios: array[1..RangosEtariosTotales] of Integer = (51, 31, 0);
-  {Establece la cota inferior de los rangos etarios, en años. En este caso: +51, 50-31, 31-0.
+  {Establece la edad mínima de los rangos etarios, en años: +51, 50-31, 31-0.
   El primer rango etario siempre es "mayor a"}
 
 type
@@ -30,7 +30,7 @@ procedure ListadoInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI:
 procedure EstCantInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
 procedure EstPorcenRein(var ArchCon: TArchCon);
 procedure EstPorcenNoHab(var ArchCon: TArchCon);
-//procedure EstTotal();
+procedure EstTotalSinInf(var ArchCon: TArchCon);
 procedure EstRangoEtario(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
 
 implementation
@@ -580,6 +580,15 @@ begin
   end;
 end;
 
+procedure PrecioneUnaTecla;
+{Muestra un texto y espera a que se precione alguna tecla}
+begin
+  TextColor(LightGreen);
+  Write('Presione una tecla para continuar.');
+  TextColor(White);
+  ReadLn;
+end;
+
 procedure EstCantInf(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI);
 {Muestra la cantidad de infracciones cometidas entre dos fechas}
 var
@@ -596,12 +605,13 @@ begin
     FormatoFecha(FechaFin.Dia, FechaFin.Mes, FechaFin.Anio));
   if TamanioLista(ListaInf) > 0 then
     if TamanioLista(ListaInf) = 1 then
-      Write(' se cometió ', TamanioLista(ListaInf), ' infracción.')
+      WriteLn(' se cometió ', TamanioLista(ListaInf), ' infracción.')
     else
-      Write(' se cometieron ', TamanioLista(ListaInf), ' infracciones.')
+      WriteLn(' se cometieron ', TamanioLista(ListaInf), ' infracciones.')
   else
-    Write(' no se cometieron infracciones.');
-  ReadLn;
+    WriteLn(' no se cometieron infracciones.');
+  WriteLn;
+  PrecioneUnaTecla;
 end;
 
 function CantConRein(var ArchCon: TArchCon): Word;
@@ -648,8 +658,9 @@ begin
   TotalCon := CantCon(ArchCon);
   TotalConRein := CantConRein(ArchCon);
 
-  Write('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConRein, TotalCon):0:2, '% es reincidente.');
-  ReadLn;
+  WriteLn('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConRein, TotalCon):0:2, '% es reincidente.');
+  WriteLn;
+  PrecioneUnaTecla;
 end;
 
 procedure EstPorcenNoHab(var ArchCon: TArchCon);
@@ -664,8 +675,37 @@ begin
   TotalCon := CantCon(ArchCon);
   TotalConNoHab := TamanioLista(ListaCon);
 
-  Write('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConNoHab, TotalCon):0:2, '% posee scoring 0.');
-  ReadLn;
+  WriteLn('De ', TotalCon, ' conductores, el ', Porcentaje(TotalConNoHab, TotalCon):0:2, '% posee scoring 0.');
+  WriteLn;
+  PrecioneUnaTecla;
+end;
+
+function CantConSinInf(var ArchCon: TArchCon): Word;
+{Devuelve la cantidad de conductores sin ninguna infracción}
+var
+  ConAux: TDatoConductores;
+begin
+  CantConSinInf := 0;
+  Seek(ArchCon, 0);
+  while not EOF(ArchCon) do
+  begin
+    Read(ArchCon, ConAux);
+    if (ConAux.Scoring = 20) and (ConAux.CantRein = 0) then
+      Inc(CantConSinInf);
+  end;
+end;
+
+procedure EstTotalSinInf(var ArchCon: TArchCon);
+{Muestra el porcentaje de conductores sin ninguna infracción}
+var
+  TotalCon, TotalSinInf: Word;
+begin
+  TotalCon := CantCon(ArchCon);
+  TotalSinInf := CantConSinInf(ArchCon);
+
+  WriteLn('De ', TotalCon, ' conductores, el ', Porcentaje(TotalSinInf, TotalCon):0:2, '% nunca ha cometido una infracción.');
+  WriteLn;
+  PrecioneUnaTecla;
 end;
 
 procedure CantInfRangoEtario(var ArchCon: TArchCon; var ArchInf: TArchInf; var ArbolDNI: TPuntDNI; var CantInf: TVectorInt);
@@ -714,15 +754,16 @@ begin
 
   Write('El rango etario con más infracciones es: ');
   if (CantInf[1] >= CantInf[2]) and (CantInf[1] >= CantInf[3]) then
-    Write('Mayores de ', RangosEtarios[1], ' años, con ', CantInf[1], ' infracciones.')
+    WriteLn('Mayores de ', RangosEtarios[1], ' años, con ', CantInf[1], ' infracciones.')
   else
   if (CantInf[2] >= CantInf[1]) and (CantInf[2] >= CantInf[3]) then
-    Write('Entre ', RangosEtarios[2], ' y ', RangosEtarios[1], ' años, con ', CantInf[2], ' infracciones.')
+    WriteLn('Entre ', RangosEtarios[2], ' y ', RangosEtarios[1], ' años, con ', CantInf[2], ' infracciones.')
   else
-    Write('Menores de ', RangosEtarios[2], ' años, con ', CantInf[3], ' infracciones.');
+    WriteLn('Menores de ', RangosEtarios[2], ' años, con ', CantInf[3], ' infracciones.');
 
 {  WriteLn;
   Write('VECTOR: ', CantInf[1], '; ', CantInf[2], '; ', CantInf[3]);}
-  ReadLn;
+  WriteLn;
+  PrecioneUnaTecla;
 end;
 end.
